@@ -1,24 +1,53 @@
-# Logs
-logs
-*.log
+# ====================
+# Frontend / Node / Vite
+# ====================
+node_modules/
+dist/
+dist-ssr/
+*.local
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
+# ====================
+# .NET / Backend
+# ====================
+**/bin/
+**/obj/
 
-# Editor directories and files
+# ASP.NET Core configs
+appsettings.*.json
+!appsettings.json
+
+# Visual Studio / Rider / ReSharper
+**/.vs/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.njsproj
+*.sw?
+*.pdb
+*.cache
+
+# Launch settings (ALDRIG till GitHub)
+**/Properties/launchSettings.json
+
+# ReSharper / Rider
+_ReSharper*/
+*.dotCover
+
+# ====================
+# Editors / OS
+# ====================
 .vscode/*
 !.vscode/extensions.json
-.idea
+.idea/
 .DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+
+# ====================
+# Misc
+# ====================
+metadata.json
