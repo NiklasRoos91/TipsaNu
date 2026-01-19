@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { ListOrdered, Plus, Trash2 } from 'lucide-react';
-import { TournamentTiebreaker, TiebreakerCriterion } from '../../types';
+import { TournamentTiebreaker, TiebreakerCriterion } from '../../types/types';
 
 interface TiebreakersInputProps {
   tiebreakers: TournamentTiebreaker[];

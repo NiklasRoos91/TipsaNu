@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Shield } from 'lucide-react';
-import { ExtraBet, ExtraBetPrediction } from '../../types';
+import { ExtraBet, ExtraBetPrediction } from '../../types/types';
 import { useExtraBetForm } from '../../hooks/useExtraBetForm';
 import { ExtraBetCard } from './ExtraBetCard';
 import { ActionButton } from '../common/ActionButton';

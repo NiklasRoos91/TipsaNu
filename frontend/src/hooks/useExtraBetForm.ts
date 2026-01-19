@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { createExtraBet } from '../services/api';
-import { ExtraBet } from '../types';
+import { ExtraBet } from '../types/types';
 
 export const useExtraBetForm = (tournamentId: string, onBetCreated: (eb: ExtraBet) => void) => {
   const [showForm, setShowForm] = useState(false);

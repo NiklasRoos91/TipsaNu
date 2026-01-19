@@ -1,5 +1,5 @@
 
-import { Match, MatchStatus, Tournament, User, League, Post, Notification, ExtraBet, GroupStanding, Team, TournamentTemplate, TiebreakerCriterion } from '../types';
+import { Match, MatchStatus, Tournament, User, League, Post, Notification, ExtraBet, GroupStanding, Team, TournamentTemplate, TiebreakerCriterion } from '../types/types';
 
 export const MOCK_USERS: User[] = [
   {

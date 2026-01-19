@@ -1,5 +1,5 @@
 import React from 'react';
-import { League } from '../../types';
+import { League } from '../../types/types';
 import { useLeagueMembers } from '../../hooks/useLeagueMembers';
 import { useLeaguePosts } from '../../hooks/useLeaguePosts';
 import { LeaderboardTable } from './LeaderboardTable';

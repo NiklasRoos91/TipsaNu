@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { MessageSquare, Send } from 'lucide-react';
-import { Post } from '../../types';
+import { Post } from '../../types/types';
 
 interface ForumProps {
   posts: Post[];

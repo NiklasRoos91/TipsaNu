@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { getMatch, getMyPrediction, submitPrediction as apiSubmitPrediction } from '../services/api';
-import { Match, Prediction } from '../types';
+import { Match, Prediction } from '../types/types';
 
 export const useMatchDetail = (matchId?: string) => {
   const [match, setMatch] = useState<Match | undefined>();

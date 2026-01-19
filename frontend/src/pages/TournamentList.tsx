@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { getTournaments } from '../services/api';
-import { Tournament } from '../types';
+import { Tournament } from '../types/types';
 import { TournamentCard } from '../components/tournament/TournamentCard';
 import { useAuth } from '../hooks/useAuth';
 import { CreateTournament } from './CreateTournament';

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Tournament } from '../types';
+import { Tournament } from '../types/types';
 import { getTournaments } from '../services/api';
 
 export const useTournaments = () => {

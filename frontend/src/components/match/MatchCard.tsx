@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Check, ChevronDown, ChevronUp } from 'lucide-react';
-import { Match, Prediction, MatchStatus } from '../../types';
+import { Match, Prediction, MatchStatus } from '../../types/types';
 import { submitPrediction as apiSubmitPrediction } from '../../services/api';
 import { MatchPredictionForm } from './MatchPredictionForm';
 

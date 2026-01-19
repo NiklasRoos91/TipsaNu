@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { createLeague, joinLeague } from '../services/api';
-import { League } from '../types';
+import { League } from '../types/types';
 
 export const useLeagueForm = (tournamentId: string, onLeagueAdded: (l: League) => void) => {
   const [showCreate, setShowCreate] = useState(false);

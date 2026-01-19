@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Post } from '../types';
+import { Post } from '../types/types';
 import { getLeaguePosts, createPost } from '../services/api';
 
 export const useLeaguePosts = (id?: string) => {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Notification } from '../../types';
+import { Notification } from '../../types/types';
 
 interface NotificationItemProps {
   notification: Notification;

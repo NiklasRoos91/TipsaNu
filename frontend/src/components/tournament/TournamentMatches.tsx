@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Filter } from 'lucide-react';
-import { Match, Prediction, GroupStanding } from '../../types';
+import { Match, Prediction, GroupStanding } from '../../types/types';
 import { getGroupStandings } from '../../services/api';
 import { GroupTable } from './GroupTable';
 import { MatchCard } from '../match/MatchCard';

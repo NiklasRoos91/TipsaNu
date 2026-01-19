@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { League, Tournament } from '../types';
+import { League, Tournament } from '../types/types';
 import { getMyLeagues, getTournaments, createLeague } from '../services/api';
 
 export const useLeagues = () => {

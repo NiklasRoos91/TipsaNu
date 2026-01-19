@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tournament } from '../../types';
+import { Tournament } from '../../types/types';
 
 interface TournamentBannerProps {
   tournament: Tournament;

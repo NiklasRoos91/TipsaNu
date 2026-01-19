@@ -1,6 +1,6 @@
 
 import { MOCK_USERS, MOCK_TOURNAMENTS, MOCK_MATCHES, MOCK_LEAGUES, MOCK_POSTS, MOCK_NOTIFICATIONS, MOCK_EXTRABETS, MOCK_STANDINGS, MOCK_TEMPLATES } from './mockData';
-import { User, Tournament, Match, Prediction, League, Post, Notification, ExtraBet, ExtraBetPrediction, GroupStanding, TournamentTemplate } from '../types';
+import { User, Tournament, Match, Prediction, League, Post, Notification, ExtraBet, ExtraBetPrediction, GroupStanding, TournamentTemplate } from '../types/types';
 
 // --- IN-MEMORY STATE (Acts as a database during the session) ---
 let users = [...MOCK_USERS];

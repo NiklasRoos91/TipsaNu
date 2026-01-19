@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getNotifications } from '../services/api';
-import { Notification } from '../types';
+import { Notification } from '../types/types';
 
 export const useNotifications = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);

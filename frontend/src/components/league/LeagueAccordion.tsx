@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ChevronRight, ChevronDown, Users, Copy, Check } from 'lucide-react';
-import { League } from '../../types';
+import { League } from '../../types/types';
 import { LeagueInlineDetail } from './LeagueInlineDetail';
 
 interface LeagueAccordionProps {

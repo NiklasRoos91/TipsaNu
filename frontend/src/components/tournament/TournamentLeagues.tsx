@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { LogIn } from 'lucide-react';
-import { League } from '../../types';
+import { League } from '../../types/types';
 import { useLeagueForm } from '../../hooks/useLeagueForm';
 import { LeagueAccordion } from '../league/LeagueAccordion';
 import { ActionButton } from '../common/ActionButton';

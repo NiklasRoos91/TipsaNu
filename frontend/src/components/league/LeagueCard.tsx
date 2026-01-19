@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Users, Copy, Check } from 'lucide-react';
-import { League } from '../../types';
+import { League } from '../../types/types';
 
 interface LeagueCardProps {
   league: League;

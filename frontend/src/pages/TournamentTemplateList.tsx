@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getTournamentTemplates } from '../services/api';
-import { TournamentTemplate } from '../types';
+import { TournamentTemplate } from '../types/types';
 import { Layout, FileText, Users, ArrowRight } from 'lucide-react';
 import { ActionButton } from '../components/common/ActionButton';
 

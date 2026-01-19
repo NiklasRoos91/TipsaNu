@@ -1,7 +1,7 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useMatchDetail } from '../hooks/useMatchDetail';
-import { MatchStatus } from '../types';
+import { MatchStatus } from '../types/types';
 import { BackLink } from '../components/match/BackLink';
 import { MatchHeader } from '../components/match/MatchHeader';
 import { MatchPredictionForm } from '../components/match/MatchPredictionForm';

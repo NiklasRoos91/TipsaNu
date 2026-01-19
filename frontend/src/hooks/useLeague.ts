@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { League } from '../types';
+import { League } from '../types/types';
 import { getLeague } from '../services/api';
 
 export const useLeague = (id?: string) => {

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { GroupStanding } from '../../types';
+import { GroupStanding } from '../../types/types';
 
 interface GroupTableProps {
   standings: GroupStanding[];

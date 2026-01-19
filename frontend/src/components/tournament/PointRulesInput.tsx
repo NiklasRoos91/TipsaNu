@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Target, Plus, Trash2 } from 'lucide-react';
-import { PointRule } from '../../types';
+import { PointRule } from '../../types/types';
 
 interface PointRulesInputProps {
   rules: PointRule[];

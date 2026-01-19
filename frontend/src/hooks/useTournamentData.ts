@@ -7,7 +7,7 @@ import {
   getMyLeagues,
   getMyExtraBetPredictions
 } from '../services/api';
-import { Tournament, Match, Prediction, ExtraBet, League, ExtraBetPrediction } from '../types';
+import { Tournament, Match, Prediction, ExtraBet, League, ExtraBetPrediction } from '../types/types';
 
 export const useTournamentData = (id?: string) => {
   const [tournament, setTournament] = useState<Tournament | undefined>();

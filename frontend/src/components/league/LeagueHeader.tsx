@@ -1,5 +1,5 @@
 import React from 'react';
-import { League } from '../../types';
+import { League } from '../../types/types';
 
 interface LeagueHeaderProps {
   league: League;

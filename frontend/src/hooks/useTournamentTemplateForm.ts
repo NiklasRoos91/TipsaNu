@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { TournamentTemplate, PointRule, TournamentTiebreaker, TiebreakerCriterion } from '../types';
+import { TournamentTemplate, PointRule, TournamentTiebreaker, TiebreakerCriterion } from '../types/types';
 
 export type TournamentTemplateFormData = Omit<TournamentTemplate, 'id'>;
 
