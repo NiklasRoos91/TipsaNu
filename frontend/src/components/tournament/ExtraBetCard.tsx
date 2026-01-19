@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { AlertCircle, ChevronDown, ChevronUp, Check, Edit2 } from 'lucide-react';
 import { ExtraBet, ExtraBetPrediction } from '../../types';
 import { submitExtraBet } from '../../services/api';
+
 import { FormButtons } from '../common/FormButtons';
 
 interface ExtraBetCardProps {
