@@ -13,5 +13,4 @@ namespace TipsaNu.Domain.Entities
         // Navigation
         public TournamentTemplate Template { get; set; } = null!;
     }
-
 }
