@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using TipsaNu.Application.Commons.Results;
-using TipsaNu.Application.Feature.Auth.DTOs;
-using TipsaNu.Application.Feature.Auth.Interfaces;
+using TipsaNu.Application.Features.Auth.DTOs;
+using TipsaNu.Application.Features.Auth.Interfaces;
 using TipsaNu.Domain.Entities;
 using TipsaNu.Domain.Enums;
 using TipsaNu.Domain.Interfaces;
@@ -11,14 +11,14 @@ namespace TipsaNu.Application.Feature.Auth.Commands.Register
     public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, OperationResult<AuthResponseDto>>
     {
         private readonly IUserRepository _userRepository;
-        private readonly IGenericInterface<User> _genericInterface;
+        private readonly IGenericRepository<User> _genericInterface;
         private readonly IJwtTokenService _jwt;
         private readonly IRefreshTokenService _refresh;
         private readonly IPasswordService _passwordService;
 
         public RegisterUserCommandHandler(
             IUserRepository userRepository,
-            IGenericInterface<User> genericInterface,
+            IGenericRepository<User> genericInterface,
             IJwtTokenService jwt,
             IRefreshTokenService refresh,
             IPasswordService passwordService)

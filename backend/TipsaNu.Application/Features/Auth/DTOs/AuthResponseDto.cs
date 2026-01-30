@@ -1,4 +1,4 @@
-﻿namespace TipsaNu.Application.Feature.Auth.DTOs
+﻿namespace TipsaNu.Application.Features.Auth.DTOs
 {
     public record AuthResponseDto(string AccessToken, string RefreshToken);
 }

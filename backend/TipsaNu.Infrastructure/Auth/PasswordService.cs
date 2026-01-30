@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using TipsaNu.Application.Feature.Auth.Interfaces;
+using TipsaNu.Application.Features.Auth.Interfaces;
 
 namespace TipsaNu.Infrastructure.Auth
 {

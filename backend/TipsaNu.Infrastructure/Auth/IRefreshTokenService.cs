@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
-using TipsaNu.Application.Feature.Auth.Interfaces;
+using TipsaNu.Application.Features.Auth.Interfaces;
 using TipsaNu.Domain.Entities;
 using TipsaNu.Infrastructure.Presistence;
 

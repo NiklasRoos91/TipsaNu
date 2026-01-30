@@ -1,9 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using TipsaNu.Application.Feature.Auth.Commands.Login;
-using TipsaNu.Application.Feature.Auth.Commands.RefreshToken;
+using TipsaNu.Application.Features.Auth.Commands.Login;
+using TipsaNu.Application.Features.Auth.Commands.RefreshToken;
 using TipsaNu.Application.Feature.Auth.Commands.Register;
-using TipsaNu.Application.Feature.Auth.DTOs;
+using TipsaNu.Application.Features.Auth.DTOs;
 
 namespace TipsaNu.Api.Controllers
 {
