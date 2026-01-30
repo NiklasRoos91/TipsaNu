@@ -11,6 +11,6 @@
         public Tournament Tournament { get; set; } = null!;
         public ICollection<GroupCompetitor> GroupCompetitors { get; set; } = new List<GroupCompetitor>();
         public ICollection<Match> Matches { get; set; } = new List<Match>();
-        public ICollection<GroupStanding> Standings { get; set; } = new List<GroupStanding>();
+        public ICollection<GroupStanding> GroupStandings { get; set; } = new List<GroupStanding>();
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace TipsaNu.Domain.Entities
+﻿using TipsaNu.Domain.Enums;
+
+namespace TipsaNu.Domain.Entities
 {
     public class Match
     {

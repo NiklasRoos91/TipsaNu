@@ -14,5 +14,7 @@
         public Tournament Tournament { get; set; } = null!;
         public Match? Match { get; set; }
         public ICollection<ExtraBet> ExtraBets { get; set; } = new List<ExtraBet>();
+        public ICollection<ExtraBetOptionChoice> ExtraBetOptionChoices { get; set; } = new List<ExtraBetOptionChoice>();
+        public ICollection<ExtraBetOptionCorrectValue> ExtraBetOptionCorrectValues { get; set; } = new List<ExtraBetOptionCorrectValue>();
     }
 }

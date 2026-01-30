@@ -9,15 +9,11 @@ namespace TipsaNu.Infrastructure.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            // Table
-            builder.ToTable("User", "dbo");
+            builder.ToTable("Users", "dbo");
 
-            // Primary Key
             builder.HasKey(u => u.UserId);
-            builder.Property(u => u.UserId)
-                   .ValueGeneratedOnAdd();
+            builder.Property(u => u.UserId).ValueGeneratedOnAdd();
 
-            // Properties
             builder.Property(u => u.Username)
                    .IsRequired()
                    .HasMaxLength(100);
@@ -25,15 +21,11 @@ namespace TipsaNu.Infrastructure.Data.Configurations
             builder.Property(u => u.Email)
                    .IsRequired()
                    .HasMaxLength(256);
-            builder.HasIndex(u => u.Email)
-                   .IsUnique();
+            builder.HasIndex(u => u.Email).IsUnique();
 
             builder.Property(u => u.PasswordHash)
                    .IsRequired()
                    .HasMaxLength(500);
-
-            builder.Property(u => u.CreatedAt)
-                   .IsRequired();
 
             builder.Property(u => u.Role)
                    .IsRequired()
@@ -41,27 +33,24 @@ namespace TipsaNu.Infrastructure.Data.Configurations
                    .HasMaxLength(50)
                    .HasDefaultValue(UserRoleEnum.User);
 
-            // Relations
+            builder.Property(u => u.CreatedAt).IsRequired();
 
-            // User (1) -> (0..*) Predictions
+            // Relations
             builder.HasMany(u => u.Predictions)
                    .WithOne(p => p.User)
                    .HasForeignKey(p => p.UserId)
-                   .OnDelete(DeleteBehavior.Cascade);
+                   .OnDelete(DeleteBehavior.NoAction);
 
-            // User (1) -> (0..*) ExtraBets
             builder.HasMany(u => u.ExtraBets)
                    .WithOne(e => e.User)
                    .HasForeignKey(e => e.UserId)
-                   .OnDelete(DeleteBehavior.Cascade);
+                   .OnDelete(DeleteBehavior.NoAction);
 
-            // User (1) -> (0..*) LeagueMemberships
             builder.HasMany(u => u.LeagueMemberships)
                    .WithOne(lm => lm.User)
                    .HasForeignKey(lm => lm.UserId)
-                   .OnDelete(DeleteBehavior.Cascade);
+                   .OnDelete(DeleteBehavior.NoAction);
 
-            // User (1) -> (0..*) AdminLeagues
             builder.HasMany(u => u.AdminLeagues)
                    .WithOne(l => l.AdminUser)
                    .HasForeignKey(l => l.AdminUserId)

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using TipsaNu.Application.Commons.Interfaces;
 
@@ -18,9 +19,15 @@ namespace TipsaNu.Infrastructure.Services
             get
             {
                 var user = _http.HttpContext?.User;
-                var id = user?.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (user == null || !user.Identity!.IsAuthenticated)
+                    return 0;
 
-                return int.TryParse(id, out var userId) ? userId : 0;
+                var sub = user.FindFirstValue(JwtRegisteredClaimNames.Sub);
+
+                if (string.IsNullOrEmpty(sub))
+                    sub = user.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                return int.TryParse(sub, out var userId) ? userId : 0;
             }
         }
     }

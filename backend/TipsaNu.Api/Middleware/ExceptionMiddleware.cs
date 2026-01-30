@@ -9,6 +9,11 @@ namespace TipsaNu.Api.Middleware
         private readonly ILogger<ExceptionMiddleware> _logger;
         private readonly IHostEnvironment _env;
 
+        private static readonly JsonSerializerOptions _jsonOptions = new()
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
+
         public ExceptionMiddleware(ILogger<ExceptionMiddleware> logger, IHostEnvironment env)
         {
             _logger = logger;
@@ -28,19 +33,31 @@ namespace TipsaNu.Api.Middleware
                 context.Response.ContentType = "application/json";
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
-                // Skapar en OperationResult<object> med fel
-                var errorMessages = new List<string>
-                {
-                    _env.IsDevelopment() ? ex.Message : "Something went wrong."
-                };
+                var result = OperationResult<object>.Failure(BuildErrorMessages(ex));
 
-                var result = OperationResult<object>.Failure(errorMessages);
-
-                // Returnerar som JSON
-                var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
-                await context.Response.WriteAsync(JsonSerializer.Serialize(result, options));
+                await context.Response.WriteAsync(JsonSerializer.Serialize(result, _jsonOptions));
             }
         }
-    }
 
+        private List<string> BuildErrorMessages(Exception ex)
+        {
+            var messages = new List<string>();
+
+            if (_env.IsDevelopment())
+            {
+                var current = ex;
+                while (current != null)
+                {
+                    messages.Add(current.Message);
+                    current = current.InnerException;
+                }
+            }
+            else
+            {
+                messages.Add("Something went wrong.");
+            }
+
+            return messages;
+        }
+    }
 }

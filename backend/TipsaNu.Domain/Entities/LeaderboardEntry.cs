@@ -10,4 +10,3 @@
         public LeagueMember LeagueMember { get; set; } = null!;
     }
 }
-}

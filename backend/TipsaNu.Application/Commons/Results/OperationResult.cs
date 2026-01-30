@@ -14,6 +14,5 @@
             new() { IsSuccess = false, ErrorMessage = errorMessage };
         public static OperationResult<T> Failure(List<string> errorMessages) =>
             new() { IsSuccess = false, ErrorMessages = errorMessages, ErrorMessage = string.Join(", ", errorMessages) };
-
     }
 }

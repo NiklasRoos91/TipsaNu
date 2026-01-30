@@ -31,10 +31,15 @@ namespace TipsaNu.Infrastructure.Auth
             if (string.IsNullOrWhiteSpace(audience))
                 throw new InvalidOperationException("Jwt:Audience saknas i appsettings.json");
 
+            var expiryHours = _config.GetValue<int?>("Jwt:ExpiryHours") ?? 4;
+
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.UserId.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim("username", user.Username),
+                new Claim(ClaimTypes.Role, user.Role.ToString()),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
             var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
@@ -44,7 +49,8 @@ namespace TipsaNu.Infrastructure.Auth
                 issuer: issuer,
                 audience: audience,
                 claims: claims,
-                expires: DateTime.UtcNow.AddHours(4),
+                notBefore: DateTime.UtcNow,
+                expires: DateTime.UtcNow.AddHours(expiryHours),
                 signingCredentials: creds
             );
 
