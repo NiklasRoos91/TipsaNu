@@ -1,9 +1,8 @@
-﻿
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 
 namespace TipsaNu.Domain.Interfaces
 {
-    public interface IGenericInterface<T> where T : class
+    public interface IGenericRepository<T> where T : class
     {
         Task AddAsync(T entity);
         Task<IEnumerable<T>> GetAllAsync(params Expression<Func<T, object>>[] includes);

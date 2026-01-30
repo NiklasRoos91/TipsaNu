@@ -1,6 +1,6 @@
 ﻿using TipsaNu.Domain.Entities;
 
-namespace TipsaNu.Application.Feature.Auth.Interfaces
+namespace TipsaNu.Application.Features.Auth.Interfaces
 {
     public interface IJwtTokenService
     {

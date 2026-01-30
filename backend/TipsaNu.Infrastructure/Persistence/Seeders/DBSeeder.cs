@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TipsaNu.Application.Feature.Auth.Interfaces;
+using TipsaNu.Application.Features.Auth.Interfaces;
 using TipsaNu.Infrastructure.Presistence;
 
 namespace TipsaNu.Infrastructure.Persistence.Seeders

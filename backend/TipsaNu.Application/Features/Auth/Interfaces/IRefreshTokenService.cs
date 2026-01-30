@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TipsaNu.Domain.Entities;
+﻿using TipsaNu.Domain.Entities;
 
-namespace TipsaNu.Application.Feature.Auth.Interfaces
+namespace TipsaNu.Application.Features.Auth.Interfaces
 {
     public interface IRefreshTokenService
     {

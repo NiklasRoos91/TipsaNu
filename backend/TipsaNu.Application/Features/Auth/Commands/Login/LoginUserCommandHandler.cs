@@ -1,10 +1,10 @@
 ﻿using MediatR;
 using TipsaNu.Application.Commons.Results;
-using TipsaNu.Application.Feature.Auth.DTOs;
-using TipsaNu.Application.Feature.Auth.Interfaces;
+using TipsaNu.Application.Features.Auth.DTOs;
+using TipsaNu.Application.Features.Auth.Interfaces;
 using TipsaNu.Domain.Interfaces;
 
-namespace TipsaNu.Application.Feature.Auth.Commands.Login
+namespace TipsaNu.Application.Features.Auth.Commands.Login
 {
     public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, OperationResult<AuthResponseDto>>
     {

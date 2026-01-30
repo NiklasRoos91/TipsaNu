@@ -1,9 +1,9 @@
 ﻿using MediatR;
 using TipsaNu.Application.Commons.Results;
-using TipsaNu.Application.Feature.Auth.DTOs;
-using TipsaNu.Application.Feature.Auth.Interfaces;
+using TipsaNu.Application.Features.Auth.Interfaces;
+using TipsaNu.Application.Features.Auth.DTOs;
 
-namespace TipsaNu.Application.Feature.Auth.Commands.RefreshToken
+namespace TipsaNu.Application.Features.Auth.Commands.RefreshToken
 {
     public class RefreshTokenCommandHandler
     : IRequestHandler<RefreshTokenCommand, OperationResult<AuthResponseDto>>

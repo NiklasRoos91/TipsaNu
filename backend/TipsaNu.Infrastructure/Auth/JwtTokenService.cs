@@ -3,7 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using TipsaNu.Application.Feature.Auth.Interfaces;
+using TipsaNu.Application.Features.Auth.Interfaces;
 using TipsaNu.Domain.Entities;
 
 namespace TipsaNu.Infrastructure.Auth
