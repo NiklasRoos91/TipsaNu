@@ -60,7 +60,7 @@ cd backend
 ```bash
 dotnet run --project TipsaNu.Api
 ```
-Databas & Arkitektur
+## Databas & Arkitektur
 
 TipsaNu har en relationsdatabas som hanterar:
 -Användare (User) och roller
@@ -72,6 +72,7 @@ TipsaNu har en relationsdatabas som hanterar:
 -Leaderboards och statistik (LeaderboardEntry, TournamentCompetitorStat)
 
 Se mappen docs/ för UML-diagram och detaljerad databasdokumentation.
+
 ## Konfiguration
 
 - `appsettings.json` innehåller konfigurationsinställningar för backend.
