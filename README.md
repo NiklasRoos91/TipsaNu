@@ -63,15 +63,16 @@ dotnet run --project TipsaNu.Api
 ## Databas & Arkitektur
 
 TipsaNu har en relationsdatabas som hanterar:
--Användare (User) och roller
--Turneringsmallar (TournamentTemplate) och instanser (Tournament)
--Matcher (Match) och tippningar (Prediction)
--Ligor (League) och medlemskap (LeagueMember)
--Sidospel (ExtraBetOption, ExtraBet)
--Historik och loggning (PredictionHistory, ExtraBetHistory, UserActivityLog)
--Leaderboards och statistik (LeaderboardEntry, TournamentCompetitorStat)
 
-Se mappen docs/ för UML-diagram och detaljerad databasdokumentation.
+- **Användare** (`User`) och roller  
+- **Turneringsmallar** (`TournamentTemplate`) och instanser (`Tournament`)  
+- **Matcher** (`Match`) och tippningar (`Prediction`)  
+- **Ligor** (`League`) och medlemskap (`LeagueMember`)  
+- **Sidospel** (`ExtraBetOption`, `ExtraBet`)  
+- **Historik och loggning** (`PredictionHistory`, `ExtraBetHistory`, `UserActivityLog`)  
+- **Leaderboards och statistik** (`LeaderboardEntry`, `TournamentCompetitorStat`)  
+
+Se mappen `docs/` för UML-diagram och detaljerad databasdokumentation.
 
 ## Konfiguration
 
