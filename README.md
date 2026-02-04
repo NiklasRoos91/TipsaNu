@@ -3,6 +3,16 @@
 
 TipsaNu är en applikation för sporttippning, byggd med **React + Vite** på frontend och **.NET Core** på backend.
 
+## Funktionalitet
+
+- Skapa och spela turneringar baserat på matcher.
+- Delta i privata eller publika ligor.
+- Tippa resultat och extra bets (sidospel) för varje match.
+- Poängberäkning och leaderboard uppdateras automatiskt.
+- Administrera matcher, resultat och turneringar.
+
+> Notera: Applikationen hanterar ingen riktig betting utan används enbart för poäng, statistik och social jämförelse.
+
 ## Projektstruktur
 
 ```
@@ -50,7 +60,18 @@ cd backend
 ```bash
 dotnet run --project TipsaNu.Api
 ```
+Databas & Arkitektur
 
+TipsaNu har en relationsdatabas som hanterar:
+-Användare (User) och roller
+-Turneringsmallar (TournamentTemplate) och instanser (Tournament)
+-Matcher (Match) och tippningar (Prediction)
+-Ligor (League) och medlemskap (LeagueMember)
+-Sidospel (ExtraBetOption, ExtraBet)
+-Historik och loggning (PredictionHistory, ExtraBetHistory, UserActivityLog)
+-Leaderboards och statistik (LeaderboardEntry, TournamentCompetitorStat)
+
+Se mappen docs/ för UML-diagram och detaljerad databasdokumentation.
 ## Konfiguration
 
 - `appsettings.json` innehåller konfigurationsinställningar för backend.
