@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using TipsaNu.Application.Features.Groups.DTOs;
+using TipsaNu.Application.Features.Matches.DTOs;
 using TipsaNu.Domain.Entities;
 
 namespace TipsaNu.Application.Features.Matches.Mappers

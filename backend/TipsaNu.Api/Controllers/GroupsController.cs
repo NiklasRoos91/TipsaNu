@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using TipsaNu.Application.Features.Groups.Queries.GetGroupStandingsByGroupId;
 using TipsaNu.Application.Features.Groups.Queries.GetMatchesByGroupId;
 
 namespace TipsaNu.Api.Controllers
@@ -21,6 +22,23 @@ namespace TipsaNu.Api.Controllers
         public async Task<IActionResult> GetMatchesByGroupId(int groupId)
         {
             var result = await _mediator.Send(new GetMatchesByGroupIdQuery(groupId));
+
+            if (!result.IsSuccess)
+            {
+                if (result.ErrorMessages?.Any() == true)
+                    return BadRequest(result.ErrorMessages);
+
+                return NotFound(result.ErrorMessage);
+            }
+
+            return Ok(result.Data);
+        }
+
+        // GET /api/groups/{groupId}/standings
+        [HttpGet("{groupId:int}/standings")]
+        public async Task<IActionResult> GetGroupStandings(int groupId)
+        {
+            var result = await _mediator.Send(new GetGroupStandingsByGroupIdQuery(groupId));
 
             if (!result.IsSuccess)
             {

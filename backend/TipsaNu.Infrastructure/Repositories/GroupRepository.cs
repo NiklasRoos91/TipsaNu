@@ -20,11 +20,5 @@ namespace TipsaNu.Infrastructure.Repositories
                                  .Where(g => g.TournamentId == tournamentId)
                                  .ToListAsync();
         }
-
-        public async Task<Group?> GetGroupByIdAsync(int groupId)
-        {
-            return await _context.Groups
-                                 .FirstOrDefaultAsync(g => g.GroupId == groupId);
-        }
     }
 }

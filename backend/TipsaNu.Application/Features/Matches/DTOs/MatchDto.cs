@@ -1,6 +1,6 @@
 ﻿using TipsaNu.Domain.Enums;
 
-namespace TipsaNu.Application.Features.Groups.DTOs
+namespace TipsaNu.Application.Features.Matches.DTOs
 {
     public class MatchDto
     {

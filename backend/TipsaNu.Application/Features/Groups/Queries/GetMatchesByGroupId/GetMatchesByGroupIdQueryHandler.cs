@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using TipsaNu.Application.Commons.Results;
-using TipsaNu.Application.Features.Groups.DTOs;
+using TipsaNu.Application.Features.Matches.DTOs;
 using TipsaNu.Domain.Interfaces;
 
 namespace TipsaNu.Application.Features.Groups.Queries.GetMatchesByGroupId

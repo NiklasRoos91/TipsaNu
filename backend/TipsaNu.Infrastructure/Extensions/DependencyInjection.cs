@@ -28,6 +28,7 @@ namespace TipsaNu.Infrastructure.Extensions
             services.AddScoped<IPasswordService, PasswordService>();
             services.AddScoped<IGroupRepository, GroupRepository>();
             services.AddScoped<IMatchRepository, MatchRepository>();
+            services.AddScoped<IGroupStandingRepository, GroupStandingRepository>();
 
 
             using (var serviceProvider = services.BuildServiceProvider())
