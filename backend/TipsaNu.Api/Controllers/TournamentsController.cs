@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using TipsaNu.Application.Features.Groups.Queries;
+using TipsaNu.Application.Features.Groups.Queries.GetGroupsByTournamentID;
 using TipsaNu.Application.Features.Tournaments.Queries.GetAll;
 using TipsaNu.Application.Features.Tournaments.Queries.GetById;
 
@@ -49,7 +49,7 @@ namespace TipsaNu.Api.Controllers
         [HttpGet("{tournamentId:int}/groups")]
         public async Task<IActionResult> GetGroupsByTournament(int tournamentId)
         {
-            var result = await _mediator.Send(new GetGroupsByTournamentQuery(tournamentId));
+            var result = await _mediator.Send(new GetGroupsByTournamentIdQuery(tournamentId));
 
             if (!result.IsSuccess)
                 return NotFound(new { message = result.ErrorMessage });

@@ -27,6 +27,8 @@ namespace TipsaNu.Infrastructure.Extensions
             services.AddScoped<IRefreshTokenService, RefreshTokenService>();
             services.AddScoped<IPasswordService, PasswordService>();
             services.AddScoped<IGroupRepository, GroupRepository>();
+            services.AddScoped<IMatchRepository, MatchRepository>();
+
 
             using (var serviceProvider = services.BuildServiceProvider())
             {
