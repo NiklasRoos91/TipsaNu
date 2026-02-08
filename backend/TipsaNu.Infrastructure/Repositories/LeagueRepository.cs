@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using TipsaNu.Application.Features.Leagues.DTOs;
 using TipsaNu.Domain.Entities;
 using TipsaNu.Domain.Interfaces;
 using TipsaNu.Infrastructure.Presistence;
@@ -71,6 +72,18 @@ namespace TipsaNu.Infrastructure.Repositories
             await _context.LeaderboardEntries.AddAsync(entry, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
             return entry;
+        }
+
+        public async Task<League?> GetLeagueWithMembersAndLeaderboardAsync(int leagueId, CancellationToken cancellationToken = default)
+        {
+            return await _context.Leagues
+                .AsNoTracking()
+                .Include(l => l.AdminUser)
+                .Include(l => l.Members)
+                    .ThenInclude(m => m.User)
+                .Include(l => l.Members)
+                    .ThenInclude(m => m.LeaderboardEntry)
+                .FirstOrDefaultAsync(l => l.LeagueId == leagueId, cancellationToken);
         }
     }
 }

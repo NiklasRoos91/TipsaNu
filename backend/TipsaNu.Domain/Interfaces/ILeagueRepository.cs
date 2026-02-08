@@ -12,6 +12,6 @@ namespace TipsaNu.Domain.Interfaces
         Task<int> GetMemberCountAsync(int leagueId, CancellationToken cancellationToken = default);
         Task<LeagueMember> AddLeagueMemberAsync(LeagueMember member, CancellationToken cancellationToken = default);
         Task<LeaderboardEntry> AddLeaderboardEntryAsync(LeaderboardEntry entry, CancellationToken cancellationToken = default);
-
+        Task<League?> GetLeagueWithMembersAndLeaderboardAsync(int leagueId, CancellationToken cancellationToken = default);
     }
 }
