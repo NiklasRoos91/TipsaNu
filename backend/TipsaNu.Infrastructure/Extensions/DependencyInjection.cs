@@ -31,6 +31,7 @@ namespace TipsaNu.Infrastructure.Extensions
             services.AddScoped<IGroupRepository, GroupRepository>();
             services.AddScoped<IMatchRepository, MatchRepository>();
             services.AddScoped<IGroupStandingRepository, GroupStandingRepository>();
+            services.AddScoped<IPredictionRepository, PredictionRepository>();
 
             services.AddHttpContextAccessor();
             services.AddScoped<ICurrentUserService, CurrentUserService>();

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TipsaNu.Application.Commons.Results;
 using TipsaNu.Application.Features.Matches.Commands.CreateMyPrediction;
-using TipsaNu.Application.Features.Matches.DTOs;
+using TipsaNu.Application.Features.Predictions.DTOs;
 
 namespace TipsaNu.Api.Controllers
 {
@@ -20,10 +20,10 @@ namespace TipsaNu.Api.Controllers
         }
 
         [HttpPost("{matchId}/predictions/mine")]
-        public async Task<IActionResult> CreateMyPrediction(int matchId, [FromBody] CreateMyPredictionRequestDto predictionDto)
+        public async Task<IActionResult> CreateMyPrediction(int matchId, [FromBody] CreateMyPredictionRequestDto predictionDto, CancellationToken cancellationToken)
         {
             var command = new CreateMyPredictionCommand(predictionDto, matchId);
-            var result = await _mediator.Send(command);
+            var result = await _mediator.Send(command, cancellationToken);
 
             if (!result.IsSuccess)
                 return BadRequest(result.ErrorMessages ?? new List<string> { result.ErrorMessage! });

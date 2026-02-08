@@ -19,9 +19,9 @@ namespace TipsaNu.Api.Controllers
         // GET /api/groups/{groupId}/matches
         // Retrieves all matches for a specific group.
         [HttpGet("{groupId:int}/matches")]
-        public async Task<IActionResult> GetMatchesByGroupId(int groupId)
+        public async Task<IActionResult> GetMatchesByGroupId(int groupId, CancellationToken cancellationToken)
         {
-            var result = await _mediator.Send(new GetMatchesByGroupIdQuery(groupId));
+            var result = await _mediator.Send(new GetMatchesByGroupIdQuery(groupId), cancellationToken);
 
             if (!result.IsSuccess)
             {
@@ -36,9 +36,9 @@ namespace TipsaNu.Api.Controllers
 
         // GET /api/groups/{groupId}/standings
         [HttpGet("{groupId:int}/standings")]
-        public async Task<IActionResult> GetGroupStandings(int groupId)
+        public async Task<IActionResult> GetGroupStandings(int groupId, CancellationToken cancellationToken)
         {
-            var result = await _mediator.Send(new GetGroupStandingsByGroupIdQuery(groupId));
+            var result = await _mediator.Send(new GetGroupStandingsByGroupIdQuery(groupId), cancellationToken);
 
             if (!result.IsSuccess)
             {

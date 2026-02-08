@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace TipsaNu.Application.Features.Matches.DTOs.Validators
+namespace TipsaNu.Application.Features.Predictions.DTOs.Validators
 {
     public class CreateMyPredictionRequestDtoValidator : AbstractValidator<CreateMyPredictionRequestDto>
     {

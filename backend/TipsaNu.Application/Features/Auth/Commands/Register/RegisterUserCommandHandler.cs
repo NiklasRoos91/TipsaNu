@@ -32,7 +32,7 @@ namespace TipsaNu.Application.Feature.Auth.Commands.Register
 
         public async Task<OperationResult<AuthResponseDto>> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
         {
-            var existingUser = await _userRepository.GetByEmailAsync(request.Request.Email);
+            var existingUser = await _userRepository.GetByEmailAsync(request.Request.Email, cancellationToken);
             if (existingUser != null)
                 return OperationResult<AuthResponseDto>.Failure("Email is already in use");
 
@@ -45,10 +45,10 @@ namespace TipsaNu.Application.Feature.Auth.Commands.Register
                 CreatedAt = DateTime.UtcNow
             };
 
-            await _genericInterface.AddAsync(user);
+            await _genericInterface.AddAsync(user, cancellationToken);
 
             var accessToken = _jwt.GenerateToken(user);
-            var refreshToken = await _refresh.CreateRefreshTokenAsync(user);
+            var refreshToken = await _refresh.CreateRefreshTokenAsync(user, cancellationToken);
 
             var response = new AuthResponseDto(accessToken, refreshToken.Token);
             return OperationResult<AuthResponseDto>.Success(response);

@@ -19,7 +19,7 @@ namespace TipsaNu.Application.Features.Groups.Queries.GetGroupsByTournamentID
 
         public async Task<OperationResult<List<GroupDto>>> Handle(GetGroupsByTournamentIdQuery request, CancellationToken cancellationToken)
         {
-            var groups = await _groupRepository.GetGroupsByTournamentIdAsync(request.TournamentId);
+            var groups = await _groupRepository.GetGroupsByTournamentIdAsync(request.TournamentId, cancellationToken);
 
             if (!groups.Any())
                 return OperationResult<List<GroupDto>>.Failure("No groups found for this tournament");

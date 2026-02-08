@@ -20,7 +20,7 @@ namespace TipsaNu.Application.Features.Tournaments.Queries.GetById
 
         public async Task<OperationResult<TournamentDto>> Handle(GetTournamentByIdQuery request, CancellationToken cancellationToken)
         {
-            var tournament = await _tournamentRepository.GetByIdAsync(request.TournamentId);
+            var tournament = await _tournamentRepository.GetByIdAsync(request.TournamentId, cancellationToken);
 
             if (tournament == null)
                 return OperationResult<TournamentDto>.Failure("Tournament not found");

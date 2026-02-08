@@ -1,4 +1,4 @@
-﻿namespace TipsaNu.Application.Features.Matches.DTOs
+﻿namespace TipsaNu.Application.Features.Predictions.DTOs
 {
     public class CreateMyPredictionRequestDto
     {

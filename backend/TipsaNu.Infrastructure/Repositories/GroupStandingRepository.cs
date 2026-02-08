@@ -14,12 +14,12 @@ namespace TipsaNu.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<List<GroupStanding>> GetGroupStandingsByGroupIdAsync(int groupId)
+        public async Task<List<GroupStanding>> GetGroupStandingsByGroupIdAsync(int groupId, CancellationToken cancellationToken = default)
         {
             return await _context.GroupStandings
                                  .Where(s => s.GroupId == groupId)
                                  .Include(s => s.Competitor)
-                                 .ToListAsync();
+                                 .ToListAsync(cancellationToken);
         }
     }
 }

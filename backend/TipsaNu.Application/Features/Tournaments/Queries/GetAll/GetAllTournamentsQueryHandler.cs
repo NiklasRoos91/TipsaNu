@@ -20,7 +20,7 @@ namespace TipsaNu.Application.Features.Tournaments.Queries.GetAll
 
         public async Task<OperationResult<List<TournamentDto>>> Handle(GetAllTournamentsQuery request, CancellationToken cancellationToken)
         {
-            var tournaments = await _tournamentRepository.GetAllAsync();
+            var tournaments = await _tournamentRepository.GetAllAsync(cancellationToken);
 
             var dtoList = _mapper.Map<List<TournamentDto>>(tournaments);
 

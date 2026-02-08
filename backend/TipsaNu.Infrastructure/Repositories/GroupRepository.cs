@@ -14,11 +14,11 @@ namespace TipsaNu.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Group>> GetGroupsByTournamentIdAsync(int tournamentId)
+        public async Task<IEnumerable<Group>> GetGroupsByTournamentIdAsync(int tournamentId, CancellationToken cancellationToken = default)
         {
             return await _context.Groups
                                  .Where(g => g.TournamentId == tournamentId)
-                                 .ToListAsync();
+                                 .ToListAsync(cancellationToken);
         }
     }
 }

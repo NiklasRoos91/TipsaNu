@@ -2,13 +2,13 @@
 using MediatR;
 using TipsaNu.Application.Commons.Interfaces;
 using TipsaNu.Application.Commons.Results;
-using TipsaNu.Application.Features.Matches.DTOs;
+using TipsaNu.Application.Features.Predictions.DTOs;
 using TipsaNu.Domain.Entities;
 using TipsaNu.Domain.Interfaces;
 
 namespace TipsaNu.Application.Features.Matches.Commands.CreateMyPrediction
 {
-    public class CreatePredictionHandler : IRequestHandler<CreateMyPredictionCommand, OperationResult<PredictionDto>>
+    public class CreatePredictionHandler : IRequestHandler<CreateMyPredictionCommand, OperationResult<MatchPredictionDto>>
     {
         private readonly IGenericRepository<Prediction> _predictionRepository;
         private readonly IGenericRepository<Match> _matchRepository;
@@ -27,18 +27,18 @@ namespace TipsaNu.Application.Features.Matches.Commands.CreateMyPrediction
             _mapper = mapper;
         }
 
-        public async Task<OperationResult<PredictionDto>> Handle(CreateMyPredictionCommand request, CancellationToken cancellationToken)
+        public async Task<OperationResult<MatchPredictionDto>> Handle(CreateMyPredictionCommand request, CancellationToken cancellationToken)
         {
             var userId = _currentUser.UserId;
             if (userId <= 0)
-                return OperationResult<PredictionDto>.Failure("Unauthorized");
+                return OperationResult<MatchPredictionDto>.Failure("Unauthorized");
 
-            var match = await _matchRepository.GetByIdAsync(request.MatchId);
+            var match = await _matchRepository.GetByIdAsync(request.MatchId, cancellationToken);
             if (match == null)
-                return OperationResult<PredictionDto>.Failure("Match not found");
+                return OperationResult<MatchPredictionDto>.Failure("Match not found");
 
             if (match.PredictionDeadline.HasValue && match.PredictionDeadline < DateTime.UtcNow)
-                return OperationResult<PredictionDto>.Failure("Prediction deadline has passed");
+                return OperationResult<MatchPredictionDto>.Failure("Prediction deadline has passed");
 
             var prediction = new Prediction
             {
@@ -46,19 +46,20 @@ namespace TipsaNu.Application.Features.Matches.Commands.CreateMyPrediction
                 UserId = userId,
                 PredictedHomeScore = request.Prediction.PredictedHomeScore,
                 PredictedAwayScore = request.Prediction.PredictedAwayScore,
-                SubmittedAt = DateTime.UtcNow
+                SubmittedAt = DateTime.UtcNow,
+                PredictedWinnerId = request.Prediction.PredictedHomeScore > request.Prediction.PredictedAwayScore
+                    ? match.HomeCompetitorId
+                    : request.Prediction.PredictedAwayScore > request.Prediction.PredictedHomeScore
+                        ? match.AwayCompetitorId
+                        : (int?)null
             };
 
-            prediction.PredictedWinnerId = request.Prediction.PredictedHomeScore > request.Prediction.PredictedAwayScore
-                ? match.HomeCompetitorId
-                : request.Prediction.PredictedAwayScore > request.Prediction.PredictedHomeScore
-                    ? match.AwayCompetitorId
-                    : (int?)null;
+            await _predictionRepository.AddAsync(prediction, cancellationToken);
 
-            await _predictionRepository.AddAsync(prediction);
+            prediction.Match = match;
 
-            var dto = _mapper.Map<PredictionDto>(prediction);
-            return OperationResult<PredictionDto>.Success(dto);
+            var dto = _mapper.Map<MatchPredictionDto>(prediction);
+            return OperationResult<MatchPredictionDto>.Success(dto);
         }
     }
 }

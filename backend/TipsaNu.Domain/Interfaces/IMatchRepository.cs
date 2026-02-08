@@ -4,6 +4,6 @@ namespace TipsaNu.Domain.Interfaces
 {
     public interface IMatchRepository
     {
-        Task<List<Match>> GetMatchesByGroupIdAsync(int groupId);
+        Task<List<Match>> GetMatchesByGroupIdAsync(int groupId, CancellationToken cancellationToken = default);
     }
 }

@@ -14,7 +14,7 @@ namespace TipsaNu.Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task<List<Match>> GetMatchesByGroupIdAsync(int groupId)
+        public async Task<List<Match>> GetMatchesByGroupIdAsync(int groupId, CancellationToken cancellationToken = default)
         {
             return await _context.Matches
                 .Where(m => m.GroupId == groupId)
@@ -22,7 +22,7 @@ namespace TipsaNu.Infrastructure.Repositories
                 .Include(m => m.AwayCompetitor)
                 .Include(m => m.WinnerCompetitor)
                 .OrderBy(m => m.StartTime)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
         }
     }
 }

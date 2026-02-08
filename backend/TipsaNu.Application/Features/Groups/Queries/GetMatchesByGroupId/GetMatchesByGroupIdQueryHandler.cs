@@ -20,7 +20,7 @@ namespace TipsaNu.Application.Features.Groups.Queries.GetMatchesByGroupId
 
         public async Task<OperationResult<List<MatchDto>>> Handle(GetMatchesByGroupIdQuery request, CancellationToken cancellationToken)
         {
-            var matches = await _matchRepository.GetMatchesByGroupIdAsync(request.GroupId);
+            var matches = await _matchRepository.GetMatchesByGroupIdAsync(request.GroupId, cancellationToken);
 
             if (!matches.Any())
                 return OperationResult<List<MatchDto>>.Failure("No matches found for this group");
