@@ -26,6 +26,7 @@ namespace TipsaNu.Application.Extensions
 
             services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
             services.AddScoped<IPointsCalculatorService, PointsCalculatorService>();
+            services.AddScoped<ILeagueMemberService, LeagueMemberService>();
 
             return services;
         }
