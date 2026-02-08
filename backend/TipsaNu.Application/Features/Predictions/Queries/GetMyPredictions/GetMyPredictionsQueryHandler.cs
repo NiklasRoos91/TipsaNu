@@ -8,13 +8,13 @@ using TipsaNu.Domain.Interfaces;
 
 namespace TipsaNu.Application.Features.Predictions.Queries.GetMyPredictions
 {
-    public class GetMyPredictionsHandler : IRequestHandler<GetMyPredictionsQuery, OperationResult<List<MatchPredictionDto>>>
+    public class GetMyPredictionsQueryHandler : IRequestHandler<GetMyPredictionsQuery, OperationResult<List<MatchPredictionDto>>>
     {
         private readonly IPredictionRepository _predictionRepository;
         private readonly ICurrentUserService _currentUser;
         private readonly IMapper _mapper;
 
-        public GetMyPredictionsHandler(
+        public GetMyPredictionsQueryHandler(
             IPredictionRepository predictionRepository,
             ICurrentUserService currentUser,
             IMapper mapper)

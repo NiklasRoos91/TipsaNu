@@ -19,6 +19,8 @@ namespace TipsaNu.Api.Controllers
             _mediator = mediator;
         }
 
+        // POST /api/matches/{matchId}/predictions/mine
+        // Creates the authenticated user's prediction for a specific match.
         [HttpPost("{matchId}/predictions/mine")]
         public async Task<IActionResult> CreateMyPrediction(int matchId, [FromBody] CreateMyPredictionRequestDto predictionDto, CancellationToken cancellationToken)
         {

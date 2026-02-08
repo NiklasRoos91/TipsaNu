@@ -1,6 +1,6 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using TipsaNu.Application.Features.Predictions.Queries.GetMyPredictionForMatch;
 using TipsaNu.Application.Features.Predictions.Queries.GetMyPredictions;
 
 namespace TipsaNu.Api.Controllers
@@ -16,10 +16,8 @@ namespace TipsaNu.Api.Controllers
             _mediator = mediator;
         }
 
-        /// <summary>
-        /// Get all predictions of the currently authenticated user
-        /// GET /api/predictions/me
-        /// </summary>
+        // GET /api/predictions/me
+        // Get all predictions of the currently authenticated user
         [HttpGet("me")]
         public async Task<IActionResult> GetMyPredictions(CancellationToken cancellationToken)
         {
@@ -28,6 +26,20 @@ namespace TipsaNu.Api.Controllers
 
             if (!result.IsSuccess)
                 return BadRequest(result.ErrorMessages ?? new List<string> { result.ErrorMessage! });
+
+            return Ok(result.Data);
+        }
+
+        // GET /api/predictions/{matchId}/me
+        // Get the prediction of the currently authenticated user for a specific match
+        [HttpGet("{matchId}/me")]
+        public async Task<IActionResult> GetMyPredictionForMatch(int matchId)
+        {
+            var query = new GetMyPredictionForMatchQuery(matchId);
+            var result = await _mediator.Send(query);
+
+            if (!result.IsSuccess)
+                return NotFound(result.ErrorMessage);
 
             return Ok(result.Data);
         }

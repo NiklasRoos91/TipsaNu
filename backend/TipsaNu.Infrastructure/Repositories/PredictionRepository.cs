@@ -25,5 +25,16 @@ namespace TipsaNu.Infrastructure.Repositories
                 .OrderByDescending(p => p.SubmittedAt)
                 .ToListAsync(cancellationToken);
         }
+
+        public async Task<Prediction?> GetPredictionForUserAndMatchAsync(int userId, int matchId, CancellationToken cancellationToken = default)
+        {
+            return await _context.Predictions
+                .Where(p => p.UserId == userId && p.MatchId == matchId)
+                .Include(p => p.Match)
+                    .ThenInclude(m => m.HomeCompetitor)
+                .Include(p => p.Match)
+                    .ThenInclude(m => m.AwayCompetitor)
+                .FirstOrDefaultAsync(cancellationToken);
+        }
     }
 }
