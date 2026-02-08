@@ -2,8 +2,8 @@
 using TipsaNu.Application.Commons.Results;
 using TipsaNu.Application.Features.Groups.DTOs;
 
-namespace TipsaNu.Application.Features.Groups.Queries
+namespace TipsaNu.Application.Features.Groups.Queries.GetGroupsByTournamentID
 {
-    public record GetGroupsByTournamentQuery(int TournamentId)
+    public record GetGroupsByTournamentIdQuery(int TournamentId)
         : IRequest<OperationResult<List<GroupDto>>>;
 }

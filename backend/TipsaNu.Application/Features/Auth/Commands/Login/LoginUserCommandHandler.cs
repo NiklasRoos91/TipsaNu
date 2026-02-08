@@ -27,7 +27,7 @@ namespace TipsaNu.Application.Features.Auth.Commands.Login
 
         public async Task<OperationResult<AuthResponseDto>> Handle(LoginUserCommand request, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetByEmailAsync(request.Request.Email);
+            var user = await _userRepository.GetByEmailAsync(request.Request.Email, cancellationToken);
             if (user == null || !_passwordService.Verify(user.PasswordHash, request.Request.Password))
                 return OperationResult<AuthResponseDto>.Failure("Wrong email or password");
 

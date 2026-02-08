@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using TipsaNu.Application.Features.Groups.Queries;
+using TipsaNu.Application.Features.Groups.Queries.GetGroupsByTournamentID;
 using TipsaNu.Application.Features.Tournaments.Queries.GetAll;
 using TipsaNu.Application.Features.Tournaments.Queries.GetById;
 
@@ -20,9 +20,9 @@ namespace TipsaNu.Api.Controllers
         // GET /api/Tournaments
         // Retrieves all tournaments.
         [HttpGet]
-        public async Task<IActionResult> GetAllTournaments()
+        public async Task<IActionResult> GetAllTournaments(CancellationToken cancellationToken)
         {
-            var result = await _mediator.Send(new GetAllTournamentsQuery());
+            var result = await _mediator.Send(new GetAllTournamentsQuery(), cancellationToken);
 
             if (!result.IsSuccess)
                 return BadRequest(new { errors = result.ErrorMessages ?? new List<string> { result.ErrorMessage ?? "Unknown error" } });
@@ -34,9 +34,9 @@ namespace TipsaNu.Api.Controllers
         // GET /api/Tournaments/{id}
         // Retrieves a specific tournament by its Id.
         [HttpGet("{tournamentId:int}")]
-        public async Task<IActionResult> GetTournamentById(int tournamentId)
+        public async Task<IActionResult> GetTournamentById(int tournamentId, CancellationToken cancellationToken)
         {
-            var result = await _mediator.Send(new GetTournamentByIdQuery(tournamentId));
+            var result = await _mediator.Send(new GetTournamentByIdQuery(tournamentId), cancellationToken);
 
             if (!result.IsSuccess)
                 return NotFound(new { message = result.ErrorMessage });
@@ -47,9 +47,9 @@ namespace TipsaNu.Api.Controllers
         // GET /api/tournaments/{tournamentId}/groups
         // Retrieves all groups for a specific tournament.
         [HttpGet("{tournamentId:int}/groups")]
-        public async Task<IActionResult> GetGroupsByTournament(int tournamentId)
+        public async Task<IActionResult> GetGroupsByTournament(int tournamentId, CancellationToken cancellationToken)
         {
-            var result = await _mediator.Send(new GetGroupsByTournamentQuery(tournamentId));
+            var result = await _mediator.Send(new GetGroupsByTournamentIdQuery(tournamentId), cancellationToken);
 
             if (!result.IsSuccess)
                 return NotFound(new { message = result.ErrorMessage });

@@ -1,8 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading;
+using TipsaNu.Application.Feature.Auth.Commands.Register;
 using TipsaNu.Application.Features.Auth.Commands.Login;
 using TipsaNu.Application.Features.Auth.Commands.RefreshToken;
-using TipsaNu.Application.Feature.Auth.Commands.Register;
 using TipsaNu.Application.Features.Auth.DTOs;
 
 namespace TipsaNu.Api.Controllers
@@ -19,10 +20,10 @@ namespace TipsaNu.Api.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterRequestDto request)
+        public async Task<IActionResult> Register([FromBody] RegisterRequestDto request, CancellationToken cancellationToken)
         {
             var command = new RegisterUserCommand(request);
-            var result = await _mediator.Send(command);
+            var result = await _mediator.Send(command, cancellationToken);
 
             if (!result.IsSuccess)
                 return BadRequest(result.ErrorMessages);
@@ -31,10 +32,10 @@ namespace TipsaNu.Api.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequestDto request)
+        public async Task<IActionResult> Login([FromBody] LoginRequestDto request, CancellationToken cancellationToken)
         {
             var command = new LoginUserCommand(request);
-            var result = await _mediator.Send(command);
+            var result = await _mediator.Send(command, cancellationToken);
 
             if (!result.IsSuccess)
                 return Unauthorized(result.ErrorMessages);
@@ -43,9 +44,9 @@ namespace TipsaNu.Api.Controllers
         }
 
         [HttpPost("refresh")]
-        public async Task<IActionResult> Refresh([FromBody] RefreshTokenRequestDto request)
+        public async Task<IActionResult> Refresh([FromBody] RefreshTokenRequestDto request, CancellationToken cancellationToken)
         {
-            var result = await _mediator.Send(new RefreshTokenCommand(request));
+            var result = await _mediator.Send(new RefreshTokenCommand(request), cancellationToken);
 
             if (!result.IsSuccess)
                 return Unauthorized(result.ErrorMessages);

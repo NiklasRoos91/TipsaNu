@@ -1,12 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using TipsaNu.Application.Commons.Interfaces;
 using TipsaNu.Application.Features.Auth.Interfaces;
 using TipsaNu.Domain.Interfaces;
 using TipsaNu.Infrastructure.Auth;
 using TipsaNu.Infrastructure.Persistence.Seeders;
 using TipsaNu.Infrastructure.Presistence;
 using TipsaNu.Infrastructure.Repositories;
+using TipsaNu.Infrastructure.Services;
 
 namespace TipsaNu.Infrastructure.Extensions
 {
@@ -27,6 +29,14 @@ namespace TipsaNu.Infrastructure.Extensions
             services.AddScoped<IRefreshTokenService, RefreshTokenService>();
             services.AddScoped<IPasswordService, PasswordService>();
             services.AddScoped<IGroupRepository, GroupRepository>();
+            services.AddScoped<IMatchRepository, MatchRepository>();
+            services.AddScoped<IGroupStandingRepository, GroupStandingRepository>();
+            services.AddScoped<IPredictionRepository, PredictionRepository>();
+            services.AddScoped<IPointRuleRepository, PointRuleRepository>();
+
+            services.AddHttpContextAccessor();
+            services.AddScoped<ICurrentUserService, CurrentUserService>();
+
 
             using (var serviceProvider = services.BuildServiceProvider())
             {

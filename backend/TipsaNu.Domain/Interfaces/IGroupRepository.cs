@@ -4,7 +4,6 @@ namespace TipsaNu.Domain.Interfaces
 {
     public interface IGroupRepository
     {
-        Task<IEnumerable<Group>> GetGroupsByTournamentIdAsync(int tournamentId);
-        Task<Group?> GetGroupByIdAsync(int groupId);
+        Task<IEnumerable<Group>> GetGroupsByTournamentIdAsync(int tournamentId, CancellationToken cancellationToken = default);
     }
 }
