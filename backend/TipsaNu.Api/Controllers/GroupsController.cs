@@ -35,6 +35,7 @@ namespace TipsaNu.Api.Controllers
         }
 
         // GET /api/groups/{groupId}/standings
+        // Retrieves the current standings for a specific group.
         [HttpGet("{groupId:int}/standings")]
         public async Task<IActionResult> GetGroupStandings(int groupId, CancellationToken cancellationToken)
         {

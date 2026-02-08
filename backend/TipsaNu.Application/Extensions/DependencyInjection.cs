@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TipsaNu.Application.Behaviors;
+using TipsaNu.Application.Services.Implementations;
+using TipsaNu.Application.Services.Interfaces;
 using TipsaNu.Domain.Entities;
 
 
@@ -23,6 +25,7 @@ namespace TipsaNu.Application.Extensions
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
 
             services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+            services.AddScoped<IPointsCalculatorService, PointsCalculatorService>();
 
             return services;
         }

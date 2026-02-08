@@ -31,5 +31,11 @@ namespace TipsaNu.Infrastructure.Repositories
                 .Include(m => m.AwayCompetitor)
                 .FirstOrDefaultAsync(m => m.MatchId == matchId, cancellationToken);
         }
+        public async Task<Match?> GetMatchWithTournamentAsync(int matchId, CancellationToken cancellationToken = default)
+        {
+            return await _context.Matches
+                .Include(m => m.Tournament)
+                .FirstOrDefaultAsync(m => m.MatchId == matchId, cancellationToken);
+        }
     }
 }
