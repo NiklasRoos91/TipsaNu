@@ -6,9 +6,9 @@ using TipsaNu.Application.Features.Matches.DTOs;
 using TipsaNu.Domain.Entities;
 using TipsaNu.Domain.Interfaces;
 
-namespace TipsaNu.Application.Features.Matches.Commands.CreatePrediction
+namespace TipsaNu.Application.Features.Matches.Commands.CreateMyPrediction
 {
-    public class CreatePredictionHandler : IRequestHandler<CreatePredictionCommand, OperationResult<PredictionDto>>
+    public class CreatePredictionHandler : IRequestHandler<CreateMyPredictionCommand, OperationResult<PredictionDto>>
     {
         private readonly IGenericRepository<Prediction> _predictionRepository;
         private readonly IGenericRepository<Match> _matchRepository;
@@ -27,7 +27,7 @@ namespace TipsaNu.Application.Features.Matches.Commands.CreatePrediction
             _mapper = mapper;
         }
 
-        public async Task<OperationResult<PredictionDto>> Handle(CreatePredictionCommand request, CancellationToken cancellationToken)
+        public async Task<OperationResult<PredictionDto>> Handle(CreateMyPredictionCommand request, CancellationToken cancellationToken)
         {
             var userId = _currentUser.UserId;
             if (userId <= 0)

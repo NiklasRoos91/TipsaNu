@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 
-namespace TipsaNu.Application.Features.Matches.Commands.CreatePrediction
+namespace TipsaNu.Application.Features.Matches.Commands.CreateMyPrediction
 {
-    public class CreatePredictionCommandValidator : AbstractValidator<CreatePredictionCommand>
+    public class CreateMyPredictionCommandValidator : AbstractValidator<CreateMyPredictionCommand>
     {
-        public CreatePredictionCommandValidator()
+        public CreateMyPredictionCommandValidator()
         {
             RuleFor(x => x.MatchId).GreaterThan(0);
 
