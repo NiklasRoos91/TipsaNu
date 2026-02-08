@@ -41,7 +41,8 @@ namespace TipsaNu.Application.Feature.Auth.Commands.Register
                 Email = request.Request.Email,
                 Username = request.Request.Username,
                 Role = UserRoleEnum.User,
-                PasswordHash = _passwordService.Hash(request.Request.Password)
+                PasswordHash = _passwordService.Hash(request.Request.Password),
+                CreatedAt = DateTime.UtcNow
             };
 
             await _genericInterface.AddAsync(user);
