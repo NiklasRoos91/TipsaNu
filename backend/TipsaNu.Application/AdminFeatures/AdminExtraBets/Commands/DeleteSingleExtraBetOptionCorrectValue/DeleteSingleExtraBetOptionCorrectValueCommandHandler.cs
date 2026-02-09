@@ -7,7 +7,7 @@ using TipsaNu.Domain.Interfaces;
 namespace TipsaNu.Application.AdminFeatures.AdminExtraBets.Commands.DeleteSingleExtraBetOptionCorrectValue
 {
     public class DeleteSingleExtraBetOptionCorrectValueCommandHandler
-        : IRequestHandler<DeleteSingleExtraBetOptionCorrectValueCommand, OperationResult<Unit>>
+        : IRequestHandler<DeleteSingleExtraBetOptionCorrectValueCommand, OperationResult<bool>>
     {
         private readonly IGenericRepository<ExtraBetOptionCorrectValue> _repository;
         private readonly IMediator _mediator;
@@ -20,19 +20,19 @@ namespace TipsaNu.Application.AdminFeatures.AdminExtraBets.Commands.DeleteSingle
             _mediator = mediator;
         }
 
-        public async Task<OperationResult<Unit>> Handle(
+        public async Task<OperationResult<bool>> Handle(
             DeleteSingleExtraBetOptionCorrectValueCommand request,
             CancellationToken cancellationToken)
         {
             var entity = await _repository.GetByIdAsync(request.CorrectValueId, cancellationToken);
             if (entity == null)
-                return OperationResult<Unit>.Failure("CorrectValue not found.");
+                return OperationResult<bool>.Failure("CorrectValue not found.");
 
             await _repository.DeleteAsync(entity.CorrectValueId, cancellationToken);
 
             await _mediator.Publish(new ExtraBetOptionCorrectValuesUpdatedEvent(entity.OptionId), cancellationToken);
 
-            return OperationResult<Unit>.Success(Unit.Value);
+            return OperationResult<bool>.Success(true);
         }
     }
 }

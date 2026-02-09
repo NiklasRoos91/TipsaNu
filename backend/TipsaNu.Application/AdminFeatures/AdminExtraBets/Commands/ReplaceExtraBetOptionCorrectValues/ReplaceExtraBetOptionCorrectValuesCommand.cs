@@ -4,5 +4,5 @@ using TipsaNu.Application.Commons.Results;
 
 namespace TipsaNu.Application.AdminFeatures.AdminExtraBets.Commands.ReplaceExtraBetOptionCorrectValues
 {
-    public record ReplaceExtraBetOptionCorrectValuesCommand(int OptionId, SetExtraBetOptionCorrectValuesDto SetExtraBetOptionCorrectValuesDto) : IRequest<OperationResult<Unit>>;
+    public record ReplaceExtraBetOptionCorrectValuesCommand(int OptionId, SetExtraBetOptionCorrectValuesDto SetExtraBetOptionCorrectValuesDto) : IRequest<OperationResult<bool>>;
 }

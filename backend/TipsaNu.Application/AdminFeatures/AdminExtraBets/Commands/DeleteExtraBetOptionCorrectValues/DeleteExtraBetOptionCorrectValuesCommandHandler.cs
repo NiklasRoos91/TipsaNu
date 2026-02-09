@@ -6,7 +6,7 @@ using TipsaNu.Domain.Interfaces;
 namespace TipsaNu.Application.AdminFeatures.AdminExtraBets.Commands.DeleteExtraBetOptionCorrectValues
 {
     public class DeleteExtraBetOptionCorrectValuesCommandHandler
-    : IRequestHandler<DeleteExtraBetOptionCorrectValuesCommand, OperationResult<Unit>>
+    : IRequestHandler<DeleteExtraBetOptionCorrectValuesCommand, OperationResult<bool>>
     {
         private readonly IExtraBetRepository _extraBetRepository;
         private readonly IMediator _mediator;
@@ -17,18 +17,18 @@ namespace TipsaNu.Application.AdminFeatures.AdminExtraBets.Commands.DeleteExtraB
             _mediator = mediator;
         }
 
-        public async Task<OperationResult<Unit>> Handle(DeleteExtraBetOptionCorrectValuesCommand request, CancellationToken cancellationToken)
+        public async Task<OperationResult<bool>> Handle(DeleteExtraBetOptionCorrectValuesCommand request, CancellationToken cancellationToken)
         {
             var existingValues = await _extraBetRepository.GetCorrectValuesByOptionIdAsync(request.OptionId, cancellationToken);
 
             if (!existingValues.Any())
-                return OperationResult<Unit>.Failure("No correct values found to delete.");
+                return OperationResult<bool>.Failure("No correct values found to delete.");
 
             await _extraBetRepository.RemoveCorrectValuesAsync(request.OptionId, cancellationToken);
 
             await _mediator.Publish(new ExtraBetOptionCorrectValuesUpdatedEvent(request.OptionId), cancellationToken);
 
-            return OperationResult<Unit>.Success(Unit.Value);
+            return OperationResult<bool>.Success(true);
         }
     }
 }

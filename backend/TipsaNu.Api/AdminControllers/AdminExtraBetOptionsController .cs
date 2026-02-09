@@ -106,7 +106,7 @@ namespace TipsaNu.Api.AdminControllers
             if (!result.IsSuccess)
                 return BadRequest(new { message = result.ErrorMessage });
 
-            return Ok(result.Data);
+            return NoContent();
         }
     }
 }

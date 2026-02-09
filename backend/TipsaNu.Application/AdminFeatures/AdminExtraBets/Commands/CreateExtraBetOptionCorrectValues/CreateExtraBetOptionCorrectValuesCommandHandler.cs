@@ -7,7 +7,7 @@ using TipsaNu.Domain.Interfaces;
 namespace TipsaNu.Application.AdminFeatures.AdminExtraBets.Commands.CreateExtraBetOptionCorrectValues
 {
     public class CreateExtraBetOptionCorrectValuesCommandHandler
-            : IRequestHandler<CreateExtraBetOptionCorrectValuesCommand, OperationResult<Unit>>
+            : IRequestHandler<CreateExtraBetOptionCorrectValuesCommand, OperationResult<bool>>
     {
         private readonly IExtraBetRepository _extraBetRepository;
         private readonly IGenericRepository<ExtraBetOption> _genericExtraBetOptionRepository;
@@ -20,15 +20,15 @@ namespace TipsaNu.Application.AdminFeatures.AdminExtraBets.Commands.CreateExtraB
             _mediator = mediator;
         }
 
-        public async Task<OperationResult<Unit>> Handle(CreateExtraBetOptionCorrectValuesCommand request, CancellationToken cancellationToken)
+        public async Task<OperationResult<bool>> Handle(CreateExtraBetOptionCorrectValuesCommand request, CancellationToken cancellationToken)
         {
             var option = await _genericExtraBetOptionRepository.GetByIdAsync(request.OptionId, cancellationToken);
             if (option == null)
-                return OperationResult<Unit>.Failure("ExtraBetOption not found");
+                return OperationResult<bool>.Failure("ExtraBetOption not found");
 
             var existingValues = await _extraBetRepository.GetCorrectValuesByOptionIdAsync(request.OptionId, cancellationToken);
             if (existingValues.Any())
-                return OperationResult<Unit>.Failure("Correct values already exist, use PATCH to update.");
+                return OperationResult<bool>.Failure("Correct values already exist, use PATCH to update.");
 
             foreach (var value in request.SetExtraBetOptionCorrectValuesDto.CorrectValues)
             {
@@ -37,7 +37,7 @@ namespace TipsaNu.Application.AdminFeatures.AdminExtraBets.Commands.CreateExtraB
 
             await _mediator.Publish(new ExtraBetOptionCorrectValuesUpdatedEvent(request.OptionId), cancellationToken);
 
-            return OperationResult<Unit>.Success(Unit.Value);
+            return OperationResult<bool>.Success(true);
         }
     }
 }
