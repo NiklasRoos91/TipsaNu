@@ -24,29 +24,29 @@ namespace TipsaNu.Application.AdminFeatures.AdminExtraBets.Commands.CreateExtraB
         public async Task<OperationResult<ExtraBetOptionDto>> Handle(
             CreateExtraBetOptionCommand request, CancellationToken cancellationToken)
         {
-            if (request.Dto.Points < 0)
+            if (request.CreateExtraBetOptionDto.Points < 0)
                 return OperationResult<ExtraBetOptionDto>.Failure("Points must be >= 0");
 
-            var tournament = await _genericTournamentRepository.GetByIdAsync(request.Dto.TournamentId, cancellationToken);
+            var tournament = await _genericTournamentRepository.GetByIdAsync(request.CreateExtraBetOptionDto.TournamentId, cancellationToken);
             if (tournament == null)
                 return OperationResult<ExtraBetOptionDto>.Failure("Tournament not found");
 
             var newOption = new ExtraBetOption
             {
-                TournamentId = request.Dto.TournamentId,
-                MatchId = request.Dto.MatchId,
-                Name = request.Dto.Name,
-                Description = request.Dto.Description,
-                Points = request.Dto.Points,
-                ExpiresAt = request.Dto.ExpiresAt,
-                AllowCustomChoice = request.Dto.AllowCustomChoice
+                TournamentId = request.CreateExtraBetOptionDto.TournamentId,
+                MatchId = request.CreateExtraBetOptionDto.MatchId,
+                Name = request.CreateExtraBetOptionDto.Name,
+                Description = request.CreateExtraBetOptionDto.Description,
+                Points = request.CreateExtraBetOptionDto.Points,
+                ExpiresAt = request.CreateExtraBetOptionDto.ExpiresAt,
+                AllowCustomChoice = request.CreateExtraBetOptionDto.AllowCustomChoice
             };
 
             var createdOption = await _extraBetsRepository.AddExtraBetOptionAsync(newOption, cancellationToken);
 
-            if (request.Dto.Choices != null)
+            if (request.CreateExtraBetOptionDto.Choices != null)
             {
-                foreach (var choice in request.Dto.Choices)
+                foreach (var choice in request.CreateExtraBetOptionDto.Choices)
                 {
                     await _extraBetsRepository.AddExtraBetOptionChoiceAsync(createdOption.OptionId, choice, cancellationToken);
                 }

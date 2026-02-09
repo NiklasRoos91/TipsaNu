@@ -5,6 +5,6 @@ using TipsaNu.Application.Features.ExtraBets.DTOs;
 
 namespace TipsaNu.Application.AdminFeatures.AdminExtraBets.Commands.CreateExtraBetOption
 {
-    public record CreateExtraBetOptionCommand(CreateExtraBetOptionDto Dto)
+    public record CreateExtraBetOptionCommand(CreateExtraBetOptionDto CreateExtraBetOptionDto)
         : IRequest<OperationResult<ExtraBetOptionDto>>;
 }

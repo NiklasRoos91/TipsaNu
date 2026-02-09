@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TipsaNu.Application.AdminFeatures.AdminExtraBets.Commands.CreateExtraBetOption;
+using TipsaNu.Application.AdminFeatures.AdminExtraBets.Commands.SetExtraBetOptionCorrectValues;
 using TipsaNu.Application.AdminFeatures.AdminExtraBets.DTOs;
 
 namespace TipsaNu.Api.AdminControllers
@@ -29,6 +30,22 @@ namespace TipsaNu.Api.AdminControllers
                 return BadRequest(new { message = result.ErrorMessage });
 
             return Ok(result.Data);
+        }
+
+        // POST: api/admin/extrabets/options/{optionId}/correct-values
+        // Sets the correct values for an ExtraBetOption. If values already exist, frontend should PATCH instead.
+        [HttpPost("{optionId}/correct-values")]
+        public async Task<IActionResult> SetCorrectValues(
+            int optionId,
+            [FromBody] SetExtraBetOptionCorrectValuesDto dto,
+            CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(new SetExtraBetOptionCorrectValuesCommand(optionId, dto), cancellationToken);
+
+            if (!result.IsSuccess)
+                return BadRequest(new { message = result.ErrorMessage });
+
+            return Ok();
         }
     }
 }

@@ -69,5 +69,43 @@ namespace TipsaNu.Infrastructure.Repositories
                 .AsNoTracking()
                 .AnyAsync(b => b.UserId == userId && b.OptionId == optionId, cancellationToken);
         }
+
+        // This method retrieves all correct values associated with a specific extra bet option.
+        public async Task<List<ExtraBetOptionCorrectValue>> GetCorrectValuesByOptionIdAsync(int optionId, CancellationToken cancellationToken = default)
+        {
+            return await _context.ExtraBetOptionCorrectValues
+                .Where(c => c.OptionId == optionId)
+                .ToListAsync(cancellationToken);
+        }
+
+        // This method adds a new correct value for a specific extra bet option.
+        public async Task<ExtraBetOptionCorrectValue> AddCorrectValueAsync(int optionId, string value, CancellationToken cancellationToken = default)
+        {
+            var correctValue = new ExtraBetOptionCorrectValue
+            {
+                OptionId = optionId,
+                Value = value.Trim()
+            };
+            await _context.ExtraBetOptionCorrectValues.AddAsync(correctValue, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
+            return correctValue;
+        }
+
+        // This method retrieves all bets placed on a specific extra bet option, including the details of the option for each bet.
+        public async Task<List<ExtraBet>> GetBetsByOptionIdAsync(int optionId, CancellationToken cancellationToken = default)
+        {
+            return await _context.ExtraBets
+                .Where(b => b.OptionId == optionId)
+                .Include(b => b.ExtraBetOption)
+                .ToListAsync(cancellationToken);
+        }
+
+        // This method updates a list of extra bets in the database.
+        // It takes a list of ExtraBet entities and a cancellation token as parameters,
+        public async Task UpdateRangeAsync(List<ExtraBet> bets, CancellationToken cancellationToken = default)
+        {
+            _context.ExtraBets.UpdateRange(bets);
+            await _context.SaveChangesAsync(cancellationToken);
+        }
     }
 }
