@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
-using TipsaNu.Application.AdminFeatures.AdminExtraBets.DTOs;
 using TipsaNu.Application.Commons.Results;
+using TipsaNu.Application.Features.ExtraBets.DTOs;
 using TipsaNu.Domain.Entities;
 using TipsaNu.Domain.Interfaces;
 
@@ -10,40 +10,45 @@ namespace TipsaNu.Application.AdminFeatures.AdminExtraBets.Commands.CreateExtraB
     public class CreateExtraBetOptionCommandHandler
         : IRequestHandler<CreateExtraBetOptionCommand, OperationResult<ExtraBetOptionDto>>
     {
-        private readonly IExtraBetRepository _repository;
+        private readonly IExtraBetRepository _extraBetsRepository;
+        private readonly IGenericRepository<Tournament> _genericTournamentRepository;
         private readonly IMapper _mapper;
 
-        public CreateExtraBetOptionCommandHandler(IExtraBetRepository repository, IMapper mapper)
+        public CreateExtraBetOptionCommandHandler(IExtraBetRepository extraBetsRepository, IGenericRepository<Tournament> genericTournamentRepository, IMapper mapper)
         {
-            _repository = repository;
+            _extraBetsRepository = extraBetsRepository;
+            _genericTournamentRepository = genericTournamentRepository;
             _mapper = mapper;
         }
 
         public async Task<OperationResult<ExtraBetOptionDto>> Handle(
             CreateExtraBetOptionCommand request, CancellationToken cancellationToken)
         {
-            var dto = request.Dto;
-
-            if (dto.Points < 0)
+            if (request.Dto.Points < 0)
                 return OperationResult<ExtraBetOptionDto>.Failure("Points must be >= 0");
+
+            var tournament = await _genericTournamentRepository.GetByIdAsync(request.Dto.TournamentId, cancellationToken);
+            if (tournament == null)
+                return OperationResult<ExtraBetOptionDto>.Failure("Tournament not found");
 
             var newOption = new ExtraBetOption
             {
-                TournamentId = dto.TournamentId,
-                MatchId = dto.MatchId,
-                Name = dto.Name,
-                Description = dto.Description,
-                Points = dto.Points,
-                ExpiresAt = dto.ExpiresAt
+                TournamentId = request.Dto.TournamentId,
+                MatchId = request.Dto.MatchId,
+                Name = request.Dto.Name,
+                Description = request.Dto.Description,
+                Points = request.Dto.Points,
+                ExpiresAt = request.Dto.ExpiresAt,
+                AllowCustomChoice = request.Dto.AllowCustomChoice
             };
 
-            var createdOption = await _repository.AddExtraBetOptionAsync(newOption, cancellationToken);
+            var createdOption = await _extraBetsRepository.AddExtraBetOptionAsync(newOption, cancellationToken);
 
-            if (dto.Choices != null)
+            if (request.Dto.Choices != null)
             {
-                foreach (var choice in dto.Choices)
+                foreach (var choice in request.Dto.Choices)
                 {
-                    await _repository.AddExtraBetOptionChoiceAsync(createdOption.OptionId, choice, cancellationToken);
+                    await _extraBetsRepository.AddExtraBetOptionChoiceAsync(createdOption.OptionId, choice, cancellationToken);
                 }
             }
 

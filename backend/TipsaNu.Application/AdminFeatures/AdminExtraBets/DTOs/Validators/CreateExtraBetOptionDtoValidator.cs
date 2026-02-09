@@ -2,9 +2,9 @@
 
 namespace TipsaNu.Application.AdminFeatures.AdminExtraBets.DTOs.Validators
 {
-    public class CreateExtraBetDtoValidator : AbstractValidator<CreateExtraBetOptionDto>
+    public class CreateExtraBetOptionDtoValidator : AbstractValidator<CreateExtraBetOptionDto>
     {
-        public CreateExtraBetDtoValidator()
+        public CreateExtraBetOptionDtoValidator()
         {
             RuleFor(x => x.TournamentId)
                 .GreaterThan(0).WithMessage("TournamentId must be greater than 0");
