@@ -9,7 +9,7 @@ namespace TipsaNu.Infrastructure.Data.Configurations
         public void Configure(EntityTypeBuilder<Match> builder)
         {
             // Table
-            builder.ToTable("Match", "dbo");
+            builder.ToTable("Matches", "dbo");
 
             // Primary Key
             builder.HasKey(m => m.MatchId);

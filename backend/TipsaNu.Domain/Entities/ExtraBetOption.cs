@@ -9,6 +9,7 @@
         public int Points { get; set; }
         public int? MatchId { get; set; }
         public DateTime? ExpiresAt { get; set; }
+        public bool AllowCustomChoice { get; set; } = false;
 
         // Navigation
         public Tournament Tournament { get; set; } = null!;

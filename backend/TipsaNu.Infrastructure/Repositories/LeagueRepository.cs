@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TipsaNu.Application.Features.Leagues.DTOs;
 using TipsaNu.Domain.Entities;
 using TipsaNu.Domain.Interfaces;
 using TipsaNu.Infrastructure.Presistence;
