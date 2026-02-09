@@ -4,23 +4,23 @@ using TipsaNu.Application.Commons.Results;
 using TipsaNu.Domain.Entities;
 using TipsaNu.Domain.Interfaces;
 
-namespace TipsaNu.Application.AdminFeatures.AdminExtraBets.Commands.SetExtraBetOptionCorrectValues
+namespace TipsaNu.Application.AdminFeatures.AdminExtraBets.Commands.CreateExtraBetOptionCorrectValues
 {
-    public class SetExtraBetOptionCorrectValuesCommandHandler
-            : IRequestHandler<SetExtraBetOptionCorrectValuesCommand, OperationResult<Unit>>
+    public class CreateExtraBetOptionCorrectValuesCommandHandler
+            : IRequestHandler<CreateExtraBetOptionCorrectValuesCommand, OperationResult<Unit>>
     {
         private readonly IExtraBetRepository _extraBetRepository;
         private readonly IGenericRepository<ExtraBetOption> _genericExtraBetOptionRepository;
         private readonly IMediator _mediator;
 
-        public SetExtraBetOptionCorrectValuesCommandHandler(IExtraBetRepository extraBetRepository, IGenericRepository<ExtraBetOption> genericExtraBetOptionRepository, IMediator mediator)
+        public CreateExtraBetOptionCorrectValuesCommandHandler(IExtraBetRepository extraBetRepository, IGenericRepository<ExtraBetOption> genericExtraBetOptionRepository, IMediator mediator)
         {
             _extraBetRepository = extraBetRepository;
             _genericExtraBetOptionRepository = genericExtraBetOptionRepository;
             _mediator = mediator;
         }
 
-        public async Task<OperationResult<Unit>> Handle(SetExtraBetOptionCorrectValuesCommand request, CancellationToken cancellationToken)
+        public async Task<OperationResult<Unit>> Handle(CreateExtraBetOptionCorrectValuesCommand request, CancellationToken cancellationToken)
         {
             var option = await _genericExtraBetOptionRepository.GetByIdAsync(request.OptionId, cancellationToken);
             if (option == null)

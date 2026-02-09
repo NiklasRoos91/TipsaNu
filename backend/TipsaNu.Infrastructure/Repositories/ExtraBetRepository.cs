@@ -107,5 +107,19 @@ namespace TipsaNu.Infrastructure.Repositories
             _context.ExtraBets.UpdateRange(bets);
             await _context.SaveChangesAsync(cancellationToken);
         }
+
+        // This method removes all correct values associated with a specific extra bet option.
+        public async Task RemoveCorrectValuesAsync(int optionId, CancellationToken cancellationToken = default)
+        {
+            var values = await _context.ExtraBetOptionCorrectValues
+                .Where(c => c.OptionId == optionId)
+                .ToListAsync(cancellationToken);
+
+            if (values.Any())
+            {
+                _context.ExtraBetOptionCorrectValues.RemoveRange(values);
+                await _context.SaveChangesAsync(cancellationToken);
+            }
+        }
     }
 }
