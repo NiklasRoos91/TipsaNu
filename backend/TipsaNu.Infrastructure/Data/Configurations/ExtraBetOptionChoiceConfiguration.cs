@@ -8,7 +8,7 @@ namespace TipsaNu.Infrastructure.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<ExtraBetOptionChoice> builder)
         {
-            builder.ToTable("ExtraBetOptionChoice", "dbo");
+            builder.ToTable("ExtraBetOptionChoices", "dbo");
 
             builder.HasKey(e => e.ChoiceId);
             builder.Property(e => e.ChoiceId).ValueGeneratedOnAdd();

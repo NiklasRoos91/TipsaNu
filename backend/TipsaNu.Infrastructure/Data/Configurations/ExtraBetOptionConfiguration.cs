@@ -8,7 +8,7 @@ namespace TipsaNu.Infrastructure.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<ExtraBetOption> builder)
         {
-            builder.ToTable("ExtraBetOption", "dbo");
+            builder.ToTable("ExtraBetOptions", "dbo");
 
             builder.HasKey(e => e.OptionId);
             builder.Property(e => e.OptionId)
@@ -27,8 +27,11 @@ namespace TipsaNu.Infrastructure.Data.Configurations
             builder.Property(e => e.ExpiresAt)
                    .IsRequired(false);
 
-            // Relations
+            builder.Property(e => e.AllowCustomChoice)
+                   .IsRequired()
+                   .HasDefaultValue(false);
 
+            // Relations
             builder.HasOne(e => e.Tournament)
                    .WithMany(t => t.ExtraBetOptions)
                    .HasForeignKey(e => e.TournamentId)
