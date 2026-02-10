@@ -1,16 +1,17 @@
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
-import { User } from '../types/types';
-import * as api from '../services/api';
+import { User, AuthResponse, LoginRequest, RegisterRequest } from '../types/authTypes';
+import * as api from '../services/authService';
 
 interface AuthContextType {
   user: User | null;
   token: string | null;
-  login: (email: string, pass: string) => Promise<void>;
-  register: (data: any) => Promise<void>;
+  login: (data: LoginRequest) => Promise<void>;
+  register: (data: RegisterRequest) => Promise<void>;
   updateUser: (data: Partial<User>) => Promise<void>;
   logout: () => void;
   isAuthenticated: boolean;
   loading: boolean;
+  error: string | null;
 }
 
 export const AuthContext = createContext<AuthContextType>({} as AuthContextType);
@@ -19,58 +20,79 @@ export const AuthProvider = ({ children }: { children?: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
   const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
+  //Init auth on page load/refresh
   useEffect(() => {
     const initAuth = async () => {
       const storedToken = localStorage.getItem('token');
       if (storedToken) {
         try {
-            // Verify token and restore user session from "Database"
-            const restoredUser = await api.verifyToken(storedToken);
-            if (restoredUser) {
-                setUser(restoredUser);
-                setToken(storedToken);
-            } else {
-                // Token invalid or user deleted
-                localStorage.removeItem('token');
-            }
-        } catch (e) {
+          const currentUser  = await api.verifyToken();  //backend returns user from token
+          if (currentUser ) {
+            setUser(currentUser );
+            setToken(storedToken);
+          } else {
             localStorage.removeItem('token');
+          }
+        } catch (err) {
+          console.log('Token invalid eller expired', err);
+          localStorage.removeItem('token');
         }
-      }
+    }
       setLoading(false);
     };
     initAuth();
   }, []);
 
-  const login = async (email: string, pass: string) => {
+  // --- Auth actions ---
+  // Login
+  const login = async (data: LoginRequest) => {
     setLoading(true);
+    setError('');
     try {
-      const res = await api.login(email, pass);
+      const res: AuthResponse & { user: User } = await api.login(data);
       setUser(res.user);
-      setToken(res.token);
-      localStorage.setItem('token', res.token);
+      setToken(res.accessToken);
+      localStorage.setItem('token', res.accessToken);
+    } catch (err:any) {
+      setError(err.response?.data?.message || 'Felaktiga inloggningsuppgifter');
     } finally {
       setLoading(false);
     }
   };
 
-  const register = async (data: any) => {
+  // Register
+  const register = async (data: RegisterRequest) => {
     setLoading(true);
+    setError(null);
     try {
-      const res = await api.register(data);
+      const res: AuthResponse & { user: User } = await api.register(data);
       setUser(res.user);
-      setToken(res.token);
-      localStorage.setItem('token', res.token);
+      setToken(res.accessToken);
+      localStorage.setItem('token', res.accessToken);
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Registrering misslyckades');
+      throw err; // Rethrow to allow component-level handling if needed
     } finally {
       setLoading(false);
     }
   };
 
+  // Update user
   const updateUser = async (data: Partial<User>) => {
-      // Optimistic update or fetch from API
+    setLoading(true);
+    setError(null);
+    try {
+      if (!token) throw new Error('Inte autentiserad');
       const updatedUser = await api.updateProfile(data);
       setUser(updatedUser);
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Uppdatering misslyckades');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
   };
 
   const logout = () => {
@@ -80,15 +102,17 @@ export const AuthProvider = ({ children }: { children?: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{
+    <AuthContext.Provider
+     value={{
       user,
       token,
       login,
       register,
       updateUser,
       logout,
-      isAuthenticated: !!user,
-      loading
+      isAuthenticated: !!token,
+      loading,
+      error
     }}>
       {children}
     </AuthContext.Provider>

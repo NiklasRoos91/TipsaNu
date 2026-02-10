@@ -32,58 +32,6 @@ const addNotification = (userId: string, title: string, message: string, link?: 
   notifications.unshift(n);
 };
 
-// --- Auth Services ---
-export const login = async (emailOrUsername: string, password: string): Promise<{ user: User; token: string }> => {
-  await delay(800);
-  const user = users.find(u => u.email === emailOrUsername || u.username === emailOrUsername);
-  if (!user) throw new Error('Invalid credentials');
-  currentUser = user;
-  const token = `mock-token-${user.id}-${user.username}`; 
-  return { user, token };
-};
-
-export const register = async (data: any): Promise<{ user: User; token: string }> => {
-  await delay(1000);
-  const newUser: User = {
-    id: `u_${Date.now()}`,
-    username: data.username,
-    email: data.email,
-    displayName: data.username, 
-    points: 0,
-    bio: '',
-    avatarUrl: `https://ui-avatars.com/api/?name=${data.username}&background=random`
-  };
-  users.push(newUser);
-  currentUser = newUser;
-  return { user: newUser, token: `mock-token-${newUser.id}` };
-};
-
-export const verifyToken = async (token: string): Promise<User | null> => {
-  await delay(200);
-  if (token.includes('admin')) {
-    currentUser = users.find(u => u.username === 'admin') || null;
-    return currentUser;
-  }
-  const foundUser = users.find(u => token.includes(u.id) || token.includes(u.username));
-  if (foundUser) {
-    currentUser = foundUser;
-    return foundUser;
-  }
-  return null;
-};
-
-export const updateProfile = async (data: Partial<User>): Promise<User> => {
-  await delay(500);
-  if (!currentUser) throw new Error("Not authenticated");
-  const index = users.findIndex(u => u.id === currentUser!.id);
-  if (index !== -1) {
-    users[index] = { ...users[index], ...data };
-    currentUser = users[index];
-    return currentUser;
-  }
-  throw new Error("User not found");
-};
-
 // --- Tournament & Template Services ---
 export const getTournaments = async (): Promise<Tournament[]> => {
   await delay(500);

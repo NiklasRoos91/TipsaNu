@@ -15,18 +15,25 @@ import { Notifications } from './pages/Notifications';
 import { CreateTournament } from './pages/CreateTournament';
 import { CreateTournamentTemplate } from './pages/CreateTournamentTemplate';
 import { TournamentTemplateList } from './pages/TournamentTemplateList';
+import { Redirect } from './components/common/Redirect';
+import { LoadingScreen } from './components/common/LoadingScreen';
 
 const ProtectedRoute = ({ children }: { children?: React.ReactNode }) => {
   const { isAuthenticated, loading } = useAuth();
-  if (loading) return <div className="h-screen flex items-center justify-center bg-slate-50">Laddar...</div>;
-  if (!isAuthenticated) return <Navigate to="/login" replace />;
+
+  if (loading) return <LoadingScreen />;
+  if (!isAuthenticated) return <Redirect to="/login" />;
+  console.log('ProtectedRoute render - isAuthenticated:', isAuthenticated, 'loading:', loading);
+
   return <Layout>{children}</Layout>;
 };
 
 const AdminRoute = ({ children }: { children?: React.ReactNode }) => {
   const { isAuthenticated, user, loading } = useAuth();
-  if (loading) return <div className="h-screen flex items-center justify-center bg-slate-50">Laddar...</div>;
-  if (!isAuthenticated || user?.username !== 'admin') return <Navigate to="/tournaments" replace />;
+
+  if (loading) return <LoadingScreen />;
+  if (!isAuthenticated || user?.role !== 'Admin') return <Redirect to="/tournaments" />;
+
   return <Layout>{children}</Layout>;
 };
 

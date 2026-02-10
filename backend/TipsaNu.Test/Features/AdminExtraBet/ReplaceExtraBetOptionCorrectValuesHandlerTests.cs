@@ -1,5 +1,4 @@
-﻿
-using Moq;
+﻿using Moq;
 using TipsaNu.Application.AdminFeatures.AdminExtraBets.Commands.ReplaceExtraBetOptionCorrectValues;
 using TipsaNu.Application.AdminFeatures.AdminExtraBets.DTOs;
 using TipsaNu.Application.AdminFeatures.AdminExtraBets.Events;
@@ -13,16 +12,21 @@ namespace TipsaNu.Test.Features.AdminExtraBet
     {
         private readonly Mock<IExtraBetRepository> _repoMock = new();
         private readonly Mock<IMediator> _mediatorMock = new();
+        private readonly Mock<IGenericRepository<ExtraBetOption>> _genericRepoMock = new();
 
         [Fact]
         public async Task Handle_ShouldReplaceAllValues()
         {
             // Arrange
+            _genericRepoMock.Setup(r => r.GetByIdAsync(1, It.IsAny<CancellationToken>()))
+                            .ReturnsAsync(new ExtraBetOption());
+
             _repoMock.Setup(r => r.GetCorrectValuesByOptionIdAsync(1, It.IsAny<CancellationToken>()))
                      .ReturnsAsync(new List<ExtraBetOptionCorrectValue> { new(), new() });
 
             var handler = new ReplaceExtraBetOptionCorrectValuesCommandHandler(
                 _repoMock.Object,
+                _genericRepoMock.Object,
                 _mediatorMock.Object
             );
 
@@ -45,11 +49,15 @@ namespace TipsaNu.Test.Features.AdminExtraBet
         public async Task Handle_ShouldAddNewValues_WhenNoneExist()
         {
             // Arrange
+            _genericRepoMock.Setup(r => r.GetByIdAsync(1, It.IsAny<CancellationToken>()))
+                            .ReturnsAsync(new ExtraBetOption());
+
             _repoMock.Setup(r => r.GetCorrectValuesByOptionIdAsync(1, It.IsAny<CancellationToken>()))
                      .ReturnsAsync(new List<ExtraBetOptionCorrectValue>());
 
             var handler = new ReplaceExtraBetOptionCorrectValuesCommandHandler(
                 _repoMock.Object,
+                _genericRepoMock.Object,
                 _mediatorMock.Object
             );
 
@@ -68,14 +76,44 @@ namespace TipsaNu.Test.Features.AdminExtraBet
         }
 
         [Fact]
+        public async Task Handle_ShouldReturnFailure_IfOptionNotFound()
+        {
+            // Arrange
+            _genericRepoMock.Setup(r => r.GetByIdAsync(1, It.IsAny<CancellationToken>()))
+                            .ReturnsAsync((ExtraBetOption?)null);
+
+            var handler = new ReplaceExtraBetOptionCorrectValuesCommandHandler(
+                _repoMock.Object,
+                _genericRepoMock.Object,
+                _mediatorMock.Object
+            );
+
+            var command = new ReplaceExtraBetOptionCorrectValuesCommand(
+                1,
+                new SetExtraBetOptionCorrectValuesDto { CorrectValues = new List<string> { "x" } }
+            );
+
+            // Act
+            var result = await handler.Handle(command, CancellationToken.None);
+
+            // Assert
+            Assert.False(result.IsSuccess);
+            Assert.Equal("ExtraBetOption not found", result.ErrorMessage);
+        }
+
+        [Fact]
         public async Task Handle_ShouldPublishEvent_AfterReplacement()
         {
             // Arrange
+            _genericRepoMock.Setup(r => r.GetByIdAsync(1, It.IsAny<CancellationToken>()))
+                            .ReturnsAsync(new ExtraBetOption());
+
             _repoMock.Setup(r => r.GetCorrectValuesByOptionIdAsync(1, It.IsAny<CancellationToken>()))
                      .ReturnsAsync(new List<ExtraBetOptionCorrectValue> { new() });
 
             var handler = new ReplaceExtraBetOptionCorrectValuesCommandHandler(
                 _repoMock.Object,
+                _genericRepoMock.Object,
                 _mediatorMock.Object
             );
 

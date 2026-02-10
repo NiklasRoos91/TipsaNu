@@ -7,7 +7,7 @@ using TipsaNu.Domain.Interfaces;
 namespace TipsaNu.Application.AdminFeatures.AdminExtraBets.Commands.AddExtraBetOptionCorrectValues
 {
     public class AddExtraBetOptionCorrectValuesCommandHandler
-        : IRequestHandler<AddExtraBetOptionCorrectValuesCommand, OperationResult<Unit>>
+        : IRequestHandler<AddExtraBetOptionCorrectValuesCommand, OperationResult<bool>>
     {
         private readonly IExtraBetRepository _extraBetRepository;
         private readonly IGenericRepository<ExtraBetOption> _genericExtraBetOptionRepository;
@@ -23,11 +23,11 @@ namespace TipsaNu.Application.AdminFeatures.AdminExtraBets.Commands.AddExtraBetO
             _mediator = mediator;
         }
 
-        public async Task<OperationResult<Unit>> Handle(AddExtraBetOptionCorrectValuesCommand request, CancellationToken cancellationToken)
+        public async Task<OperationResult<bool>> Handle(AddExtraBetOptionCorrectValuesCommand request, CancellationToken cancellationToken)
         {
             var option = await _genericExtraBetOptionRepository.GetByIdAsync(request.OptionId, cancellationToken);
             if (option == null)
-                return OperationResult<Unit>.Failure("ExtraBetOption not found");
+                return OperationResult<bool>.Failure("ExtraBetOption not found");
 
             var existingValues = await _extraBetRepository.GetCorrectValuesByOptionIdAsync(request.OptionId, cancellationToken);
             var existingValueStrings = existingValues.Select(ev => ev.Value).ToHashSet();
@@ -42,7 +42,7 @@ namespace TipsaNu.Application.AdminFeatures.AdminExtraBets.Commands.AddExtraBetO
 
             await _mediator.Publish(new ExtraBetOptionCorrectValuesUpdatedEvent(request.OptionId), cancellationToken);
 
-            return OperationResult<Unit>.Success(Unit.Value);
+            return OperationResult<bool>.Success(true);
         }
     }
 }

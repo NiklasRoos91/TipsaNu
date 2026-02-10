@@ -1,39 +1,31 @@
+import { useLogin } from '../../hooks/useLogin';
 
-import React from 'react';
+export const LoginForm = () => {
+  const { email, setEmail, password, setPassword, error, isLoggingIn, handleLogin, quickLogin } = useLogin();
 
-interface LoginFormProps {
-  email: string;
-  setEmail: (val: string) => void;
-  password: string;
-  setPassword: (val: string) => void;
-  onSubmit: (e: React.FormEvent) => void;
-  isLoggingIn: boolean;
-}
-
-export const LoginForm: React.FC<LoginFormProps> = ({
-  email,
-  setEmail,
-  password,
-  setPassword,
-  onSubmit,
-  isLoggingIn,
-}) => {
   return (
-    <form onSubmit={onSubmit} className="space-y-5">
+    <form onSubmit={handleLogin} className="space-y-5">
       <div>
-        <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Användarnamn eller E-post</label>
+        <label htmlFor="email" className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">
+          E-post
+          </label>
         <input
+          id="email"
           type="text"
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-accent/10 focus:border-accent outline-none transition-all text-slate-900 font-medium placeholder:text-slate-300 shadow-inner"
-          placeholder="T.ex. user1"
+          placeholder="E-postadress"
         />
       </div>
+
       <div>
-        <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Lösenord</label>
+        <label htmlFor="password" className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">
+          Lösenord
+          </label>
         <input
+          id="password"
           type="password"
           required
           value={password}
@@ -42,6 +34,9 @@ export const LoginForm: React.FC<LoginFormProps> = ({
           placeholder="••••••••"
         />
       </div>
+
+      {error && <p className="text-red-500 text-sm font-medium">{error}</p>}
+
       <button
         type="submit"
         disabled={isLoggingIn}
