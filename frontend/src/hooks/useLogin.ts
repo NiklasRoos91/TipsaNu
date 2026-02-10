@@ -1,40 +1,43 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './useAuth';
+
+interface Credentials {
+  Email: string;
+  Password: string;
+}
 
 export const useLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [isLoggingIn, setIsLoggingIn] = useState(false);
-  const { login } = useAuth();
+  const { login, error: authError, loading: authLoading, isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
-  const handleLogin = async (e?: React.FormEvent, credentials?: { email: string; pass: string }) => {
+  const handleLogin = async (e?: React.FormEvent, credentials?: Credentials) => {
     if (e) e.preventDefault();
-    setError('');
-    setIsLoggingIn(true);
 
-    const loginEmail = credentials ? credentials.email : email;
-    const loginPass = credentials ? credentials.pass : password;
+    const loginData: Credentials = credentials
+      ? credentials
+      : { Email: email, Password: password };
 
     try {
-      await login(loginEmail, loginPass);
+      await login(loginData);
+
+      console.log('isAuthenticated efter login:', isAuthenticated);
+      
       navigate('/tournaments');
     } catch (err) {
-      setError('Felaktiga inloggningsuppgifter. Prova igen.');
-    } finally {
-      setIsLoggingIn(false);
+      console.error('Login failed:', err);
     }
   };
 
   const quickLogin = (type: 'user' | 'admin') => {
     const creds = type === 'admin' 
-      ? { email: 'admin', pass: 'password' } 
-      : { email: 'user1', pass: 'password' };
+      ? { Email: 'admin@admin.com', Password: 'Password123!' } 
+      : { Email: 'user@user.com', Password: 'Password123!' };
     
-    setEmail(creds.email);
-    setPassword(creds.pass);
+    setEmail(creds.Email);
+    setPassword(creds.Password);
     handleLogin(undefined, creds);
   };
 
@@ -43,8 +46,8 @@ export const useLogin = () => {
     setEmail,
     password,
     setPassword,
-    error,
-    isLoggingIn,
+    error: authError,
+    isLoggingIn: authLoading,
     handleLogin,
     quickLogin
   };

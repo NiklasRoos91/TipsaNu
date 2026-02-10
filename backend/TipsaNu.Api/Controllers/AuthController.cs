@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading;
 using TipsaNu.Application.Feature.Auth.Commands.Register;
 using TipsaNu.Application.Features.Auth.Commands.Login;
 using TipsaNu.Application.Features.Auth.Commands.RefreshToken;
@@ -19,6 +18,8 @@ namespace TipsaNu.Api.Controllers
             _mediator = mediator;
         }
 
+        // Post: /api/auth/register
+        // Register a new user with email, username and password, return JWT token if successful, otherwise return 400 Bad Request
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequestDto request, CancellationToken cancellationToken)
         {
@@ -31,6 +32,8 @@ namespace TipsaNu.Api.Controllers
             return Ok(result.Data);
         }
 
+        // Post: /api/auth/login
+        // Login with email and password, return JWT token if successful, otherwise return 401 Unauthorized
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequestDto request, CancellationToken cancellationToken)
         {
@@ -43,6 +46,8 @@ namespace TipsaNu.Api.Controllers
             return Ok(result.Data);
         }
 
+        // Post: /api/auth/refresh
+        // Refresh JWT token using refresh token, return new JWT token if successful, otherwise return 401 Unauthorized
         [HttpPost("refresh")]
         public async Task<IActionResult> Refresh([FromBody] RefreshTokenRequestDto request, CancellationToken cancellationToken)
         {
