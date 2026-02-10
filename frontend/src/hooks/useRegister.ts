@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './useAuth';
 
@@ -22,6 +22,15 @@ export const useRegister = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    if (
+      !formData.username.trim() ||
+      !formData.email.trim() ||
+      !formData.password.trim() ||
+      !formData.confirmPassword.trim()
+    ) {
+      setError('Alla fält måste fyllas i');
+      return;
+    }
 
     if (formData.password !== formData.confirmPassword) {
       setError('Lösenorden matchar inte');
@@ -30,14 +39,20 @@ export const useRegister = () => {
 
     setIsRegistering(true);
     try {
-      await register(formData);
-      navigate('/tournaments');
-    } catch (err) {
-      setError('Registreringen misslyckades. Försök igen.');
-    } finally {
-      setIsRegistering(false);
-    }
+    const registerData = {
+      Email: formData.email,
+      Username: formData.username,
+      Password: formData.password,
   };
+  
+    await register(registerData); // använder contextens register
+    navigate('/tournaments');
+  } catch (err) {
+    setError('Registreringen misslyckades. Försök igen.');
+  } finally {
+    setIsRegistering(false);
+  }
+};
 
   return {
     formData,

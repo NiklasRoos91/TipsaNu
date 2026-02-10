@@ -2,7 +2,12 @@
 import React from 'react';
 
 interface RegisterFormProps {
-  formData: any;
+  formData: {
+    username: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+  };
   onUpdateField: (field: any, value: string) => void;
   onSubmit: (e: React.FormEvent) => void;
   isRegistering: boolean;
