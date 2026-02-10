@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { Check, ChevronDown, ChevronUp } from 'lucide-react';
-import { Match, Prediction, MatchStatus } from '../../types/types';
+import { Prediction, MatchStatus } from '../../types/types';
 import { submitPrediction as apiSubmitPrediction } from '../../services/api';
 import { MatchPredictionForm } from './MatchPredictionForm';
+import { Match } from '../../types/tournamentTypes'; 
+import { MatchStatusEnum } from '../../types/enums/tournamentEnums'; // Se till att importera rätt enum
+
 
 interface MatchCardProps {
   match: Match;
   prediction?: Prediction;
+  groups: { name: string, groupId: number }[]; // Lägg till groups som en prop
 }
 
-export const MatchCard: React.FC<MatchCardProps> = ({ match, prediction: initialPrediction }) => {
+export const MatchCard: React.FC<MatchCardProps> = ({ match, prediction: initialPrediction, groups }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [prediction, setPrediction] = useState<Prediction | undefined>(initialPrediction);
   const [homePred, setHomePred] = useState<number | ''>(initialPrediction?.homeScore ?? 0);
@@ -17,9 +21,12 @@ export const MatchCard: React.FC<MatchCardProps> = ({ match, prediction: initial
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
-  const isLive = match.status === MatchStatus.LIVE;
-  const isFinished = match.status === MatchStatus.FINISHED;
-  const isLocked = !isFinished && match.status !== MatchStatus.SCHEDULED && new Date(match.startTime) < new Date();
+  const InProgress = match.status === MatchStatusEnum.InProgress;
+  const isFinished = match.status === MatchStatusEnum.Finished;
+  const isScheduled = match.status === MatchStatusEnum.Scheduled;
+  const isLocked = !isFinished && match.status !== MatchStatusEnum.Scheduled && new Date(match.startTime) < new Date();
+
+  const groupName = groups.find(group => group.groupId === match.groupId)?.name ?? "Okänd grupp";
 
   // Keep local state in sync if initialPrediction changes from parent (e.g. on bulk load)
   useEffect(() => {
@@ -39,7 +46,7 @@ export const MatchCard: React.FC<MatchCardProps> = ({ match, prediction: initial
 
     setIsSubmitting(true);
     try {
-      const result = await apiSubmitPrediction(match.id, Number(homePred), Number(awayPred));
+      const result = await apiSubmitPrediction(String(match.matchId), Number(homePred), Number(awayPred));
       setPrediction(result);
       setShowSuccess(true);
       setTimeout(() => {
@@ -72,10 +79,10 @@ export const MatchCard: React.FC<MatchCardProps> = ({ match, prediction: initial
         className={`p-4 cursor-pointer select-none transition-colors ${isFinished || isLocked ? 'cursor-default' : 'hover:bg-slate-50/50'}`}
       >
         <div className="flex justify-between items-center mb-3 text-xs font-bold tracking-wider uppercase">
-          <span className="text-slate-400">{match.group}</span>
+          <span className="text-slate-400">{groupName}</span>
           <div className="flex items-center gap-3">
-            <span className={`${isLive ? 'text-red-500 animate-pulse' : 'text-slate-400'}`}>
-              {isLive ? 'LIVE' : isFinished ? 'AVSLUTAD' : new Date(match.startTime).toLocaleDateString('sv-SE', { day: 'numeric', month: 'short' })}
+            <span className={`${InProgress ? 'text-red-500 animate-pulse' : 'text-slate-400'}`}>
+              {InProgress ? 'LIVE' : isFinished ? 'AVSLUTAD' : new Date(match.startTime).toLocaleDateString('sv-SE', { day: 'numeric', month: 'short' })}
             </span>
             {!isFinished && !isLocked && (
               isExpanded ? <ChevronUp size={16} className="text-accent" /> : <ChevronDown size={16} className="text-slate-300" />
@@ -85,13 +92,15 @@ export const MatchCard: React.FC<MatchCardProps> = ({ match, prediction: initial
 
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3 w-1/3">
-            <img src={match.homeTeam.flagUrl} alt="" className="w-8 h-6 object-cover rounded shadow-sm border border-slate-100" />
-            <span className="font-semibold text-primary truncate">{match.homeTeam.name}</span>
+            <img src={match.homeCompetitorName} alt="" className="w-8 h-6 object-cover rounded shadow-sm border border-slate-100" />
+            <span className="font-semibold text-primary truncate">{match.homeCompetitorName}</span>
           </div>
 
           <div className="flex flex-col items-center justify-center w-1/3">
             <div className="text-xl font-black text-slate-800 font-mono">
-              {match.status === MatchStatus.SCHEDULED ? 'VS' : `${match.homeScore} - ${match.awayScore}`}
+              {match.status === MatchStatusEnum.Scheduled || match.scoreHome == null || match.scoreAway == null 
+                ? 'VS' 
+                : `${match.scoreHome} - ${match.scoreAway}`}
             </div>
             <div className="mt-2">
                {prediction ? (
@@ -117,8 +126,8 @@ export const MatchCard: React.FC<MatchCardProps> = ({ match, prediction: initial
           </div>
 
           <div className="flex items-center gap-3 w-1/3 justify-end text-right">
-            <span className="font-semibold text-primary truncate">{match.awayTeam.name}</span>
-            <img src={match.awayTeam.flagUrl} alt="" className="w-8 h-6 object-cover rounded shadow-sm border border-slate-100" />
+            <span className="font-semibold text-primary truncate">{match.awayCompetitorName}</span>
+            <img src={match.awayCompetitorName} alt="" className="w-8 h-6 object-cover rounded shadow-sm border border-slate-100" />
           </div>
         </div>
       </div>
@@ -131,8 +140,8 @@ export const MatchCard: React.FC<MatchCardProps> = ({ match, prediction: initial
               Ditt tips för matchen
             </h4>
             <MatchPredictionForm 
-              homeTeamName={match.homeTeam.name}
-              awayTeamName={match.awayTeam.name}
+              homeTeamName={match.homeCompetitorName}
+              awayTeamName={match.awayCompetitorName}
               homePred={homePred}
               awayPred={awayPred}
               onHomeChange={setHomePred}

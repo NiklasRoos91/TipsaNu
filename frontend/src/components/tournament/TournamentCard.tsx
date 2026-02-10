@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
-import { Tournament } from '../../types/types';
+import { Tournament } from '../../types/tournamentTypes';
 
 interface TournamentCardProps {
   tournament: Tournament;
@@ -9,7 +9,7 @@ interface TournamentCardProps {
 
 export const TournamentCard: React.FC<TournamentCardProps> = ({ tournament }) => {
   return (
-    <Link to={`/tournaments/${tournament.id}`} className="group">
+    <Link to={`/tournaments/${tournament.tournamentId}`} className="group">
       <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex justify-between items-center group-hover:border-accent transition-all">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0">

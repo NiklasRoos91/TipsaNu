@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Tournament } from '../types/types';
-import { getTournaments } from '../services/api';
+import { Tournament } from '../types/tournamentTypes';
+import { getTournaments } from '../services/tournamentService';
 
 export const useTournaments = () => {
   const [tournaments, setTournaments] = useState<Tournament[]>([]);
@@ -9,19 +9,24 @@ export const useTournaments = () => {
 
   useEffect(() => {
     let isMounted = true;
-    getTournaments()
-      .then((data) => {
+
+    const loadTournaments = async () => {
+      try {
+        const data = await getTournaments();
         if (isMounted) {
-          setTournaments(data);
+          setTournaments(Array.isArray(data) ? data : []);
           setLoading(false);
         }
-      })
-      .catch((err) => {
-        if (isMounted) {
-          setError('Kunde inte hämta turneringar');
-          setLoading(false);
+      } catch(err) {
+      if (isMounted) {
+        console.error('Kunde inte hämta turneringar', err);
+        setError('Kunde inte hämta turneringar');
+        setLoading(false);
         }
-      });
+      }
+  };
+
+    loadTournaments();
 
     return () => {
       isMounted = false;

@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Calendar, Trophy } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
-import { useTournamentData } from '../hooks/useTournamentData';
+import { useTournament } from '../hooks/useTournament';
 
 import { TournamentBanner } from '../components/tournament/TournamentBanner';
 import { TournamentTabs, TabType } from '../components/tournament/TournamentTabs';
@@ -15,22 +15,22 @@ export const TournamentDetail = () => {
   const { user } = useAuth();
   const isAdmin = user?.username === 'admin';
 
-  const { 
-    tournament, 
-    matches, 
-    extraBets, 
-    setExtraBets, 
-    extraBetPredictions,
-    updateExtraBetPredictions,
-    leagues, 
-    setLeagues, 
-    predictions, 
-    loading 
-  } = useTournamentData(id);
-
+  const { tournament, loading, error } = useTournament(Number(id));
   const [activeTab, setActiveTab] = useState<TabType>('matches');
 
+  // State placeholders för framtida backend-data
+  const [matches, setMatches] = useState<any[]>([]);
+  const [predictions, setPredictions] = useState<any[]>([]);
+  const [leagues, setLeagues] = useState<any[]>([]);
+  const [extraBets, setExtraBets] = useState<any[]>([]);
+  const [extraBetPredictions, setExtraBetPredictions] = useState<any[]>([]);
+
+  const updateExtraBetPredictions = (pred: any) => {
+    setExtraBetPredictions(prev => [pred, ...prev]);
+  }  
+
   if (loading) return <div className="p-8 text-center text-slate-500">Laddar turnering...</div>;
+  if (error) return <div className="p-8 text-center text-red-500">{error}</div>;
   if (!tournament) return <div className="p-8 text-center">Turnering hittades inte</div>;
 
   return (
@@ -49,7 +49,6 @@ export const TournamentDetail = () => {
           {activeTab === 'matches' && (
             <TournamentMatches 
               tournamentId={id || ''} 
-              matches={matches} 
               predictions={predictions} 
             />
           )}
@@ -96,7 +95,7 @@ export const TournamentDetail = () => {
               </div>
               <div className="flex items-center gap-3 text-sm text-slate-500 pt-2 border-t border-slate-100">
                 <Calendar size={18} className="text-slate-400" />
-                <span>Slutar {new Date(tournament.endDate).toLocaleDateString('sv-SE')}</span>
+                <span>Slutar {new Date(tournament.EndDate).toLocaleDateString('sv-SE')}</span>
               </div>
             </div>
           </div>

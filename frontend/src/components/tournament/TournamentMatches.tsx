@@ -1,13 +1,13 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Filter } from 'lucide-react';
-import { Match, Prediction, GroupStanding } from '../../types/types';
-import { getGroupStandings } from '../../services/api';
+import {  Prediction } from '../../types/types';
 import { GroupTable } from './GroupTable';
 import { MatchCard } from '../match/MatchCard';
+import { useGroups } from '../../hooks/useGroups';
+import { useGroupMatches } from '../../hooks/useGroupMatches';
 
 interface TournamentMatchesProps {
   tournamentId: string;
-  matches: Match[];
   predictions: Prediction[];
 }
 
@@ -15,39 +15,25 @@ type MatchCategory = 'groups' | 'knockout';
 
 export const TournamentMatches: React.FC<TournamentMatchesProps> = ({ 
   tournamentId, 
-  matches, 
   predictions 
 }) => {
   const [matchCategory, setMatchCategory] = useState<MatchCategory>('groups');
   const [selectedFilter, setSelectedFilter] = useState<string | null>(null);
-  const [standings, setStandings] = useState<GroupStanding[]>([]);
-  const [loadingStandings, setLoadingStandings] = useState(false);
+  const { groups } = useGroups(Number(tournamentId));
 
-  // Categorize and filter matches
+  const groupId = selectedFilter ? groups.find(g => g.name === selectedFilter)?.groupId ?? null : null;
+  const { matches, loading: loadingMatches, error: matchesError } = useGroupMatches(groupId);
+
   const matchGroups = useMemo(() => {
     const categories = {
-      groups: [] as string[],
+      groups: groups.map(g => g.name),
       knockout: [] as string[]
     };
 
-    matches.forEach(m => {
-      let g = m.group || 'Övrigt';
-      // Normalize group names like "A" to "Grupp A" if they are just letters
-      if (g.length === 1) g = `Grupp ${g}`;
-      
-      if (g.toLowerCase().includes('grupp')) {
-        if (!categories.groups.includes(g)) categories.groups.push(g);
-      } else {
-        if (!categories.knockout.includes(g)) categories.knockout.push(g);
-      }
-    });
-
     categories.groups.sort();
-    categories.knockout.sort();
     return categories;
-  }, [matches]);
+  }, [groups]);
 
-  // Set default filter when category changes
   useEffect(() => {
     const availableFilters = matchGroups[matchCategory];
     if (availableFilters.length > 0) {
@@ -59,33 +45,9 @@ export const TournamentMatches: React.FC<TournamentMatchesProps> = ({
     }
   }, [matchCategory, matchGroups]);
 
-  // Fetch standings when group filter changes
-  useEffect(() => {
-    if (tournamentId && matchCategory === 'groups' && selectedFilter) {
-      setLoadingStandings(true);
-      getGroupStandings(tournamentId, selectedFilter)
-        .then(data => {
-          setStandings(data);
-          setLoadingStandings(false);
-        })
-        .catch(() => {
-          setLoadingStandings(false);
-        });
-    } else {
-      setStandings([]);
-    }
-  }, [tournamentId, matchCategory, selectedFilter]);
-
-  // Memoisering av standings
-  const memoizedStandings = useMemo(() => standings, [standings]);
-
   const filteredMatches = useMemo(() => {
     if (!selectedFilter) return [];
-    return matches.filter(m => {
-      let mg = m.group;
-      if (mg?.length === 1) mg = `Grupp ${mg}`;
-      return mg === selectedFilter;
-    });
+    return matches;
   }, [matches, selectedFilter]);
 
   return (
@@ -141,13 +103,13 @@ export const TournamentMatches: React.FC<TournamentMatchesProps> = ({
       {/* Group Standings Table */}
       {matchCategory === 'groups' && selectedFilter && (
         <div className="animate-fade-in">
-          {loadingStandings ? (
-            <div className="h-32 bg-slate-50 rounded-xl animate-pulse border border-slate-100" />
-          ) : memoizedStandings.length > 0 ? (
-            <GroupTable standings={memoizedStandings} />
-          ) : (
-            <div className="p-4 bg-slate-50 rounded-xl text-xs text-slate-400 italic mb-6">Ingen tabell tillgänglig för denna grupp.</div>
-          )}
+          {/* Placeholder för loading */}
+          <div className="h-32 bg-slate-50 rounded-xl animate-pulse border border-slate-100" />
+          
+          {/* Placeholder för när ingen data finns */}
+          <div className="p-4 bg-slate-50 rounded-xl text-xs text-slate-400 italic mb-6">
+            Ingen tabell tillgänglig för denna grupp.
+          </div>
         </div>
       )}
 
@@ -155,9 +117,10 @@ export const TournamentMatches: React.FC<TournamentMatchesProps> = ({
         {filteredMatches.length > 0 ? (
           filteredMatches.map(match => (
             <MatchCard 
-              key={match.id} 
+              key={match.matchId} 
               match={match} 
-              prediction={predictions.find(p => p.matchId === match.id)} 
+              prediction={undefined} 
+              groups={groups}
             />
           ))
         ) : selectedFilter ? (
