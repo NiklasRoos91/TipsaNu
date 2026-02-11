@@ -8,7 +8,7 @@ export const useGroupMatches = (groupId: number | null) => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!groupId) return; // Om groupId inte finns, gör inget
+    if (!groupId) return;
 
     setLoading(true);
     setError(null);

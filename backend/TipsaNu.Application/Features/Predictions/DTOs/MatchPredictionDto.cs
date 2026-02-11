@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TipsaNu.Application.Features.Predictions.DTOs
+﻿namespace TipsaNu.Application.Features.Predictions.DTOs
 {
     public class MatchPredictionDto
     {

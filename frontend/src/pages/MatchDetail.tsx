@@ -1,7 +1,7 @@
-import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useMatchDetail } from '../hooks/useMatchDetail';
-import { MatchStatus } from '../types/types';
+import { useMatchById } from '../hooks/useMatchById';  
+import { useCreatePrediction } from '../hooks/useCreatePrediction';
+import { MatchStatusEnum } from '../types/enums/matchEnums';
 import { BackLink } from '../components/match/BackLink';
 import { MatchHeader } from '../components/match/MatchHeader';
 import { MatchPredictionForm } from '../components/match/MatchPredictionForm';
@@ -11,22 +11,13 @@ import { LockedMessage } from '../components/match/LockedMessage';
 export const MatchDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const {
-    match,
-    prediction,
-    homePred,
-    awayPred,
-    loading,
-    isSubmitting,
-    showSuccess,
-    updateHomePred,
-    updateAwayPred,
-    submitPrediction
-  } = useMatchDetail(id);
+
+  const { match, loading, error } = useMatchById(Number(id));
+  const { handleSubmitPrediction, loading: predictionLoading, error: predictionError, prediction } = useCreatePrediction();
 
   if (loading || !match) return <div className="p-10 text-center">Laddar match...</div>;
-
-  const isLocked = match.status !== MatchStatus.SCHEDULED && new Date(match.startTime) < new Date();
+  if (error) return <div className="p-10 text-center text-red-500">{error}</div>;
+  const isLocked = match.status !== MatchStatusEnum.Scheduled && new Date(match.startTime) < new Date();
 
   return (
     <div className="max-w-2xl mx-auto">
@@ -46,20 +37,16 @@ export const MatchDetail = () => {
             )
           ) : (
             <MatchPredictionForm 
-              homeTeamName={match.homeTeam.name}
-              awayTeamName={match.awayTeam.name}
-              homePred={homePred}
-              awayPred={awayPred}
-              isSubmitting={isSubmitting}
-              showSuccess={showSuccess}
+              homeTeamName={match.homeCompetitorName || ''}
+              awayTeamName={match.awayCompetitorName || ''}
+              isSubmitting={predictionLoading}
+              showSuccess={prediction ? true : false}
               hasExistingPrediction={!!prediction}
-              onHomeChange={updateHomePred}
-              onAwayChange={updateAwayPred}
-              onCancel={() => navigate(`/tournaments/${match.tournamentId}`)}
               onSubmit={(e) => {
                 e.preventDefault();
-                submitPrediction();
+                handleSubmitPrediction(match.matchId, match.scoreHome ?? 0, match.scoreAway ?? 0);
               }}
+              onCancel={() => navigate(`/tournaments/${match.tournamentId}`)}
             />
           )}
         </div>

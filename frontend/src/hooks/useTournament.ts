@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Tournament } from '../types/tournamentTypes';
-import { getTournament } from '../services/tournamentService'; // ✅ rätt namn
+import { getTournament } from '../services/tournamentService';
 
 export const useTournament = (id: number) => {
   const [tournament, setTournament] = useState<Tournament | null>(null);

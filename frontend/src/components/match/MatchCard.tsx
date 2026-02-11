@@ -1,25 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { Check, ChevronDown, ChevronUp } from 'lucide-react';
-import { Prediction, MatchStatus } from '../../types/types';
-import { submitPrediction as apiSubmitPrediction } from '../../services/api';
-import { MatchPredictionForm } from './MatchPredictionForm';
 import { Match } from '../../types/tournamentTypes'; 
-import { MatchStatusEnum } from '../../types/enums/tournamentEnums'; // Se till att importera rätt enum
-
+import { MatchStatusEnum } from '../../types/enums/matchEnums';
+import { useMatchById } from '../../hooks/useMatchById';
+import { useCreatePrediction  } from '../../hooks/useCreatePrediction';
+import { MatchPredictionForm } from './MatchPredictionForm';
 
 interface MatchCardProps {
   match: Match;
-  prediction?: Prediction;
-  groups: { name: string, groupId: number }[]; // Lägg till groups som en prop
+  prediction: { homeScore: number; awayScore: number } | null;
+  groups: { name: string, groupId: number }[]; 
 }
 
 export const MatchCard: React.FC<MatchCardProps> = ({ match, prediction: initialPrediction, groups }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [prediction, setPrediction] = useState<Prediction | undefined>(initialPrediction);
   const [homePred, setHomePred] = useState<number | ''>(initialPrediction?.homeScore ?? 0);
   const [awayPred, setAwayPred] = useState<number | ''>(initialPrediction?.awayScore ?? 0);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const { match: fetchedMatch, loading, error } = useMatchById(match.matchId);
+  const { handleSubmitPrediction, loading: isSubmitting, prediction: newPrediction } = useCreatePrediction();
+
 
   const InProgress = match.status === MatchStatusEnum.InProgress;
   const isFinished = match.status === MatchStatusEnum.Finished;
@@ -31,7 +31,6 @@ export const MatchCard: React.FC<MatchCardProps> = ({ match, prediction: initial
   // Keep local state in sync if initialPrediction changes from parent (e.g. on bulk load)
   useEffect(() => {
     if (initialPrediction) {
-      setPrediction(initialPrediction);
       setHomePred(initialPrediction.homeScore);
       setAwayPred(initialPrediction.awayScore);
     } else {
@@ -40,30 +39,27 @@ export const MatchCard: React.FC<MatchCardProps> = ({ match, prediction: initial
     }
   }, [initialPrediction]);
 
+    useEffect(() => {
+    if (newPrediction) {
+      setHomePred(newPrediction.predictedHomeScore);
+      setAwayPred(newPrediction.predictedAwayScore);
+      setShowSuccess(true);
+      setTimeout(() => {
+      setShowSuccess(false);
+      }, 2000);
+    }
+  }, [newPrediction]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (homePred === '' || awayPred === '' || isSubmitting || isLocked || isFinished) return;
 
-    setIsSubmitting(true);
-    try {
-      const result = await apiSubmitPrediction(String(match.matchId), Number(homePred), Number(awayPred));
-      setPrediction(result);
-      setShowSuccess(true);
-      setTimeout(() => {
-        setShowSuccess(false);
-        setIsExpanded(false);
-      }, 2000);
-    } catch (error) {
-      alert('Kunde inte spara tipset.');
-    } finally {
-      setIsSubmitting(false);
-    }
+    await handleSubmitPrediction(match.matchId, Number(homePred), Number(awayPred));
   };
 
   const handleCancel = () => {
-    // Reset to initial values from state (which mirrors the saved prediction)
-    setHomePred(prediction?.homeScore ?? 0);
-    setAwayPred(prediction?.awayScore ?? 0);
+    setHomePred(initialPrediction?.homeScore ?? 0);
+    setAwayPred(initialPrediction?.awayScore ?? 0);
     setIsExpanded(false);
   };
 
@@ -103,10 +99,10 @@ export const MatchCard: React.FC<MatchCardProps> = ({ match, prediction: initial
                 : `${match.scoreHome} - ${match.scoreAway}`}
             </div>
             <div className="mt-2">
-               {prediction ? (
+               {newPrediction ? (
                  <div className="flex items-center gap-1 text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">
                    <Check size={10} />
-                   <span>{prediction.homeScore}-{prediction.awayScore}</span>
+                   <span>{newPrediction.predictedHomeScore}-{newPrediction.predictedAwayScore}</span>
                  </div>
                ) : (
                  !isFinished && !isLocked && (
@@ -117,7 +113,7 @@ export const MatchCard: React.FC<MatchCardProps> = ({ match, prediction: initial
                    </div>
                  )
                )}
-               {(isFinished || isLocked) && !prediction && (
+               {(isFinished || isLocked) && !newPrediction && (
                  <div className="text-[10px] font-bold text-slate-300 bg-slate-50 px-2 py-0.5 rounded-full uppercase italic">
                    Ej tippad
                  </div>
@@ -142,15 +138,15 @@ export const MatchCard: React.FC<MatchCardProps> = ({ match, prediction: initial
             <MatchPredictionForm 
               homeTeamName={match.homeCompetitorName}
               awayTeamName={match.awayCompetitorName}
-              homePred={homePred}
-              awayPred={awayPred}
-              onHomeChange={setHomePred}
-              onAwayChange={setAwayPred}
               onSubmit={handleSubmit}
               onCancel={handleCancel}
               isSubmitting={isSubmitting}
               showSuccess={showSuccess}
-              hasExistingPrediction={!!prediction}
+              hasExistingPrediction={!!newPrediction}
+              homePred={homePred}
+              awayPred={awayPred}
+              onHomePredChange={setHomePred}
+              onAwayPredChange={setAwayPred}
             />
           </div>
         </div>
