@@ -1,6 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Notification } from '../../types/types';
+
+// Placeholder type for notification, replace with actual type from your data model
+type Notification = {
+  id: string;
+  title: string;
+  message: string;
+  link?: string;
+  read: boolean;
+  createdAt: string;
+};
 
 interface NotificationItemProps {
   notification: Notification;

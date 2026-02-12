@@ -1,13 +1,14 @@
-import { TournamentStatusEnum, MatchStatusEnum } from './enums/tournamentEnums';
+import { TournamentStatusEnum } from './enums/tournamentEnums';
+import { MatchStatusEnum } from './enums/matchEnums';
 
 // Tournament
 export interface Tournament {
-  TournamentId: number;
-  Name: string;
-  StartsAt: string;
-  EndDate?: string; // <-- lägg till
-  Status: TournamentStatusEnum;
-  BannerUrl?: string;
+  tournamentId: number;
+  name: string;
+  startsAt: string;
+  endDate?: string;
+  status: TournamentStatusEnum;
+  bannerUrl?: string;
 }
 
 // Group

@@ -1,6 +1,33 @@
 import { useState } from 'react';
-import { createLeague, joinLeague } from '../services/api';
-import { League } from '../types/types';
+
+// Mock typ för liga
+type League = {
+  id: string;
+  name: string;
+  tournamentId: string;
+};
+
+// Mock-funktioner för frontend
+const createLeague = async (name: string, tournamentId: string): Promise<League> => {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve({ id: Math.random().toString(36).substr(2, 9), name, tournamentId });
+    }, 500);
+  });
+};
+
+const joinLeague = async (code: string): Promise<League | null> => {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      // Här returnerar vi en dummy-liga om koden är "1234", annars null
+      if (code === '1234') {
+        resolve({ id: 'mockid', name: 'Mockliga', tournamentId: '1' });
+      } else {
+        resolve(null);
+      }
+    }, 500);
+  });
+};
 
 export const useLeagueForm = (tournamentId: string, onLeagueAdded: (l: League) => void) => {
   const [showCreate, setShowCreate] = useState(false);

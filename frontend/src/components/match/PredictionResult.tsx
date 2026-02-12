@@ -1,5 +1,5 @@
 import React from 'react';
-import { MatchPredictionDto } from '../../types/tournamentTypes';
+import { MatchPredictionDto } from '../../types/matchTypes';
 
 interface PredictionResultProps {
   prediction: MatchPredictionDto;

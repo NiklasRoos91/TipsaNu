@@ -1,6 +1,25 @@
 import { useState } from 'react';
-import { createExtraBet } from '../services/api';
-import { ExtraBet } from '../types/types';
+
+// Mock typ för extra bet
+type ExtraBet = {
+  id: string;
+  tournamentId: string;
+  question: string;
+  description: string;
+  points: number;
+  deadline: string;
+  allowedValues?: string[];
+  requiresValue: boolean;
+};
+
+// Mock-funktion som ersätter backend
+const createExtraBet = async (data: Omit<ExtraBet, 'id'>): Promise<ExtraBet> => {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve({ ...data, id: Math.random().toString(36).substr(2, 9) });
+    }, 500);
+  });
+};
 
 export const useExtraBetForm = (tournamentId: string, onBetCreated: (eb: ExtraBet) => void) => {
   const [showForm, setShowForm] = useState(false);

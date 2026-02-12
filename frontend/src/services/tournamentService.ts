@@ -11,12 +11,12 @@ export const getTournaments = async (): Promise<Tournament[]> => {
   }
 };
 
-export const getTournament = async (id: number): Promise<Tournament> => {
+export const getTournament = async (tournamentId: number): Promise<Tournament> => {
   try {
-    const response = await api.get<Tournament>(`/tournaments/${id}`);
+    const response = await api.get<Tournament>(`/tournaments/${tournamentId}`);
     return response.data;
   } catch (err: any) {
-    console.error(`Kunde inte hämta turnering ${id}`, err);
+    console.error(`Kunde inte hämta turnering ${tournamentId}`, err);
     throw new Error(err.response?.data?.message || 'Nätverksfel vid hämtning av turnering');
   }
 };

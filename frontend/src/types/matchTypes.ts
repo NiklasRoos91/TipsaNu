@@ -19,8 +19,18 @@ export interface Match {
   status: MatchStatusEnum;
 }
 
-
 // Prediction
+export interface Prediction {
+  predictionId: number;
+  userId: number;
+  matchId: number;
+  predictedHomeScore: number;
+  predictedAwayScore: number;
+  predictedWinnerId?: number;
+  pointsAwarded: number;
+  submittedAt: string;
+}
+
 export interface MatchPredictionDto {
   matchId: number;
   predictedHomeScore: number;

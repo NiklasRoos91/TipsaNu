@@ -28,7 +28,6 @@ export const MatchCard: React.FC<MatchCardProps> = ({ match, prediction: initial
 
   const groupName = groups.find(group => group.groupId === match.groupId)?.name ?? "Okänd grupp";
 
-  // Keep local state in sync if initialPrediction changes from parent (e.g. on bulk load)
   useEffect(() => {
     if (initialPrediction) {
       setHomePred(initialPrediction.homeScore);
@@ -98,28 +97,31 @@ export const MatchCard: React.FC<MatchCardProps> = ({ match, prediction: initial
                 ? 'VS' 
                 : `${match.scoreHome} - ${match.scoreAway}`}
             </div>
+
             <div className="mt-2">
-               {newPrediction ? (
-                 <div className="flex items-center gap-1 text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">
-                   <Check size={10} />
-                   <span>{newPrediction.predictedHomeScore}-{newPrediction.predictedAwayScore}</span>
-                 </div>
-               ) : (
-                 !isFinished && !isLocked && (
-                   <div className={`text-[10px] font-bold px-2 py-0.5 rounded-full transition-colors ${
-                     isExpanded ? 'bg-accent text-white' : 'text-slate-400 bg-slate-100'
-                   }`}>
-                     TIPPA
-                   </div>
-                 )
-               )}
-               {(isFinished || isLocked) && !newPrediction && (
-                 <div className="text-[10px] font-bold text-slate-300 bg-slate-50 px-2 py-0.5 rounded-full uppercase italic">
-                   Ej tippad
-                 </div>
-               )}
+              {(newPrediction || initialPrediction) ? (
+                <div className="flex items-center gap-1 text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">
+                  <Check size={10} />
+                  <span>
+                    { (newPrediction?.predictedHomeScore ?? initialPrediction?.homeScore) }-
+                    { (newPrediction?.predictedAwayScore ?? initialPrediction?.awayScore) }
+                  </span>
+                </div>
+              ) : !isFinished && !isLocked ? (
+                <div className={`text-[10px] font-bold px-2 py-0.5 rounded-full transition-colors ${
+                  isExpanded ? 'bg-accent text-white' : 'text-slate-400 bg-slate-100'
+                }`}>
+                  TIPPA
+                </div>
+              ) : (
+                <div className="text-[10px] font-bold text-slate-300 bg-slate-50 px-2 py-0.5 rounded-full uppercase italic">
+                  Ej tippad
+                </div>
+              )}
             </div>
           </div>
+
+
 
           <div className="flex items-center gap-3 w-1/3 justify-end text-right">
             <span className="font-semibold text-primary truncate">{match.awayCompetitorName}</span>

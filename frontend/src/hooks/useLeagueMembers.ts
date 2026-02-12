@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { getLeagueMembers } from '../services/api';
 
 export interface MemberWithRank {
   id: string;
@@ -7,6 +6,27 @@ export interface MemberWithRank {
   points: number;
   rank: number;
 }
+
+// Mock-typ för medlem
+export interface MemberWithRank {
+  id: string;
+  name: string;
+  points: number;
+  rank: number;
+}
+
+// Mock-funktion som ersätter getLeagueMembers
+const getLeagueMembers = async (id: string) => {
+  return new Promise<MemberWithRank[]>(resolve => {
+    setTimeout(() => {
+      resolve([
+        { id: '1', name: 'Alice', points: 25, rank: 0 },
+        { id: '2', name: 'Bob', points: 30, rank: 0 },
+        { id: '3', name: 'Charlie', points: 20, rank: 0 }
+      ]);
+    }, 500);
+  });
+};
 
 export const useLeagueMembers = (id?: string) => {
   const [members, setMembers] = useState<MemberWithRank[]>([]);

@@ -9,10 +9,10 @@ interface MatchPredictionFormProps {
   hasExistingPrediction: boolean;
   onSubmit: (e: React.FormEvent) => void;
   onCancel: () => void;
-  homePred: number | '';   // Dynamiskt värde för hemmapoäng
-  awayPred: number | '';   // Dynamiskt värde för bortapoäng
-  onHomePredChange: (value: number | '') => void;  // Förändring av hemmapoäng
-  onAwayPredChange: (value: number | '') => void;  // Förändring av bortapoäng
+  homePred: number | ''; 
+  awayPred: number | ''; 
+  onHomePredChange: (value: number | '') => void;
+  onAwayPredChange: (value: number | '') => void; 
 }
 
 export const MatchPredictionForm: React.FC<MatchPredictionFormProps> = ({

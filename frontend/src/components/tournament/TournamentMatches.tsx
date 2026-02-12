@@ -1,28 +1,26 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Filter } from 'lucide-react';
-import {  Prediction } from '../../types/types';
-import { GroupTable } from './GroupTable';
+import { MatchPredictionDto } from '../../types/matchTypes';
 import { MatchCard } from '../match/MatchCard';
 import { useGroups } from '../../hooks/useGroups';
 import { useGroupMatches } from '../../hooks/useGroupMatches';
+import { useUserPredictions } from '../../hooks/useUserPredictions';
 
 interface TournamentMatchesProps {
   tournamentId: string;
-  predictions: Prediction[];
 }
 
 type MatchCategory = 'groups' | 'knockout';
 
 export const TournamentMatches: React.FC<TournamentMatchesProps> = ({ 
-  tournamentId, 
-  predictions 
+  tournamentId 
 }) => {
   const [matchCategory, setMatchCategory] = useState<MatchCategory>('groups');
   const [selectedFilter, setSelectedFilter] = useState<string | null>(null);
   const { groups } = useGroups(Number(tournamentId));
-
   const groupId = selectedFilter ? groups.find(g => g.name === selectedFilter)?.groupId ?? null : null;
   const { matches, loading: loadingMatches, error: matchesError } = useGroupMatches(groupId);
+  const { predictions, loading: loadingPredictions, error: predictionsError } = useUserPredictions();
 
   const matchGroups = useMemo(() => {
     const categories = {
@@ -49,6 +47,10 @@ export const TournamentMatches: React.FC<TournamentMatchesProps> = ({
     if (!selectedFilter) return [];
     return matches;
   }, [matches, selectedFilter]);
+
+  const filteredPredictions = useMemo(() => {
+    return predictions.filter(p => filteredMatches.some(m => m.matchId === p.matchId));
+  }, [predictions, filteredMatches]);
 
   return (
     <div className="space-y-6">
@@ -112,17 +114,36 @@ export const TournamentMatches: React.FC<TournamentMatchesProps> = ({
           </div>
         </div>
       )}
-
+      
+      <div className="mb-4">
+        <div className="flex justify-between items-center mb-2">
+          <span className="text-sm text-slate-600">Tippade matcher</span>
+          <span className="font-bold text-primary">{filteredPredictions.length} / {filteredMatches.length}</span>
+        </div>
+        <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+          <div 
+            className="bg-accent h-2 rounded-full transition-all duration-1000 ease-out" 
+            style={{ width: `${filteredMatches.length > 0 ? (filteredPredictions.length / filteredMatches.length) * 100 : 0}%` }}
+          ></div>
+        </div>
+      </div>
+      
       <div className="space-y-4 animate-fade-in">
         {filteredMatches.length > 0 ? (
-          filteredMatches.map(match => (
+          filteredMatches.map(match => {
+            const initialPrediction = filteredPredictions.find(p => p.matchId === match.matchId) ?? null;
+            const mappedPrediction = initialPrediction
+              ? { homeScore: initialPrediction.predictedHomeScore, awayScore: initialPrediction.predictedAwayScore }
+              : null;
+            return (
             <MatchCard 
               key={match.matchId} 
               match={match} 
-              prediction={undefined} 
+              prediction={mappedPrediction} 
               groups={groups}
             />
-          ))
+            );
+          })
         ) : selectedFilter ? (
           <div className="text-center p-12 bg-white rounded-xl border border-slate-200 text-slate-400">
             Inga matcher hittades för det valda filtret.

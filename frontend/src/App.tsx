@@ -8,7 +8,6 @@ import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { TournamentList } from './pages/TournamentList';
 import { TournamentDetail } from './pages/TournamentDetail';
-import { MatchDetail } from './pages/MatchDetail';
 import { ExtraBets } from './pages/ExtraBets';
 import { UserProfile } from './pages/UserProfile';
 import { Notifications } from './pages/Notifications';
@@ -55,7 +54,6 @@ const App = () => {
           <Route path="/admin/templates/new" element={<AdminRoute><CreateTournamentTemplate /></AdminRoute>} />
           
           <Route path="/tournaments/:id" element={<ProtectedRoute><TournamentDetail /></ProtectedRoute>} />
-          <Route path="/matches/:id" element={<ProtectedRoute><MatchDetail /></ProtectedRoute>} />
           
           <Route path="/profile" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
           <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />

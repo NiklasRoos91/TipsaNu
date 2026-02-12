@@ -1,7 +1,14 @@
 
 import React, { useState } from 'react';
 import { MessageSquare, Send } from 'lucide-react';
-import { Post } from '../../types/types';
+
+// placeholder data structure for posts, should be replaced with actual data from backend
+type Post = {
+  id: string | number;
+  username: string;
+  content: string;
+  createdAt: string | number | Date;
+};
 
 interface ForumProps {
   posts: Post[];

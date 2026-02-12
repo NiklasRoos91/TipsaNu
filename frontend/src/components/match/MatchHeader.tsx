@@ -9,7 +9,7 @@ interface MatchHeaderProps {
 export const MatchHeader: React.FC<MatchHeaderProps> = ({ match }) => {
   const isLive = match.status === MatchStatusEnum.InProgress;
 
-  const groupName = match.groupId ? `Group ${match.groupId}` : 'Unknown Group'; // Här kan du använda riktig gruppdata om du har det
+  const groupName = match.groupId ? `Group ${match.groupId}` : 'Unknown Group';
 
   return (
     <div className="bg-primary p-6 text-white text-center relative">
