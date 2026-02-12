@@ -55,6 +55,7 @@ export const AuthProvider = ({ children }: { children?: ReactNode }) => {
       setUser(res.user);
       setToken(res.accessToken);
       localStorage.setItem('token', res.accessToken);
+      localStorage.setItem('refreshToken', res.refreshToken);
     } catch (err:any) {
       setError(err.response?.data?.message || 'Felaktiga inloggningsuppgifter');
     } finally {
@@ -99,6 +100,7 @@ export const AuthProvider = ({ children }: { children?: ReactNode }) => {
     setUser(null);
     setToken(null);
     localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
   };
 
   return (

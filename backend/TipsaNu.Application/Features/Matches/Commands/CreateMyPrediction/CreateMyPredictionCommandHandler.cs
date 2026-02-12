@@ -10,18 +10,21 @@ namespace TipsaNu.Application.Features.Matches.Commands.CreateMyPrediction
 {
     public class CreatePredictionHandler : IRequestHandler<CreateMyPredictionCommand, OperationResult<MatchPredictionDto>>
     {
-        private readonly IGenericRepository<Prediction> _predictionRepository;
+        private readonly IPredictionRepository _predictionRepository;
+        private readonly IGenericRepository<Prediction> _genericPredictionRepository;
         private readonly IGenericRepository<Match> _matchRepository;
         private readonly ICurrentUserService _currentUser;
         private readonly IMapper _mapper;
 
         public CreatePredictionHandler(
-            IGenericRepository<Prediction> predictionRepository,
+            IPredictionRepository predictionRepository,
+            IGenericRepository<Prediction> genericPredictionRepository,
             IGenericRepository<Match> matchRepository,
             ICurrentUserService currentUser,
             IMapper mapper)
         {
             _predictionRepository = predictionRepository;
+            _genericPredictionRepository = genericPredictionRepository;
             _matchRepository = matchRepository;
             _currentUser = currentUser;
             _mapper = mapper;
@@ -40,6 +43,15 @@ namespace TipsaNu.Application.Features.Matches.Commands.CreateMyPrediction
             if (match.PredictionDeadline.HasValue && match.PredictionDeadline < DateTime.UtcNow)
                 return OperationResult<MatchPredictionDto>.Failure("Prediction deadline has passed");
 
+            var existingPrediction = await _predictionRepository.GetByUserAndMatchAsync(userId, request.MatchId, cancellationToken);
+
+            // Steg 2: Ta bort den gamla predictionen om den finns
+            if (existingPrediction != null)
+            {
+                // Här tar vi bort den gamla predictionen
+                await _genericPredictionRepository.DeleteAsync(existingPrediction.PredictionId, cancellationToken);
+            }
+
             var prediction = new Prediction
             {
                 MatchId = request.MatchId,
@@ -54,7 +66,7 @@ namespace TipsaNu.Application.Features.Matches.Commands.CreateMyPrediction
                         : (int?)null
             };
 
-            await _predictionRepository.AddAsync(prediction, cancellationToken);
+            await _genericPredictionRepository.AddAsync(prediction, cancellationToken);
 
             prediction.Match = match;
 

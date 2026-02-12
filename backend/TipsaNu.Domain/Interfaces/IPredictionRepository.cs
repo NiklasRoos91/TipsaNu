@@ -8,5 +8,6 @@ namespace TipsaNu.Domain.Interfaces
         Task<Prediction?> GetPredictionForUserAndMatchAsync(int userId, int matchId, CancellationToken cancellationToken = default);
         Task<List<Prediction>> GetPredictionsForMatchAsync(int matchId, CancellationToken cancellationToken = default);
         Task UpdateRangeAsync(List<Prediction> predictions, CancellationToken cancellationToken = default);
+        Task<Prediction> GetByUserAndMatchAsync(int userId, int matchId, CancellationToken cancellationToken = default);
     }
 }

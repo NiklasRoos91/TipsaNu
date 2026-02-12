@@ -1,53 +1,37 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Filter } from 'lucide-react';
-import { Match, Prediction, GroupStanding } from '../../types/types';
-import { getGroupStandings } from '../../services/api';
-import { GroupTable } from './GroupTable';
+import { MatchPredictionDto } from '../../types/matchTypes';
 import { MatchCard } from '../match/MatchCard';
+import { useGroups } from '../../hooks/useGroups';
+import { useGroupMatches } from '../../hooks/useGroupMatches';
+import { useUserPredictions } from '../../hooks/useUserPredictions';
 
 interface TournamentMatchesProps {
   tournamentId: string;
-  matches: Match[];
-  predictions: Prediction[];
 }
 
 type MatchCategory = 'groups' | 'knockout';
 
 export const TournamentMatches: React.FC<TournamentMatchesProps> = ({ 
-  tournamentId, 
-  matches, 
-  predictions 
+  tournamentId 
 }) => {
   const [matchCategory, setMatchCategory] = useState<MatchCategory>('groups');
   const [selectedFilter, setSelectedFilter] = useState<string | null>(null);
-  const [standings, setStandings] = useState<GroupStanding[]>([]);
-  const [loadingStandings, setLoadingStandings] = useState(false);
+  const { groups } = useGroups(Number(tournamentId));
+  const groupId = selectedFilter ? groups.find(g => g.name === selectedFilter)?.groupId ?? null : null;
+  const { matches, loading: loadingMatches, error: matchesError } = useGroupMatches(groupId);
+  const { predictions, loading: loadingPredictions, error: predictionsError } = useUserPredictions();
 
-  // Categorize and filter matches
   const matchGroups = useMemo(() => {
     const categories = {
-      groups: [] as string[],
+      groups: groups.map(g => g.name),
       knockout: [] as string[]
     };
 
-    matches.forEach(m => {
-      let g = m.group || 'Övrigt';
-      // Normalize group names like "A" to "Grupp A" if they are just letters
-      if (g.length === 1) g = `Grupp ${g}`;
-      
-      if (g.toLowerCase().includes('grupp')) {
-        if (!categories.groups.includes(g)) categories.groups.push(g);
-      } else {
-        if (!categories.knockout.includes(g)) categories.knockout.push(g);
-      }
-    });
-
     categories.groups.sort();
-    categories.knockout.sort();
     return categories;
-  }, [matches]);
+  }, [groups]);
 
-  // Set default filter when category changes
   useEffect(() => {
     const availableFilters = matchGroups[matchCategory];
     if (availableFilters.length > 0) {
@@ -59,34 +43,14 @@ export const TournamentMatches: React.FC<TournamentMatchesProps> = ({
     }
   }, [matchCategory, matchGroups]);
 
-  // Fetch standings when group filter changes
-  useEffect(() => {
-    if (tournamentId && matchCategory === 'groups' && selectedFilter) {
-      setLoadingStandings(true);
-      getGroupStandings(tournamentId, selectedFilter)
-        .then(data => {
-          setStandings(data);
-          setLoadingStandings(false);
-        })
-        .catch(() => {
-          setLoadingStandings(false);
-        });
-    } else {
-      setStandings([]);
-    }
-  }, [tournamentId, matchCategory, selectedFilter]);
-
-  // Memoisering av standings
-  const memoizedStandings = useMemo(() => standings, [standings]);
-
   const filteredMatches = useMemo(() => {
     if (!selectedFilter) return [];
-    return matches.filter(m => {
-      let mg = m.group;
-      if (mg?.length === 1) mg = `Grupp ${mg}`;
-      return mg === selectedFilter;
-    });
+    return matches;
   }, [matches, selectedFilter]);
+
+  const filteredPredictions = useMemo(() => {
+    return predictions.filter(p => filteredMatches.some(m => m.matchId === p.matchId));
+  }, [predictions, filteredMatches]);
 
   return (
     <div className="space-y-6">
@@ -141,25 +105,45 @@ export const TournamentMatches: React.FC<TournamentMatchesProps> = ({
       {/* Group Standings Table */}
       {matchCategory === 'groups' && selectedFilter && (
         <div className="animate-fade-in">
-          {loadingStandings ? (
-            <div className="h-32 bg-slate-50 rounded-xl animate-pulse border border-slate-100" />
-          ) : memoizedStandings.length > 0 ? (
-            <GroupTable standings={memoizedStandings} />
-          ) : (
-            <div className="p-4 bg-slate-50 rounded-xl text-xs text-slate-400 italic mb-6">Ingen tabell tillgänglig för denna grupp.</div>
-          )}
+          {/* Placeholder för loading */}
+          <div className="h-32 bg-slate-50 rounded-xl animate-pulse border border-slate-100" />
+          
+          {/* Placeholder för när ingen data finns */}
+          <div className="p-4 bg-slate-50 rounded-xl text-xs text-slate-400 italic mb-6">
+            Ingen tabell tillgänglig för denna grupp.
+          </div>
         </div>
       )}
-
+      
+      <div className="mb-4">
+        <div className="flex justify-between items-center mb-2">
+          <span className="text-sm text-slate-600">Tippade matcher</span>
+          <span className="font-bold text-primary">{filteredPredictions.length} / {filteredMatches.length}</span>
+        </div>
+        <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+          <div 
+            className="bg-accent h-2 rounded-full transition-all duration-1000 ease-out" 
+            style={{ width: `${filteredMatches.length > 0 ? (filteredPredictions.length / filteredMatches.length) * 100 : 0}%` }}
+          ></div>
+        </div>
+      </div>
+      
       <div className="space-y-4 animate-fade-in">
         {filteredMatches.length > 0 ? (
-          filteredMatches.map(match => (
+          filteredMatches.map(match => {
+            const initialPrediction = filteredPredictions.find(p => p.matchId === match.matchId) ?? null;
+            const mappedPrediction = initialPrediction
+              ? { homeScore: initialPrediction.predictedHomeScore, awayScore: initialPrediction.predictedAwayScore }
+              : null;
+            return (
             <MatchCard 
-              key={match.id} 
+              key={match.matchId} 
               match={match} 
-              prediction={predictions.find(p => p.matchId === match.id)} 
+              prediction={mappedPrediction} 
+              groups={groups}
             />
-          ))
+            );
+          })
         ) : selectedFilter ? (
           <div className="text-center p-12 bg-white rounded-xl border border-slate-200 text-slate-400">
             Inga matcher hittades för det valda filtret.

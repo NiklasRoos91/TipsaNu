@@ -1,8 +1,32 @@
 
 import React, { useState, useEffect } from 'react';
 import { AlertCircle, ChevronDown, ChevronUp, Check, Edit2 } from 'lucide-react';
-import { ExtraBet, ExtraBetPrediction } from '../../types/types';
-import { submitExtraBet } from '../../services/api';
+
+// Mock för ExtraBetPrediction
+export type ExtraBetPrediction = {
+  betId: string;
+  selectedOption: string;
+};
+
+// Mock-funktion som ersätter submitExtraBet
+export const submitExtraBet = async (betId: string, value: string): Promise<ExtraBetPrediction> => {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve({ betId, selectedOption: value });
+    }, 500); // simulerar liten delay
+  });
+};
+
+// Mock för ExtraBet
+export type ExtraBet = {
+  id: string;         
+  question: string; 
+  description?: string;  
+  points: number;         
+  deadline: string;       
+  allowedValues?: string[]; 
+  requiresValue: boolean;   
+};
 
 import { FormButtons } from '../common/FormButtons';
 

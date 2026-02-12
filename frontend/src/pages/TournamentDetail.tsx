@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams, useLocation } from 'react-router-dom';
 import { Calendar, Trophy } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
-import { useTournamentData } from '../hooks/useTournamentData';
+import { useTournament } from '../hooks/useTournament';
 
 import { TournamentBanner } from '../components/tournament/TournamentBanner';
 import { TournamentTabs, TabType } from '../components/tournament/TournamentTabs';
@@ -11,26 +11,35 @@ import { TournamentLeagues } from '../components/tournament/TournamentLeagues';
 import { TournamentExtraBets } from '../components/tournament/TournamentExtraBets';
 
 export const TournamentDetail = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
+  const location = useLocation();
+
+  console.log("PATH:", location.pathname, "PARAMS ID:", id);
+
+  const tournamentId = id ? Number(id) : NaN;
+
+if (isNaN(tournamentId)) {
+  return <div className="p-8 text-center text-red-500">Ogiltigt turnerings-id</div>;
+}
+
   const { user } = useAuth();
   const isAdmin = user?.username === 'admin';
 
-  const { 
-    tournament, 
-    matches, 
-    extraBets, 
-    setExtraBets, 
-    extraBetPredictions,
-    updateExtraBetPredictions,
-    leagues, 
-    setLeagues, 
-    predictions, 
-    loading 
-  } = useTournamentData(id);
-
+  const { tournament, loading, error } = useTournament(Number(id));
   const [activeTab, setActiveTab] = useState<TabType>('matches');
 
+  // State placeholders för framtida backend-data
+  const [matches, setMatches] = useState<any[]>([]);
+  const [leagues, setLeagues] = useState<any[]>([]);
+  const [extraBets, setExtraBets] = useState<any[]>([]);
+  const [extraBetPredictions, setExtraBetPredictions] = useState<any[]>([]);
+
+  const updateExtraBetPredictions = (pred: any) => {
+    setExtraBetPredictions(prev => [pred, ...prev]);
+  }  
+
   if (loading) return <div className="p-8 text-center text-slate-500">Laddar turnering...</div>;
+  if (error) return <div className="p-8 text-center text-red-500">{error}</div>;
   if (!tournament) return <div className="p-8 text-center">Turnering hittades inte</div>;
 
   return (
@@ -49,8 +58,6 @@ export const TournamentDetail = () => {
           {activeTab === 'matches' && (
             <TournamentMatches 
               tournamentId={id || ''} 
-              matches={matches} 
-              predictions={predictions} 
             />
           )}
 
@@ -82,18 +89,6 @@ export const TournamentDetail = () => {
               Turneringsstatus
             </h3>
             <div className="space-y-4">
-              <div>
-                <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm text-slate-600">Tippade matcher</span>
-                  <span className="font-bold text-primary">{predictions.length} / {matches.length}</span>
-                </div>
-                <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
-                  <div 
-                    className="bg-accent h-2 rounded-full transition-all duration-1000 ease-out" 
-                    style={{ width: `${matches.length > 0 ? (predictions.length / matches.length) * 100 : 0}%` }}
-                  ></div>
-                </div>
-              </div>
               <div className="flex items-center gap-3 text-sm text-slate-500 pt-2 border-t border-slate-100">
                 <Calendar size={18} className="text-slate-400" />
                 <span>Slutar {new Date(tournament.endDate).toLocaleDateString('sv-SE')}</span>

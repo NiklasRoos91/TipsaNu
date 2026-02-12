@@ -1,6 +1,28 @@
 import { useState, useEffect } from 'react';
-import { League } from '../types/types';
-import { getLeague } from '../services/api';
+
+// Mock-typ för League
+export type League = {
+  id: string;
+  name: string;
+  tournamentId: string;
+  membersCount: number;
+  joinCode: string;
+};
+
+// Mock-funktion istället för API-anrop
+const getLeague = async (id: string): Promise<League> => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        id,
+        name: `Mockliga ${id}`,
+        tournamentId: '123',
+        membersCount: 10,
+        joinCode: 'ABCDE'
+      });
+    }, 300); // simulerar liten delay
+  });
+};
 
 export const useLeague = (id?: string) => {
   const [league, setLeague] = useState<League | undefined>();

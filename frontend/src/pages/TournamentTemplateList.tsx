@@ -1,7 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getTournamentTemplates } from '../services/api';
 import { TournamentTemplate } from '../types/types';
 import { Layout, FileText, Users, ArrowRight } from 'lucide-react';
 import { ActionButton } from '../components/common/ActionButton';
@@ -10,6 +9,30 @@ export const TournamentTemplateList: React.FC = () => {
   const [templates, setTemplates] = useState<TournamentTemplate[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+
+const getTournamentTemplates = async (): Promise<any[]> => {
+  return [
+    {
+      id: 1,
+      name: 'VM 2026',
+      description: 'Mockad beskrivning',
+      totalGroups: 8,
+      advancingPerGroup: 2,
+      allowsBestThird: true,
+      pointRules: []
+    },
+    {
+      id: 2,
+      name: 'EM 2024',
+      description: 'Mockad beskrivning',
+      totalGroups: 6,
+      advancingPerGroup: 2,
+      allowsBestThird: false,
+      pointRules: []
+    }
+  ];
+};
+
 
   useEffect(() => {
     getTournamentTemplates().then(data => {

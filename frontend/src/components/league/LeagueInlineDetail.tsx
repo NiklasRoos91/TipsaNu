@@ -1,9 +1,20 @@
 import React from 'react';
-import { League } from '../../types/types';
 import { useLeagueMembers } from '../../hooks/useLeagueMembers';
 import { useLeaguePosts } from '../../hooks/useLeaguePosts';
 import { LeaderboardTable } from './LeaderboardTable';
 import { Forum } from './Forum';
+
+// Plceholder type for league, replace with actual type from your data model
+type League = {
+  id: string;
+  tournamentId: string;
+  ownerId: string | number;
+
+  name: string;
+  description?: string | null;
+  code: string;
+  membersCount: number;
+};
 
 interface LeagueInlineDetailProps {
   league: League;

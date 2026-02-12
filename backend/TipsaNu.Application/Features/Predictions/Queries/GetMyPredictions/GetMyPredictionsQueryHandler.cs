@@ -24,7 +24,6 @@ namespace TipsaNu.Application.Features.Predictions.Queries.GetMyPredictions
             _mapper = mapper;
         }
 
-
         public async Task<OperationResult<List<MatchPredictionDto>>> Handle(GetMyPredictionsQuery request, CancellationToken cancellationToken)
         {
             var userId = _currentUser.UserId;
@@ -34,11 +33,8 @@ namespace TipsaNu.Application.Features.Predictions.Queries.GetMyPredictions
             var predictions = await _predictionRepository
                 .GetPredictionsForUserWithMatchAsync(userId, cancellationToken);
 
-
-            // Koppla matchen till prediction innan mappning
             predictions.ForEach(p => p.Match = p.Match);
 
-            // Mappa till MatchPredictionDto
             var dtos = _mapper.Map<List<MatchPredictionDto>>(predictions);
 
             return OperationResult<List<MatchPredictionDto>>.Success(dtos);

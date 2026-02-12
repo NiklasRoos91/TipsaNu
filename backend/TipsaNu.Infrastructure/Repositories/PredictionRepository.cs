@@ -49,5 +49,12 @@ namespace TipsaNu.Infrastructure.Repositories
             _context.Predictions.UpdateRange(predictions);
             await _context.SaveChangesAsync(cancellationToken);
         }
+
+        public async Task<Prediction> GetByUserAndMatchAsync(int userId, int matchId, CancellationToken cancellationToken = default)
+        {
+            return await _context.Predictions
+                .Where(p => p.UserId == userId && p.MatchId == matchId)
+                .FirstOrDefaultAsync(cancellationToken);
+        }
     }
 }

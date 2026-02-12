@@ -1,8 +1,8 @@
 import React from 'react';
-import { Prediction } from '../../types/types';
+import { MatchPredictionDto } from '../../types/matchTypes';
 
 interface PredictionResultProps {
-  prediction: Prediction;
+  prediction: MatchPredictionDto;
 }
 
 export const PredictionResult: React.FC<PredictionResultProps> = ({ prediction }) => {
@@ -15,7 +15,7 @@ export const PredictionResult: React.FC<PredictionResultProps> = ({ prediction }
        : 'bg-slate-50 text-slate-600 border-slate-100'
     }`}>
       <p className="font-medium text-lg mb-1">Du tippade</p>
-      <div className="text-3xl font-bold font-mono">{prediction.homeScore} - {prediction.awayScore}</div>
+      <div className="text-3xl font-bold font-mono">{prediction.predictedHomeScore} - {prediction.predictedAwayScore}</div>
       {prediction.pointsAwarded !== undefined && (
         <div className="mt-3 inline-block bg-white px-3 py-1 rounded-full text-sm font-bold shadow-sm">
           Poäng: {prediction.pointsAwarded}

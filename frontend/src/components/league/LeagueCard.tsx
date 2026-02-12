@@ -1,6 +1,17 @@
 import React, { useState } from 'react';
 import { Users, Copy, Check } from 'lucide-react';
-import { League } from '../../types/types';
+
+// Plceholder type for league, replace with actual type from your data model
+type League = {
+  id: string;
+  tournamentId: string;
+  ownerId: string | number;
+
+  name: string;
+  description?: string | null;
+  code: string;
+  membersCount: number;
+};
 
 interface LeagueCardProps {
   league: League;

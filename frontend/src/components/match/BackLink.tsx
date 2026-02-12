@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 
 interface BackLinkProps {
-  tournamentId: string;
+  tournamentId: number;
 }
 
 export const BackLink: React.FC<BackLinkProps> = ({ tournamentId }) => (

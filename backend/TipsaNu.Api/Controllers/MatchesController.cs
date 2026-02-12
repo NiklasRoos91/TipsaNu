@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TipsaNu.Application.Features.Matches.Commands.CreateMyPrediction;
+using TipsaNu.Application.Features.Matches.Queries.GetMatchById;
 using TipsaNu.Application.Features.Predictions.DTOs;
 
 namespace TipsaNu.Api.Controllers
@@ -16,6 +17,19 @@ namespace TipsaNu.Api.Controllers
         public MatchesController(IMediator mediator)
         {
             _mediator = mediator;
+        }
+
+        // GET /api/matches/{matchId}
+        [HttpGet("{matchId}")]
+        public async Task<IActionResult> GetMatchById(int matchId, CancellationToken cancellationToken)
+        {
+            var query = new GetMatchByIdQuery(matchId);
+            var result = await _mediator.Send(query, cancellationToken);
+
+            if (!result.IsSuccess)
+                return NotFound(result.ErrorMessages ?? new List<string> { result.ErrorMessage! });
+
+            return Ok(result.Data);
         }
 
         // POST /api/matches/{matchId}/predictions/mine
