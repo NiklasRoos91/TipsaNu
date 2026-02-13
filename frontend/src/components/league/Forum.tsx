@@ -2,17 +2,17 @@
 import React, { useState } from 'react';
 import { MessageSquare, Send } from 'lucide-react';
 
-// placeholder data structure for posts, should be replaced with actual data from backend
-type Post = {
-  id: string | number;
+// Anpassad post-typ, kan uppdateras när backend är klar
+export interface LeaguePostDto {
+  postId: number | string;
+  userId?: number;
   username: string;
   content: string;
-  createdAt: string | number | Date;
-};
-
+  createdAt: string; // ISO string
+}
 interface ForumProps {
-  posts: Post[];
-  onAddPost: (content: string) => Promise<boolean | undefined>;
+  posts: LeaguePostDto[];
+  onAddPost: (content: string) => Promise<void>;
 }
 
 export const Forum: React.FC<ForumProps> = ({ posts, onAddPost }) => {
@@ -20,9 +20,13 @@ export const Forum: React.FC<ForumProps> = ({ posts, onAddPost }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const success = await onAddPost(newPost);
-    if (success) setNewPost('');
-    else if (success === false) alert("Kunde inte skicka inlägg.");
+    if (!newPost.trim()) return;
+    try {
+      await onAddPost(newPost);
+      setNewPost('');
+    } catch (err) {
+      alert("Kunde inte skicka inlägg.");
+    }
   };
 
   return (
@@ -34,7 +38,7 @@ export const Forum: React.FC<ForumProps> = ({ posts, onAddPost }) => {
       
       <div className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-thin scrollbar-thumb-slate-200">
         {posts.length > 0 ? posts.map(post => (
-          <div key={post.id} className="flex gap-3 animate-fade-in">
+          <div key={post.postId} className="flex gap-3 animate-fade-in">
             <div className="w-8 h-8 rounded-full bg-slate-200 flex-shrink-0 flex items-center justify-center font-bold text-xs text-slate-600 border border-slate-300">
               {post.username.charAt(0).toUpperCase()}
             </div>

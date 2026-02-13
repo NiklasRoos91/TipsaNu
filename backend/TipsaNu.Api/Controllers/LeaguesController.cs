@@ -63,7 +63,7 @@ namespace TipsaNu.Api.Controllers
             return Ok(result.Data);
         }
 
-        // 13.	GET /api/leagues/{leagueId}
+        // 	GET /api/leagues/{leagueId}
         // Retrieves detailed information about a specific league, including its leaderboard.
         [HttpGet("{leagueId}")]
         public async Task<IActionResult> GetLeagueDetails(int leagueId, CancellationToken cancellationToken)
