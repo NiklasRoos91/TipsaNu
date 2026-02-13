@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Users, LogIn, CheckSquare } from 'lucide-react';
+import { Users, CheckSquare } from 'lucide-react';
 
 interface GroupSettingsInputProps {
   totalGroups: number;
