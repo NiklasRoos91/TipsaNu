@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Check, ChevronDown, ChevronUp } from 'lucide-react';
+import {  ChevronDown, ChevronUp } from 'lucide-react';
 import { Match } from '../../types/matchTypes'; 
 import { MatchStatusEnum } from '../../types/enums/matchEnums';
 import { useCreatePrediction  } from '../../hooks/useCreatePrediction';
