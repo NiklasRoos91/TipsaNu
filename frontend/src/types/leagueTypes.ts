@@ -22,6 +22,13 @@ export interface JoinLeagueDto {
   invitationCode: string;
 }
 
+export interface LeaderboardEntryBackendDto {
+  leagueMemberId: number;
+  userId: number;
+  username: string;
+  totalPoints: number;
+}
+
 export interface LeaderboardEntryDto {
   userId: number;
   username: string;
@@ -55,7 +62,7 @@ export interface LeagueMemberDto {
   leagueMemberId: number;
   leagueId: number;
   userId: number;
-  joinedAt: string; // ISO string
+  joinedAt: string;
 }
 
 export interface CreatedLeagueWithMemberDto {

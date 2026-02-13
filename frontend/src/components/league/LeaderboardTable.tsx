@@ -1,10 +1,10 @@
 import React from 'react';
 import { Trophy } from 'lucide-react';
-import { MemberWithRank } from '../../hooks/useLeagueMembers';
+import type { LeaderboardEntryDto } from '../../types/leagueTypes';
 import { MemberRow } from './MemberRow';
 
 interface LeaderboardTableProps {
-  members: MemberWithRank[];
+  members: LeaderboardEntryDto[];
 }
 
 export const LeaderboardTable: React.FC<LeaderboardTableProps> = ({ members }) => {
@@ -28,7 +28,7 @@ export const LeaderboardTable: React.FC<LeaderboardTableProps> = ({ members }) =
           </thead>
           <tbody className="divide-y divide-slate-100">
             {members.map((member) => (
-              <MemberRow key={member.id} member={member} />
+              <MemberRow key={member.userId} member={member} />
             ))}
           </tbody>
         </table>

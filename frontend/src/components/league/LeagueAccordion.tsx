@@ -105,7 +105,7 @@ export const LeagueAccordion: React.FC<LeagueAccordionProps> = ({ league, isExpa
         </div>
       </button>
 
-      {isExpanded && <LeagueInlineDetail league={league} />}
+      {isExpanded && <LeagueInlineDetail leagueId={league.leagueId} />}
     </div>
   );
 };
