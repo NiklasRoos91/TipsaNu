@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Check, ChevronDown, ChevronUp } from 'lucide-react';
-import { Match } from '../../types/tournamentTypes'; 
+import { Match } from '../../types/matchTypes'; 
 import { MatchStatusEnum } from '../../types/enums/matchEnums';
-import { useMatchById } from '../../hooks/useMatchById';
 import { useCreatePrediction  } from '../../hooks/useCreatePrediction';
 import { MatchPredictionForm } from './MatchPredictionForm';
+import { useSetMatchResult } from '../../hooks/useSetMatchResult';
+import { useAuth } from '../../hooks/useAuth';
+import { MatchResultForm } from './MatchResultForm';
+import { PredictionResultBadge } from './PredictionResultBadge';
 
 interface MatchCardProps {
   match: Match;
@@ -17,9 +20,12 @@ export const MatchCard: React.FC<MatchCardProps> = ({ match, prediction: initial
   const [homePred, setHomePred] = useState<number | ''>(initialPrediction?.homeScore ?? 0);
   const [awayPred, setAwayPred] = useState<number | ''>(initialPrediction?.awayScore ?? 0);
   const [showSuccess, setShowSuccess] = useState(false);
-  const { match: fetchedMatch, loading, error } = useMatchById(match.matchId);
   const { handleSubmitPrediction, loading: isSubmitting, prediction: newPrediction } = useCreatePrediction();
+  const { handleSubmitResult, loading: isSubmittingResult, updatedMatch } = useSetMatchResult();
+  const { isAdmin } = useAuth();const [homeScoreLocal, setHomeScoreLocal] = useState<number | null>(match.scoreHome);
+  const [awayScoreLocal, setAwayScoreLocal] = useState<number | null>(match.scoreAway);
 
+  
 
   const InProgress = match.status === MatchStatusEnum.InProgress;
   const isFinished = match.status === MatchStatusEnum.Finished;
@@ -49,12 +55,17 @@ export const MatchCard: React.FC<MatchCardProps> = ({ match, prediction: initial
     }
   }, [newPrediction]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (homePred === '' || awayPred === '' || isSubmitting || isLocked || isFinished) return;
+  useEffect(() => {
+  if (updatedMatch) {
+    setHomeScoreLocal(updatedMatch.scoreHome);
+    setAwayScoreLocal(updatedMatch.scoreAway);
+  }
+}, [updatedMatch]);
 
-    await handleSubmitPrediction(match.matchId, Number(homePred), Number(awayPred));
-  };
+const handlePredictionSubmit = async (homeScore: number, awayScore: number) => {
+  if (isSubmitting || isLocked || isFinished) return;
+  await handleSubmitPrediction(match.matchId, homeScore, awayScore);
+};
 
   const handleCancel = () => {
     setHomePred(initialPrediction?.homeScore ?? 0);
@@ -93,36 +104,26 @@ export const MatchCard: React.FC<MatchCardProps> = ({ match, prediction: initial
 
           <div className="flex flex-col items-center justify-center w-1/3">
             <div className="text-xl font-black text-slate-800 font-mono">
-              {match.status === MatchStatusEnum.Scheduled || match.scoreHome == null || match.scoreAway == null 
-                ? 'VS' 
-                : `${match.scoreHome} - ${match.scoreAway}`}
+              {homeScoreLocal == null || awayScoreLocal == null ? 'VS' : `${homeScoreLocal} - ${awayScoreLocal}`}
             </div>
 
             <div className="mt-2">
-              {(newPrediction || initialPrediction) ? (
-                <div className="flex items-center gap-1 text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">
-                  <Check size={10} />
-                  <span>
-                    { (newPrediction?.predictedHomeScore ?? initialPrediction?.homeScore) }-
-                    { (newPrediction?.predictedAwayScore ?? initialPrediction?.awayScore) }
-                  </span>
-                </div>
-              ) : !isFinished && !isLocked ? (
-                <div className={`text-[10px] font-bold px-2 py-0.5 rounded-full transition-colors ${
-                  isExpanded ? 'bg-accent text-white' : 'text-slate-400 bg-slate-100'
-                }`}>
-                  TIPPA
-                </div>
-              ) : (
-                <div className="text-[10px] font-bold text-slate-300 bg-slate-50 px-2 py-0.5 rounded-full uppercase italic">
-                  Ej tippad
-                </div>
-              )}
+              <PredictionResultBadge
+                prediction={
+                  newPrediction
+                    ? newPrediction
+                    : initialPrediction
+                    ? {
+                        predictedHomeScore: initialPrediction.homeScore,
+                        predictedAwayScore: initialPrediction.awayScore,
+                      }
+                    : null
+                }
+                matchResult={{ scoreHome: homeScoreLocal, scoreAway: awayScoreLocal }}
+                matchStatus={match.status}
+              />
             </div>
           </div>
-
-
-
           <div className="flex items-center gap-3 w-1/3 justify-end text-right">
             <span className="font-semibold text-primary truncate">{match.awayCompetitorName}</span>
             <img src={match.awayCompetitorName} alt="" className="w-8 h-6 object-cover rounded shadow-sm border border-slate-100" />
@@ -130,26 +131,56 @@ export const MatchCard: React.FC<MatchCardProps> = ({ match, prediction: initial
         </div>
       </div>
 
-      {/* Expanded Prediction Area */}
+      {/* Expanded Area */}
       {isExpanded && (
         <div className="border-t border-slate-100 bg-slate-50/50 p-6 animate-fade-in">
           <div className="max-w-xs mx-auto">
-            <h4 className="text-center text-sm font-bold text-slate-500 uppercase tracking-widest mb-6">
-              Ditt tips för matchen
-            </h4>
-            <MatchPredictionForm 
-              homeTeamName={match.homeCompetitorName}
-              awayTeamName={match.awayCompetitorName}
-              onSubmit={handleSubmit}
-              onCancel={handleCancel}
-              isSubmitting={isSubmitting}
-              showSuccess={showSuccess}
-              hasExistingPrediction={!!newPrediction}
-              homePred={homePred}
-              awayPred={awayPred}
-              onHomePredChange={setHomePred}
-              onAwayPredChange={setAwayPred}
-            />
+            <>
+              <h4 className="text-center text-sm font-bold text-slate-500 uppercase tracking-widest mb-6">
+                Ditt tips för matchen
+              </h4>
+              <MatchPredictionForm 
+                match={{
+                  homeCompetitorName: match.homeCompetitorName,
+                  awayCompetitorName: match.awayCompetitorName
+                }}
+                prediction={initialPrediction ? {
+                  matchId: match.matchId,
+                  predictedHomeScore: initialPrediction.homeScore,
+                    predictedAwayScore: initialPrediction.awayScore,
+                    pointsAwarded: 0,
+                  submittedAt: new Date().toISOString()
+                } : undefined}
+                onSubmit={handlePredictionSubmit}
+                onCancel={handleCancel}
+              />
+            </>
+            
+            {/*
+              TODO: Only show the match result form if the match has been played.
+              Right now it always shows for admins, but later we can add a condition
+              using `isFinished` or check `match.startTime` to block input before the match starts.
+            */}
+            {/* Admin: match result */}
+            {isAdmin && (
+              <>
+                <h4 className="text-center text-sm font-bold text-slate-500 uppercase tracking-widest mb-6">
+                  Mata in matchresultat
+                </h4>
+                <MatchResultForm 
+                  match={{
+                    homeCompetitorName: match.homeCompetitorName,
+                    awayCompetitorName: match.awayCompetitorName
+                  }}
+                  onSubmit={async (homeScore, awayScore) => {
+                    await handleSubmitResult(match.matchId, homeScore, awayScore);
+                    setHomeScoreLocal(homeScore);
+                    setAwayScoreLocal(awayScore);
+                  }}
+                  onCancel={handleCancel}
+                />
+              </>
+            )}
           </div>
         </div>
       )}

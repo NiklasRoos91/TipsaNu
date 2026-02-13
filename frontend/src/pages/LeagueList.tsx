@@ -4,7 +4,7 @@ import { useLeagues } from '../hooks/useLeagues';
 import { LeagueCard } from '../components/league/LeagueCard';
 import { CreateLeagueForm } from '../components/league/CreateLeagueForm';
 import { LayoutGrid, Plus } from 'lucide-react';
-import { ActionButton } from '../components/common/ActionButton';
+import { ActionButton } from '../components/commons/ActionButton';
 
 export const LeagueList = () => {
   const {

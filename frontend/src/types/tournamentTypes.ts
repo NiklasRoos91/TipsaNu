@@ -1,5 +1,4 @@
 import { TournamentStatusEnum } from './enums/tournamentEnums';
-import { MatchStatusEnum } from './enums/matchEnums';
 
 // Tournament
 export interface Tournament {
@@ -16,26 +15,6 @@ export interface Group {
   groupId: number;
   tournamentId: number;
   name: string;
-}
-
-// Match
-export interface Match {
-  matchId: number;
-  tournamentId: number;
-  groupId: number;
-  matchType: number;
-  roundNumber: number;
-  startTime: string; // ISO-datum
-  predictionDeadline?: string | null;
-  homeCompetitorId: number;
-  homeCompetitorName: string;
-  awayCompetitorId: number;
-  awayCompetitorName: string;
-  scoreHome?: number | null;
-  scoreAway?: number | null;
-  winnerCompetitorId?: number | null;
-  winnerCompetitorName?: string | null;
-  status: MatchStatusEnum;
 }
 
 // Group Standing

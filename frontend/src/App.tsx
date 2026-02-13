@@ -14,8 +14,8 @@ import { Notifications } from './pages/Notifications';
 import { CreateTournament } from './pages/CreateTournament';
 import { CreateTournamentTemplate } from './pages/CreateTournamentTemplate';
 import { TournamentTemplateList } from './pages/TournamentTemplateList';
-import { Redirect } from './components/common/Redirect';
-import { LoadingScreen } from './components/common/LoadingScreen';
+import { Redirect } from './components/commons/Redirect';
+import { LoadingScreen } from './components/commons/LoadingScreen';
 
 const ProtectedRoute = ({ children }: { children?: React.ReactNode }) => {
   const { isAuthenticated, loading } = useAuth();

@@ -1,9 +1,8 @@
-import React from 'react';
 import { useRegister } from '../hooks/useRegister';
-import { RegisterLayout } from '../components/register/RegisterLayout';
-import { RegisterForm } from '../components/register/RegisterForm';
-import { ErrorMessage } from '../components/common/ErrorMessage';
-import { LoginLink } from '../components/register/LoginLink';
+import { RegisterLayout } from '../components/registers/RegisterLayout';
+import { RegisterForm } from '../components/registers/RegisterForm';
+import { ErrorMessage } from '../components/commons/ErrorMessage';
+import { LoginLink } from '../components/registers/LoginLink';
 
 export const Register = () => {
   const {

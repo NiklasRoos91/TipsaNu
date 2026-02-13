@@ -4,11 +4,11 @@ import { Calendar, Trophy } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { useTournament } from '../hooks/useTournament';
 
-import { TournamentBanner } from '../components/tournament/TournamentBanner';
-import { TournamentTabs, TabType } from '../components/tournament/TournamentTabs';
-import { TournamentMatches } from '../components/tournament/TournamentMatches';
-import { TournamentLeagues } from '../components/tournament/TournamentLeagues';
-import { TournamentExtraBets } from '../components/tournament/TournamentExtraBets';
+import { TournamentBanner } from '../components/tournaments/TournamentBanner';
+import { TournamentTabs, TabType } from '../components/tournaments/TournamentTabs';
+import { TournamentMatches } from '../components/tournaments/TournamentMatches';
+import { TournamentLeagues } from '../components/tournaments/TournamentLeagues';
+import { TournamentExtraBets } from '../components/tournaments/TournamentExtraBets';
 
 export const TournamentDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -22,14 +22,12 @@ if (isNaN(tournamentId)) {
   return <div className="p-8 text-center text-red-500">Ogiltigt turnerings-id</div>;
 }
 
-  const { user } = useAuth();
-  const isAdmin = user?.username === 'admin';
+  const { isAdmin } = useAuth();
 
   const { tournament, loading, error } = useTournament(Number(id));
   const [activeTab, setActiveTab] = useState<TabType>('matches');
 
   // State placeholders för framtida backend-data
-  const [matches, setMatches] = useState<any[]>([]);
   const [leagues, setLeagues] = useState<any[]>([]);
   const [extraBets, setExtraBets] = useState<any[]>([]);
   const [extraBetPredictions, setExtraBetPredictions] = useState<any[]>([]);

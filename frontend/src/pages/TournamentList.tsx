@@ -1,17 +1,18 @@
 
 import React, { useState } from 'react';
-import { TournamentCard } from '../components/tournament/TournamentCard';
+import { TournamentCard } from '../components/tournaments/TournamentCard';
 import { useTournaments } from '../hooks/useTournaments';
 import { useAuth } from '../hooks/useAuth';
 import { CreateTournament } from './CreateTournament';
 import { Trophy } from 'lucide-react';
-import { ActionButton } from '../components/common/ActionButton';
+import { ActionButton } from '../components/commons/ActionButton';
 
 export const TournamentList = () => {
   const { tournaments = [], loading, error } = useTournaments();
   const [showCreate, setShowCreate] = useState(false);
-  const { user } = useAuth();
-  const isAdmin = user?.username === 'admin';
+  const { isAdmin} = useAuth();
+  console.log("TournamentList - isAdmin:", isAdmin);
+  console.log("TournamentList - showCreate:", showCreate, "isAdmin:", isAdmin);
 
   return (
     <div className="max-w-4xl mx-auto pb-12">

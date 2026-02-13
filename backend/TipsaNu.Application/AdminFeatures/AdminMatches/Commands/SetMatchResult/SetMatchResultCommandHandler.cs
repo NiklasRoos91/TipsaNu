@@ -28,6 +28,10 @@ namespace TipsaNu.Application.AdminFeatures.AdminMatches.Commands.SetMatchResult
             if (match == null)
                 return OperationResult<MatchDto>.Failure("Match not found");
 
+            // TODO: Only allow setting the result if the match has started or is finished.
+            // Currently, any match can have its score set. Later we can add a check using match.StartTime 
+            // or match.Status to prevent updating scores for matches that haven't been played yet.
+
             if (request.Dto.ScoreHome.HasValue)
                 match.ScoreHome = request.Dto.ScoreHome;
 

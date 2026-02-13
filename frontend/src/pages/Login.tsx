@@ -1,10 +1,9 @@
-import React from 'react';
 import { useLogin } from '../hooks/useLogin';
-import { LoginLayout } from '../components/login/LoginLayout';
-import { LoginForm } from '../components/login/LoginForm';
-import { ErrorMessage } from '../components/common/ErrorMessage';
-import { QuickLoginButtons } from '../components/login/QuickLoginButtons';
-import { RegisterLink } from '../components/login/RegisterLink';
+import { LoginLayout } from '../components/logins/LoginLayout';
+import { LoginForm } from '../components/logins/LoginForm';
+import { ErrorMessage } from '../components/commons/ErrorMessage';
+import { QuickLoginButtons } from '../components/logins/QuickLoginButtons';
+import { RegisterLink } from '../components/logins/RegisterLink';
 
 export const Login = () => {
   const {

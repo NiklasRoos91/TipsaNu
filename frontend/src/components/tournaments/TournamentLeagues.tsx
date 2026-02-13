@@ -4,9 +4,9 @@ import { LogIn } from 'lucide-react';
 import { League } from '../../types/types';
 import { useLeagueForm } from '../../hooks/useLeagueForm';
 import { LeagueAccordion } from '../league/LeagueAccordion';
-import { ActionButton } from '../common/ActionButton';
-import { FormButtons } from '../common/FormButtons';
-import { JoinButtons } from '../common/JoinButtons';
+import { ActionButton } from '../commons/ActionButton';
+import { FormButtons } from '../commons/FormButtons';
+import { JoinButtons } from '../commons/JoinButtons';
 
 interface TournamentLeaguesProps {
   tournamentId: string;

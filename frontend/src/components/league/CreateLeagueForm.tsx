@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { FormButtons } from '../common/FormButtons';
+import { FormButtons } from '../commons/FormButtons';
 
 interface CreateLeagueFormProps {
   onSubmit: (name: string) => Promise<boolean>;

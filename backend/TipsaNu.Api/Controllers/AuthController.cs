@@ -4,6 +4,7 @@ using TipsaNu.Application.Feature.Auth.Commands.Register;
 using TipsaNu.Application.Features.Auth.Commands.Login;
 using TipsaNu.Application.Features.Auth.Commands.RefreshToken;
 using TipsaNu.Application.Features.Auth.DTOs;
+using TipsaNu.Application.Features.Auth.Queries.GetMe;
 
 namespace TipsaNu.Api.Controllers
 {
@@ -55,6 +56,19 @@ namespace TipsaNu.Api.Controllers
 
             if (!result.IsSuccess)
                 return Unauthorized(result.ErrorMessages);
+
+            return Ok(result.Data);
+        }
+
+        // Get: /api/auth/me
+        // 
+        [HttpGet("me")]
+        public async Task<IActionResult> Me(CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(new GetMeQuery(), cancellationToken);
+
+            if (!result.IsSuccess)
+                return BadRequest(result.ErrorMessage);
 
             return Ok(result.Data);
         }

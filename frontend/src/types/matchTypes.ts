@@ -3,21 +3,27 @@ import{ MatchTypeEnum, MatchStatusEnum } from './enums/matchEnums';
 export interface Match {
   matchId: number;
   tournamentId: number;
-  groupId: number;
+  groupId: number | null;
   matchType: MatchTypeEnum;
   roundNumber: number;
   startTime: string;
   predictionDeadline: string | null;
   homeCompetitorId: number;
-  homeCompetitorName: string | null;
   awayCompetitorId: number;
-  awayCompetitorName: string | null;
+  homeCompetitorName: string;
+  awayCompetitorName: string;
   scoreHome: number | null;
   scoreAway: number | null;
   winnerCompetitorId: number | null;
   winnerCompetitorName: string | null;
   status: MatchStatusEnum;
 }
+
+
+export type SetMatchResultDto = {
+  scoreHome: number;
+  scoreAway: number;
+};
 
 // Prediction
 export interface Prediction {

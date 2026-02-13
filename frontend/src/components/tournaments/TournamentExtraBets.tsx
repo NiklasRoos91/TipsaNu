@@ -4,8 +4,8 @@ import { Shield } from 'lucide-react';
 import { ExtraBet, ExtraBetPrediction } from '../../types/types';
 import { useExtraBetForm } from '../../hooks/useExtraBetForm';
 import { ExtraBetCard } from './ExtraBetCard';
-import { ActionButton } from '../common/ActionButton';
-import { FormButtons } from '../common/FormButtons';
+import { ActionButton } from '../commons/ActionButton';
+import { FormButtons } from '../commons/FormButtons';
 
 interface TournamentExtraBetsProps {
   tournamentId: string;

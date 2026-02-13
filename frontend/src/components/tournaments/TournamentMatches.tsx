@@ -1,10 +1,12 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Filter } from 'lucide-react';
-import { MatchPredictionDto } from '../../types/matchTypes';
-import { MatchCard } from '../match/MatchCard';
+import { MatchCard } from '../matches/MatchCard';
 import { useGroups } from '../../hooks/useGroups';
 import { useGroupMatches } from '../../hooks/useGroupMatches';
 import { useUserPredictions } from '../../hooks/useUserPredictions';
+import { ActionButton } from '../commons/ActionButton';
+import { useAuth } from '../../hooks/useAuth'; 
+import { CreateMatch } from '../../pages/CreateMatch';
 
 interface TournamentMatchesProps {
   tournamentId: string;
@@ -18,9 +20,11 @@ export const TournamentMatches: React.FC<TournamentMatchesProps> = ({
   const [matchCategory, setMatchCategory] = useState<MatchCategory>('groups');
   const [selectedFilter, setSelectedFilter] = useState<string | null>(null);
   const { groups } = useGroups(Number(tournamentId));
+  const [showCreate, setShowCreate] = useState(false);
   const groupId = selectedFilter ? groups.find(g => g.name === selectedFilter)?.groupId ?? null : null;
   const { matches, loading: loadingMatches, error: matchesError } = useGroupMatches(groupId);
   const { predictions, loading: loadingPredictions, error: predictionsError } = useUserPredictions();
+  const { isAdmin } = useAuth();  
 
   const matchGroups = useMemo(() => {
     const categories = {
@@ -57,21 +61,41 @@ export const TournamentMatches: React.FC<TournamentMatchesProps> = ({
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-bold text-primary">Matcher</h2>
-          <div className="flex bg-slate-100 p-1 rounded-lg">
-            <button 
-              onClick={() => setMatchCategory('groups')}
-              className={`px-4 py-1.5 text-xs font-bold rounded-md transition-all ${matchCategory === 'groups' ? 'bg-white text-primary shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
-            >
-              Gruppspel
-            </button>
-            <button 
-              onClick={() => setMatchCategory('knockout')}
-              className={`px-4 py-1.5 text-xs font-bold rounded-md transition-all ${matchCategory === 'knockout' ? 'bg-white text-primary shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
-            >
-              Slutspel
-            </button>
+
+          <div className="flex items-center gap-2">  {/* wrapper för Grupp/Slut + knapp */}
+            <div className="flex bg-slate-100 p-1 rounded-lg">
+              <button 
+                onClick={() => setMatchCategory('groups')}
+                className={`px-4 py-1.5 text-xs font-bold rounded-md transition-all ${matchCategory === 'groups' ? 'bg-white text-primary shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+              >
+                Gruppspel
+              </button>
+              <button 
+                onClick={() => setMatchCategory('knockout')}
+                className={`px-4 py-1.5 text-xs font-bold rounded-md transition-all ${matchCategory === 'knockout' ? 'bg-white text-primary shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+              >
+                Slutspel
+              </button>
+            </div>
+
+             {isAdmin && (
+              <div className="w-auto ml-auto">
+                <ActionButton
+                  label="Skapa ny"
+                  onClick={() => setShowCreate(!showCreate)}
+                  isActive={showCreate}
+                />
+              </div>
+              )}
+            </div>
           </div>
-        </div>
+
+            {showCreate && isAdmin && (
+              <div className="mb-10 animate-fade-in">
+                <CreateMatch onCreated={() => setShowCreate(false)} />
+              </div>
+            )}
+
 
         {/* Filter Chips */}
         <div className="flex flex-wrap gap-2 py-2">

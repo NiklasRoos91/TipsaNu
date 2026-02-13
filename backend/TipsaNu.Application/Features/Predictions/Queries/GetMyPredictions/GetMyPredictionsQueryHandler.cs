@@ -3,7 +3,6 @@ using MediatR;
 using TipsaNu.Application.Commons.Interfaces;
 using TipsaNu.Application.Commons.Results;
 using TipsaNu.Application.Features.Predictions.DTOs;
-using TipsaNu.Domain.Entities;
 using TipsaNu.Domain.Interfaces;
 
 namespace TipsaNu.Application.Features.Predictions.Queries.GetMyPredictions

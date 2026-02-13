@@ -22,13 +22,22 @@ export interface RefreshTokenRequest {
   refreshToken: string;
 }
 
+// --- Register Request ---
 export interface RegisterRequest {
   Email: string;
   Username: string;
   Password: string;
 }
 
+// --- Login Request ---
 export interface LoginRequest {
   Email: string;
   Password: string;
+}
+
+// --- JWT Payload ---
+export interface TokenPayload {
+  sub: string;
+  username: string;
+  'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'?: string;
 }
