@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TournamentTemplate } from '../types/types';
 import { Layout, FileText, Users, ArrowRight } from 'lucide-react';
-import { ActionButton } from '../components/common/ActionButton';
+import { ActionButton } from '../components/commons/ActionButton';
 
 export const TournamentTemplateList: React.FC = () => {
   const [templates, setTemplates] = useState<TournamentTemplate[]>([]);

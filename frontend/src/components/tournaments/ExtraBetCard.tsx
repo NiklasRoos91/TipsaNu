@@ -28,7 +28,7 @@ export type ExtraBet = {
   requiresValue: boolean;   
 };
 
-import { FormButtons } from '../common/FormButtons';
+import { FormButtons } from '../commons/FormButtons';
 
 interface ExtraBetCardProps {
   bet: ExtraBet;

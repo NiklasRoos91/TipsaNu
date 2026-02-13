@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Shield } from 'lucide-react';
-import { CreateTournamentForm } from '../components/tournament/CreateTournamentForm';
+import { CreateTournamentForm } from '../components/tournaments/CreateTournamentForm';
 import { TournamentFormData } from '../hooks/useTournamentForm';
 
 // ⚠️ Temporary placeholder to avoid TS error, replace with real API call later

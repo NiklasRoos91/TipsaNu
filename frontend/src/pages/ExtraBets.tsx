@@ -1,7 +1,7 @@
 import React from 'react';
 import { Award } from 'lucide-react';
 import { useTournaments } from '../hooks/useTournaments';
-import { TournamentCard } from '../components/tournament/TournamentCard';
+import { TournamentCard } from '../components/tournaments/TournamentCard';
 
 export const ExtraBets = () => {
   const { tournaments, loading, error } = useTournaments();

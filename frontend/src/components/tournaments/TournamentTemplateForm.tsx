@@ -2,8 +2,8 @@
 import React from 'react';
 import { Layout, FileText, Info } from 'lucide-react';
 import { useTournamentTemplateForm, TournamentTemplateFormData } from '../../hooks/useTournamentTemplateForm';
-import { TextInput } from '../common/inputs/TextInput';
-import { FormButtons } from '../common/FormButtons';
+import { TextInput } from '../commons/inputs/TextInput';
+import { FormButtons } from '../commons/FormButtons';
 import { GroupSettingsInput } from './GroupSettingsInput';
 import { PointRulesInput } from './PointRulesInput';
 import { TiebreakersInput } from './TiebreakersInput';

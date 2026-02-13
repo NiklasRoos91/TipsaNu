@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import { TournamentTemplateForm } from '../components/tournament/TournamentTemplateForm';
+import { TournamentTemplateForm } from '../components/tournaments/TournamentTemplateForm';
 import { TournamentTemplateFormData } from '../hooks/useTournamentTemplateForm';
 import { ArrowLeft } from 'lucide-react';
 

@@ -29,9 +29,13 @@ export const AuthProvider = ({ children }: { children?: ReactNode }) => {
       if (storedToken) {
         try {
           const currentUser  = await api.verifyToken();  //backend returns user from token
+          console.log("verifyToken response:", currentUser);  
+          
           if (currentUser ) {
             setUser(currentUser );
             setToken(storedToken);
+            console.log("User set in AuthProvider:", currentUser); // <-- logg här
+            console.log("Is admin?", currentUser.role === "Admin"); // <-- lo
           } else {
             localStorage.removeItem('token');
           }

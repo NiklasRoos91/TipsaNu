@@ -2,10 +2,10 @@
 import React from 'react';
 import { Trophy, Calendar, Image as ImageIcon } from 'lucide-react';
 import { useTournamentForm, TournamentFormData } from '../../hooks/useTournamentForm';
-import { FormButtons } from '../common/FormButtons';
-import { TextInput } from '../common/inputs/TextInput';
-import { DateInput } from '../common/inputs/DateInput';
-import { UrlInput } from '../common/inputs/UrlInput';
+import { FormButtons } from '../commons/FormButtons';
+import { TextInput } from '../commons/inputs/TextInput';
+import { DateInput } from '../commons/inputs/DateInput';
+import { UrlInput } from '../commons/inputs/UrlInput';
 
 /**
  * CreateTournamentForm - A modular component for creating a new tournament.

@@ -6,7 +6,7 @@ using TipsaNu.Application.AdminFeatures.AdminMatches.DTOs;
 
 namespace TipsaNu.Api.AdminControllers
 {
-    [Route("api/[controller]")]
+    [Route("api/admin/matches")]
     [ApiController]
     [Authorize(Roles = "Admin")]
     public class AdminMatchesController : ControllerBase
@@ -18,7 +18,7 @@ namespace TipsaNu.Api.AdminControllers
             _mediator = mediator;
         }
 
-        // PUT: api/AdminMatches/{matchId}/result
+        // PUT: api/admin/matches/{matchId}/result
         // 
         [HttpPut("{matchId}/result")]
         public async Task<IActionResult> SetMatchResult(int matchId, [FromBody] SetMatchResultDto dto, CancellationToken cancellationToken)

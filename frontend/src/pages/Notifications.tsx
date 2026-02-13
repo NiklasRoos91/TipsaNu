@@ -1,4 +1,3 @@
-import React from 'react';
 import { useNotifications } from '../hooks/useNotifications';
 import { NotificationsList } from '../components/notifications/NotificationsList';
 import { Bell } from 'lucide-react';
