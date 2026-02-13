@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { LogIn } from 'lucide-react';
-import { League } from '../../types/types';
+import { League } from '../../types/leagueTypes';
 import { useLeagueForm } from '../../hooks/useLeagueForm';
 import { LeagueAccordion } from '../league/LeagueAccordion';
 import { ActionButton } from '../commons/ActionButton';
@@ -10,20 +10,13 @@ import { JoinButtons } from '../commons/JoinButtons';
 
 interface TournamentLeaguesProps {
   tournamentId: string;
-  leagues: League[];
-  onLeaguesUpdate: (updatedLeagues: League[]) => void;
 }
 
-export const TournamentLeagues: React.FC<TournamentLeaguesProps> = ({ 
-  tournamentId, 
-  leagues, 
-  onLeaguesUpdate 
-}) => {
+export const TournamentLeagues: React.FC<TournamentLeaguesProps> = ({ tournamentId}) => {
   const [expandedLeagueId, setExpandedLeagueId] = useState<string | null>(null);
   
   const leagueForm = useLeagueForm(tournamentId, (l) => {
-    onLeaguesUpdate([...leagues.filter(ex => ex.id !== l.id), l]);
-    setExpandedLeagueId(l.id); // Expand the newly added league
+    setExpandedLeagueId(l.id);
   });
 
   return (
@@ -114,22 +107,13 @@ export const TournamentLeagues: React.FC<TournamentLeaguesProps> = ({
         </div>
       )}
 
-      <div className="space-y-4">
-        {leagues.map(l => (
-          <LeagueAccordion 
-            key={l.id} 
-            league={l} 
-            isExpanded={expandedLeagueId === l.id}
-            onToggle={() => setExpandedLeagueId(expandedLeagueId === l.id ? null : l.id)}
-          />
-        ))}
-        {leagues.length === 0 && (
-          <div className="text-center p-16 bg-slate-50 rounded-3xl border-2 border-dashed border-slate-200 text-slate-400">
-            <p className="font-medium">Inga ligor för denna turnering ännu.</p>
-            <p className="text-sm">Skapa en egen liga och bjud in dina vänner!</p>
-          </div>
-        )}
-      </div>
+<div className="space-y-4">
+  <div className="text-center p-16 bg-slate-50 rounded-3xl border-2 border-dashed border-slate-200 text-slate-400">
+    <p className="font-medium">Inga ligor för denna turnering ännu.</p>
+    <p className="text-sm">Skapa en egen liga och bjud in dina vänner!</p>
+  </div>
+</div>
+
     </div>
   );
 };
