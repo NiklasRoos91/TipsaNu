@@ -1,8 +1,8 @@
 import React from 'react';
-import { MemberWithRank } from '../../hooks/useLeagueMembers';
+import type { LeaderboardEntryDto } from '../../types/leagueTypes';
 
 interface MemberRowProps {
-  member: MemberWithRank;
+  member: LeaderboardEntryDto;
 }
 
 export const MemberRow: React.FC<MemberRowProps> = ({ member }) => {
@@ -28,9 +28,9 @@ export const MemberRow: React.FC<MemberRowProps> = ({ member }) => {
       <td className="px-6 py-4 font-medium text-primary">
         <div className="flex items-center gap-2">
           <div className="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-[10px] font-bold text-slate-400">
-            {member.name.charAt(0).toUpperCase()}
+            {member.username.charAt(0).toUpperCase()}
           </div>
-          {member.name}
+          {member.username}
         </div>
       </td>
       <td className="px-6 py-4 font-bold text-primary text-right">

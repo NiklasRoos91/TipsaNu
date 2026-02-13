@@ -28,7 +28,6 @@ if (isNaN(tournamentId)) {
   const [activeTab, setActiveTab] = useState<TabType>('matches');
 
   // State placeholders för framtida backend-data
-  const [leagues, setLeagues] = useState<any[]>([]);
   const [extraBets, setExtraBets] = useState<any[]>([]);
   const [extraBetPredictions, setExtraBetPredictions] = useState<any[]>([]);
 
@@ -47,7 +46,7 @@ if (isNaN(tournamentId)) {
       <TournamentTabs 
         activeTab={activeTab} 
         setActiveTab={setActiveTab} 
-        leaguesCount={leagues.length} 
+        leaguesCount={0}
         extraBetsCount={extraBets.length} 
       />
 
@@ -62,8 +61,6 @@ if (isNaN(tournamentId)) {
           {activeTab === 'leagues' && (
             <TournamentLeagues 
               tournamentId={id || ''} 
-              leagues={leagues} 
-              onLeaguesUpdate={setLeagues} 
             />
           )}
 

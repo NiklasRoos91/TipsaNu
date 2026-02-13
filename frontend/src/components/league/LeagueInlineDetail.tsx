@@ -1,28 +1,29 @@
 import React from 'react';
-import { useLeagueMembers } from '../../hooks/useLeagueMembers';
-import { useLeaguePosts } from '../../hooks/useLeaguePosts';
 import { LeaderboardTable } from './LeaderboardTable';
-import { Forum } from './Forum';
-
-// Plceholder type for league, replace with actual type from your data model
-type League = {
-  id: string;
-  tournamentId: string;
-  ownerId: string | number;
-
-  name: string;
-  description?: string | null;
-  code: string;
-  membersCount: number;
-};
+// import { Forum } from './Forum';
+import { useLeagueDetail } from '../../hooks/useLeagueDetail';
 
 interface LeagueInlineDetailProps {
-  league: League;
+  leagueId: number;
 }
 
-export const LeagueInlineDetail: React.FC<LeagueInlineDetailProps> = ({ league }) => {
-  const { members, loading: membersLoading } = useLeagueMembers(league.id);
-  const { posts, loading: postsLoading, addPost } = useLeaguePosts(league.id);
+// Plceholder hooks until Api is ready
+const useLeagueMembers = (_leagueId: number) => ({
+  members: [], // tom lista
+  loading: false,
+});
+
+const useLeaguePosts = (_leagueId: number) => ({
+  posts: [],
+  loading: false,
+  addPost: async (_: any) => {},
+});
+
+export const LeagueInlineDetail: React.FC<LeagueInlineDetailProps> = ({ leagueId }) => {
+  const { league, loading, error } = useLeagueDetail(leagueId);
+
+  if (loading) return <div className="p-4 text-sm text-slate-500">Laddar ligadetaljer...</div>;
+  if (error || !league) return <div className="p-4 text-sm text-red-500">Kunde inte hämta ligan</div>;
 
   return (
     <div className="mt-2 p-4 md:p-6 bg-slate-50 rounded-b-xl border-t border-slate-100 animate-fade-in">
@@ -31,13 +32,13 @@ export const LeagueInlineDetail: React.FC<LeagueInlineDetailProps> = ({ league }
         <div className="space-y-4">
            <div className="px-1 flex justify-between items-center">
              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest">Tabell</h4>
-             {membersLoading && <span className="text-[10px] text-slate-400 animate-pulse italic">Uppdaterar...</span>}
            </div>
-           <LeaderboardTable members={members} />
+           <LeaderboardTable members={league.leaderboard} />
         </div>
 
+        {/* Forum removed for now */}
         {/* Forum section - Always bottom */}
-        <div className="space-y-4">
+        {/* <div className="space-y-4">
           <div className="flex justify-between items-center px-1">
             <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest">Klotterplank</h4>
             {postsLoading && <span className="text-[10px] text-slate-400 animate-pulse italic">Hämtar inlägg...</span>}
@@ -45,7 +46,7 @@ export const LeagueInlineDetail: React.FC<LeagueInlineDetailProps> = ({ league }
           <div className="flex flex-col h-[500px]">
             <Forum posts={posts} onAddPost={addPost} />
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
