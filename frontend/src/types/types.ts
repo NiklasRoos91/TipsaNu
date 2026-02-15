@@ -30,23 +30,3 @@ export interface TournamentTemplate {
   pointRules: PointRule[];
   tiebreakers: TournamentTiebreaker[];
 }
-
-export interface ExtraBet {
-  id: string;
-  tournamentId: string;
-  question: string; // Acts as "name"
-  description?: string;
-  allowedValues?: string[]; // Predefined options (suggestions)
-  requiresValue: boolean; // If true, allows/requires free text input
-  deadline: string;
-  points: number;
-  result?: string;
-}
-
-export interface ExtraBetPrediction {
-  id: string;
-  extraBetId: string;
-  userId: string;
-  selectedOption: string;
-  createdAt: string;
-}

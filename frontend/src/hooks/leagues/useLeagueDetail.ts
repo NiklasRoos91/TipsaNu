@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import type { LeagueWithLeaderboardDto, LeaderboardEntryBackendDto, LeaderboardEntryDto, } from '../types/leagueTypes';
-import { getLeagueById } from '../services/leagueService';
-import { mapLeaderboard } from '../utils/mapLeaderboard';
+import type { LeagueWithLeaderboardDto, LeaderboardEntryBackendDto, LeaderboardEntryDto, } from '../../types/leagueTypes';
+import { getLeagueById } from '../../services/leagueService';
+import { mapLeaderboard } from '../../utils/mapLeaderboard';
 
 export const useLeagueDetail = (leagueId: number | null) => {
   const [league, setLeague] = useState<LeagueWithLeaderboardDto | null>(null);

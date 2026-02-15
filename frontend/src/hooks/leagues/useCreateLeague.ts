@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import type { CreateLeagueDto, CreatedLeagueWithMemberDto } from '../types/leagueTypes';
-import { createLeague } from '../services/leagueService';
+import type { CreateLeagueDto, CreatedLeagueWithMemberDto } from '../../types/leagueTypes';
+import { createLeague } from '../../services/leagueService';
 
 export const useCreateLeague = () => {
   const [loading, setLoading] = useState(false);

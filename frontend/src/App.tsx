@@ -3,12 +3,11 @@ import React from 'react';
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { useAuth } from './hooks/useAuth';
-import { Layout } from './components/Layout';
+import { Layout } from './components/layouts/Layout';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { TournamentList } from './pages/TournamentList';
 import { TournamentDetail } from './pages/TournamentDetail';
-import { ExtraBets } from './pages/ExtraBets';
 import { UserProfile } from './pages/UserProfile';
 import { Notifications } from './pages/Notifications';
 import { CreateTournament } from './pages/CreateTournament';
@@ -22,7 +21,6 @@ const ProtectedRoute = ({ children }: { children?: React.ReactNode }) => {
 
   if (loading) return <LoadingScreen />;
   if (!isAuthenticated) return <Redirect to="/login" />;
-  console.log('ProtectedRoute render - isAuthenticated:', isAuthenticated, 'loading:', loading);
 
   return <Layout>{children}</Layout>;
 };
@@ -57,9 +55,6 @@ const App = () => {
           
           <Route path="/profile" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
           <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
-
-          <Route path="/leagues" element={<Navigate to="/tournaments" replace />} />
-          <Route path="/extrabets" element={<ProtectedRoute><ExtraBets /></ProtectedRoute>} />
           
           <Route path="*" element={<Navigate to="/tournaments" replace />} />
         </Routes>

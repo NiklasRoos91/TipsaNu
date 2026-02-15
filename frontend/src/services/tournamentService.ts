@@ -1,5 +1,6 @@
 import { api } from './apiClient';
-import { Tournament, Group, Match, GroupStanding } from '../types/tournamentTypes';
+import { Tournament, Group, GroupStanding } from '../types/tournamentTypes';
+import { Match } from '../types/matchTypes';
 
 export const getTournaments = async (): Promise<Tournament[]> => {
   try {

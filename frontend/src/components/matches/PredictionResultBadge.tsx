@@ -6,7 +6,7 @@ interface PredictionResultBadgeProps {
   prediction: { predictedHomeScore: number; predictedAwayScore: number } | null;
   matchResult: { scoreHome: number | null; scoreAway: number | null };
   matchStatus: MatchStatusEnum;
-  isExpanded?: boolean; // för styling om kortet är expanderat
+  isExpanded?: boolean;
 }
 
 export const PredictionResultBadge: React.FC<PredictionResultBadgeProps> = ({
@@ -18,7 +18,6 @@ export const PredictionResultBadge: React.FC<PredictionResultBadgeProps> = ({
   const { scoreHome, scoreAway } = matchResult;
   const isFinished = matchStatus === MatchStatusEnum.Finished;
 
-  // 1. Matchen är avslutad och det finns ingen tippning → "Ej tippad"
   if (isFinished && !prediction) {
     return (
       <div className="text-[10px] font-bold text-slate-300 bg-slate-50 px-2 py-0.5 rounded-full uppercase italic">
@@ -27,11 +26,9 @@ export const PredictionResultBadge: React.FC<PredictionResultBadgeProps> = ({
     );
   }
 
-  // 2. Matchen har en tippning → visa "Din tippning" med checkmark
   if (prediction) {
     const { predictedHomeScore, predictedAwayScore } = prediction;
 
-    // Behåll den befintliga färglogiken om resultat finns
     let color = '';
     let text = `${predictedHomeScore}-${predictedAwayScore}`;
 
@@ -57,7 +54,6 @@ export const PredictionResultBadge: React.FC<PredictionResultBadgeProps> = ({
       </div>
     );
   } else {
-    // Om matchen inte spelats → visa bara tippningen utan Check
     return (
       <div className="text-[10px] font-bold px-2 py-0.5 rounded-full border bg-slate-100 text-slate-400">
         {text}
@@ -66,10 +62,9 @@ export const PredictionResultBadge: React.FC<PredictionResultBadgeProps> = ({
   }
 }
 
-  // 3. Ingen tippning och matchen är ej avslutad → TIPPA
   return (
     <div className={`text-[10px] font-bold px-2 py-0.5 rounded-full transition-colors ${
-      isExpanded ? 'bg-accent text-white' : 'text-slate-400 bg-slate-100'
+      isExpanded ? 'bg-blue-200 text-blue-800' : 'text-slate-400 bg-slate-100'
     }`}>
       TIPPA
     </div>

@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import type { CreateLeagueDto, CreatedLeagueWithMemberDto, JoinLeagueDto, LeagueMemberDto } from '../types/leagueTypes';
-import { useCreateLeague } from './useCreateLeague'; 
+import type { CreateLeagueDto, CreatedLeagueWithMemberDto, JoinLeagueDto, LeagueMemberDto } from '../../types/leagueTypes.ts';
+import { useCreateLeague } from './useCreateLeague.ts'; 
 import { useJoinLeague } from './useJoinLeague.ts';
 
 type League = {

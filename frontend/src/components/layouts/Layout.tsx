@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '../../hooks/useAuth';
 import { Menu, X, Trophy, User, Bell, LogOut, Layout as LayoutIcon } from 'lucide-react';
 
 export const Layout = ({ children }: { children?: React.ReactNode }) => {

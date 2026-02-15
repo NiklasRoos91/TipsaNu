@@ -15,7 +15,6 @@ export const useAuth = () => {
     return false;
   }, [context.token]);
 
-  console.log("useAuth hook - isAdmin:", isAdmin);
   return {
   ...context,
   isAdmin
