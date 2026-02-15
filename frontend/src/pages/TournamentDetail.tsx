@@ -13,9 +13,6 @@ import { TournamentExtraBets } from '../components/tournaments/TournamentExtraBe
 export const TournamentDetail = () => {
   const { id } = useParams<{ id: string }>();
   const location = useLocation();
-
-  console.log("PATH:", location.pathname, "PARAMS ID:", id);
-
   const tournamentId = id ? Number(id) : NaN;
 
 if (isNaN(tournamentId)) {

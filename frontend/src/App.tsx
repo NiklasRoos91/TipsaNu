@@ -22,7 +22,6 @@ const ProtectedRoute = ({ children }: { children?: React.ReactNode }) => {
 
   if (loading) return <LoadingScreen />;
   if (!isAuthenticated) return <Redirect to="/login" />;
-  console.log('ProtectedRoute render - isAuthenticated:', isAuthenticated, 'loading:', loading);
 
   return <Layout>{children}</Layout>;
 };

@@ -6,6 +6,9 @@ import { ErrorMessage } from '../commons/ErrorMessage';
 import { ExtraBetResultBadge } from '../extraBets/ExtraBetResultBadge';
 import { useGetExtraBetOptionCorrectValues } from '../../hooks/useGetExtraBetOptionCorrectValues';
 import { useSubmitExtraBet } from "../../hooks/extraBets/useSubmitExtraBet";
+import { ExtraBetCorrectValuesForm } from '../extraBets/ExtraBetCorrectValuesForm';
+import { useAuth } from '../../hooks/useAuth';
+
 
 export type ExtraBetPrediction = {
   betId: string;
@@ -23,7 +26,7 @@ export const ExtraBetCard: React.FC<ExtraBetCardProps> = ({
   bet, 
   initialPrediction, 
   isExpired,
-  onSavePrediction 
+  onSavePrediction,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [selectedValue, setSelectedValue] = useState<string>(initialPrediction?.selectedOption || '');
@@ -34,6 +37,7 @@ export const ExtraBetCard: React.FC<ExtraBetCardProps> = ({
   const [currentPrediction, setCurrentPrediction] = useState<ExtraBetPrediction | undefined>(initialPrediction);
   const { values: correctValues, loading: loadingCorrectValues, error: correctValuesError } = useGetExtraBetOptionCorrectValues(bet.optionId);
   const { submit, loading: submitting, error: submitError } = useSubmitExtraBet(bet.optionId);
+  const { isAdmin } = useAuth();
 
   // Initialize custom value if the prediction doesn't match predefined options
   useEffect(() => {
@@ -204,6 +208,18 @@ export const ExtraBetCard: React.FC<ExtraBetCardProps> = ({
               />
             </div>
           </form>
+          
+          {isAdmin && (
+            <>
+              <h4 className="tetext-xs font-bold text-slate-500 uppercase tracking-widest text-center mb-4 mt-6">
+                Sätt korrektvärden
+              </h4>
+              <ExtraBetCorrectValuesForm 
+                optionId={bet.optionId}
+                onCancel={handleCancel}
+              />
+            </>
+          )}
         </div>
       )}
     </div>

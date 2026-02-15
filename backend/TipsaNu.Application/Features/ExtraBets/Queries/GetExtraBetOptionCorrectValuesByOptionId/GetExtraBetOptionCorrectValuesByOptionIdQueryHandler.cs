@@ -24,12 +24,7 @@ namespace TipsaNu.Application.Features.ExtraBets.Queries.GetExtraBetOptionCorrec
             GetExtraBetOptionCorrectValuesByOptionIdQuery request,
             CancellationToken cancellationToken)
         {
-            var entities = await _extraBetRepository
-                            .GetCorrectValuesByOptionIdAsync(request.OptionId, cancellationToken);
-
-            if (entities == null || entities.Count == 0)
-                return OperationResult<List<ExtraBetOptionCorrectValueDto>>
-                    .Failure("No correct values found for this option");
+            var entities = await _extraBetRepository.GetCorrectValuesByOptionIdAsync(request.OptionId, cancellationToken);
 
             var dto = _mapper.Map<List<ExtraBetOptionCorrectValueDto>>(entities);
 

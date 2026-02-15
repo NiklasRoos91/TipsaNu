@@ -11,8 +11,6 @@ export const TournamentList = () => {
   const { tournaments = [], loading, error } = useTournaments();
   const [showCreate, setShowCreate] = useState(false);
   const { isAdmin} = useAuth();
-  console.log("TournamentList - isAdmin:", isAdmin);
-  console.log("TournamentList - showCreate:", showCreate, "isAdmin:", isAdmin);
 
   return (
     <div className="max-w-4xl mx-auto pb-12">

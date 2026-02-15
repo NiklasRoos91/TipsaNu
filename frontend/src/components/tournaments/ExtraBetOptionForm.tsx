@@ -28,7 +28,7 @@ export const ExtraBetOptionForm: React.FC<ExtraBetOptionFormProps> = ({
     allowCustom: false
   });
 
-  const [showOptionsInput, setShowOptionsInput] = useState(false); // ny state för textarea
+  const [showOptionsInput, setShowOptionsInput] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

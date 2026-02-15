@@ -29,7 +29,7 @@ export const ExtraBets = () => {
       <div className="grid gap-4">
         {tournaments.length > 0 ? (
           tournaments.map((tournament) => (
-            <TournamentCard key={tournament.id} tournament={tournament} />
+            <TournamentCard key={tournament.tournamentId} tournament={tournament} />
           ))
         ) : (
           <div className="text-center p-12 bg-slate-50 rounded-xl border-2 border-dashed border-slate-200 text-slate-400">
