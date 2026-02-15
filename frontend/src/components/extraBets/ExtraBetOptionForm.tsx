@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Shield } from 'lucide-react';
-import { useCreateExtraBetOption } from '../../hooks/useCreateExtraBetOption';
+import { useCreateExtraBetOption } from '../../hooks/extraBets/useCreateExtraBetOption';
 import { FormButtons } from '../commons/FormButtons';
 import { ErrorMessage } from '../commons/ErrorMessage';
 

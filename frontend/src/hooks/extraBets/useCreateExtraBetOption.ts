@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { extraBetService } from "../services/extraBetService";
-import type { CreateExtraBetOptionDto, ExtraBetOptionDto } from "../types/extrabetTypes";
+import { extraBetService } from "../../services/extraBetService";
+import type { CreateExtraBetOptionDto, ExtraBetOptionDto } from "../../types/extrabetTypes";
 
 export function useCreateExtraBetOption() {
   const [data, setData] = useState<ExtraBetOptionDto | null>(null);

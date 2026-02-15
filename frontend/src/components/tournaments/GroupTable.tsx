@@ -1,6 +1,7 @@
 
 import React from 'react';
-import { GroupStanding } from '../../types/types';
+import type { GroupStanding } from "../../mocks/groupMock";
+import { MOCK_GROUP_STANDINGS } from "../../mocks/groupMock";
 
 interface GroupTableProps {
   standings: GroupStanding[];

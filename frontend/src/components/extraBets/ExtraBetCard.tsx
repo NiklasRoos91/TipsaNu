@@ -3,10 +3,10 @@ import { AlertCircle, ChevronDown, ChevronUp, Check, Edit2 } from 'lucide-react'
 import { FormButtons } from '../commons/FormButtons';
 import type { ExtraBetOptionForUser } from '../../types/extrabetTypes';
 import { ErrorMessage } from '../commons/ErrorMessage';
-import { ExtraBetResultBadge } from '../extraBets/ExtraBetResultBadge';
-import { useGetExtraBetOptionCorrectValues } from '../../hooks/useGetExtraBetOptionCorrectValues';
+import { ExtraBetResultBadge } from './ExtraBetResultBadge';
+import { useGetExtraBetOptionCorrectValues } from '../../hooks/extraBets/useGetExtraBetOptionCorrectValues';
 import { useSubmitExtraBet } from "../../hooks/extraBets/useSubmitExtraBet";
-import { ExtraBetCorrectValuesForm } from '../extraBets/ExtraBetCorrectValuesForm';
+import { ExtraBetCorrectValuesForm } from './ExtraBetCorrectValuesForm';
 import { useAuth } from '../../hooks/useAuth';
 
 

@@ -5,8 +5,8 @@ import { useMyLeaguesInTournament } from "../../hooks/useMyLeaguesInTournament.t
 import { ActionButton } from '../commons/ActionButton';
 import { FormButtons } from '../commons/FormButtons';
 import { JoinButtons } from '../commons/JoinButtons';
-import { LeagueAccordion } from '../league/LeagueAccordion.tsx';
-import { useLeagueForm } from '../../hooks/useLeagueForm';
+import { LeagueAccordion } from '../leagues/LeagueAccordion.tsx';
+import { useLeagueForm } from '../../hooks/leagues/useLeagueForm.ts';
 
 interface TournamentLeaguesProps {
   tournamentId: string;

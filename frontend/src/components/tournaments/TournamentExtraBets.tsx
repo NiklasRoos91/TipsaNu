@@ -1,8 +1,8 @@
 
 import React, {useState} from 'react';
 import { ActionButton } from '../commons/ActionButton';
-import { ExtraBetOptionForm } from './ExtraBetOptionForm';
-import { ExtraBetCard } from './ExtraBetCard';
+import { ExtraBetOptionForm } from '../extraBets/ExtraBetOptionForm';
+import { ExtraBetCard } from '../extraBets/ExtraBetCard';
 import { useGetOptionsForUser } from '../../hooks/useGetOptionsForUser';
 import type { ExtraBetOptionForUser } from '../../types/extrabetTypes';
 

@@ -1,5 +1,5 @@
 
-import { ExtraBet, TournamentTemplate, TiebreakerCriterion } from '../types/types';
+import { TournamentTemplate, TiebreakerCriterion } from '../types/types';
 
 
 export const MOCK_TEMPLATES: TournamentTemplate[] = [
@@ -110,29 +110,4 @@ const RAW_MATCHES_2026 = [
   { group: "K", date: "2026-06-28", time: "01:30", homeCompetitor: "TBD", awayCompetitor: "Uzbekistan" },
   { group: "J", date: "2026-06-28", time: "04:00", homeCompetitor: "Algeria", awayCompetitor: "Austria" },
   { group: "J", date: "2026-06-28", time: "04:00", homeCompetitor: "Jordan", awayCompetitor: "Argentina" },
-];
-
-
-
-
-
-export const MOCK_EXTRABETS: ExtraBet[] = [
-  { 
-    id: 'eb1', 
-    tournamentId: 't1', 
-    question: 'Vem vinner skytteligan?', 
-    allowedValues: ['Mbappé', 'Kane', 'Isak', 'Ronaldo'], 
-    requiresValue: false,
-    deadline: '2024-06-20T00:00:00Z', 
-    points: 50 
-  },
-  { 
-    id: 'eb2', 
-    tournamentId: 't1', 
-    question: 'Hur långt går Sverige?', 
-    allowedValues: ['Gruppspel', 'Åttondel', 'Kvartsfinal', 'Semifinal', 'Final'], 
-    requiresValue: false,
-    deadline: '2024-06-14T00:00:00Z', 
-    points: 30 
-  }
 ];

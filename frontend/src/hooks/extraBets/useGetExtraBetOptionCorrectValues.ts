@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
-import type { ExtraBetOptionCorrectValueDto } from "../types/extrabetTypes";
-import { extraBetService } from "../services/extraBetService";
+import type { ExtraBetOptionCorrectValueDto } from "../../types/extrabetTypes";
+import { extraBetService } from "../../services/extraBetService";
 
 export const useGetExtraBetOptionCorrectValues = (optionId?: number) => {
   const [values, setValues] = useState<ExtraBetOptionCorrectValueDto[]>([]);

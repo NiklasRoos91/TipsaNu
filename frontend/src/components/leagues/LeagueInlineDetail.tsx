@@ -1,7 +1,7 @@
 import React from 'react';
 import { LeaderboardTable } from './LeaderboardTable';
 // import { Forum } from './Forum';
-import { useLeagueDetail } from '../../hooks/useLeagueDetail';
+import { useLeagueDetail } from '../../hooks/leagues/useLeagueDetail';
 
 interface LeagueInlineDetailProps {
   leagueId: number;

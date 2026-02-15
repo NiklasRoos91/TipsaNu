@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { getMatches } from '../services/tournamentService';
-import { Match } from '../types/tournamentTypes';
+import { getMatches } from '../../services/tournamentService';
+import { Match } from '../../types/matchTypes';
 
 export const useGroupMatches = (groupId: number | null) => {
   const [matches, setMatches] = useState<Match[]>([]);

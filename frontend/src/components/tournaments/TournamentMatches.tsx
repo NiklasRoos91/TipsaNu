@@ -2,11 +2,11 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { Filter } from 'lucide-react';
 import { MatchCard } from '../matches/MatchCard';
 import { useGroups } from '../../hooks/useGroups';
-import { useGroupMatches } from '../../hooks/useGroupMatches';
+import { useGroupMatches } from '../../hooks/matches/useGroupMatches';
 import { useUserPredictions } from '../../hooks/useUserPredictions';
 import { ActionButton } from '../commons/ActionButton';
 import { useAuth } from '../../hooks/useAuth'; 
-import { CreateMatch } from '../../pages/CreateMatch';
+import { CreateMatch } from '../matches/CreateMatch';
 
 interface TournamentMatchesProps {
   tournamentId: string;

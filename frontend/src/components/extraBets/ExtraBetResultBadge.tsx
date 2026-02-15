@@ -29,10 +29,10 @@ export const ExtraBetResultBadge: React.FC<ExtraBetResultBadgeProps> = ({
     : prediction === correctAnswer;
 
   const color = !prediction
-    ? 'text-slate-300 bg-slate-50 italic'          // Ej tippad
+    ? 'text-slate-300 bg-slate-50 italic'
     : isCorrect
-    ? 'bg-emerald-50 text-emerald-600 border-emerald-100'  // Rätt
-    : 'bg-red-50 text-red-600 border-red-100';     // Fel
+    ? 'bg-emerald-50 text-emerald-600 border-emerald-100'
+    : 'bg-red-50 text-red-600 border-red-100'; 
 
   return (
     <div className={`flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full border ${color}`}>
