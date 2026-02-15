@@ -16,7 +16,7 @@ export const ExtraBetOptionForm: React.FC<ExtraBetOptionFormProps> = ({
   onCancel
 }) => {
   const { createExtraBetOption, isLoading } = useCreateExtraBetOption();
-  const [error, setError] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [createSuccess, setCreateSuccess] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -34,12 +34,12 @@ export const ExtraBetOptionForm: React.FC<ExtraBetOptionFormProps> = ({
     e.preventDefault();
 
     if (!formData.question || !formData.deadline) {
-      setError('Fyll i alla obligatoriska fält.');
+      setErrorMessage('Fyll i alla obligatoriska fält.');
       return;
     }
 
     if (!formData.allowCustom && !showOptionsInput) {
-      setError('Du måste kryssa i minst en av checkboxarna: Tillåt fritext eller Visa förvalda alternativ.');
+      setErrorMessage('Du måste kryssa i minst en av checkboxarna: Tillåt fritext eller Visa förvalda alternativ.');
       return;
     }
 
@@ -49,7 +49,7 @@ export const ExtraBetOptionForm: React.FC<ExtraBetOptionFormProps> = ({
       .filter(Boolean);
 
     if (showOptionsInput && choices.length === 0) {
-      setError('Ange minst ett alternativ.');
+      setErrorMessage('Ange minst ett alternativ.');
       return;
     }
 
@@ -182,7 +182,7 @@ export const ExtraBetOptionForm: React.FC<ExtraBetOptionFormProps> = ({
 
         {/* FormButtons */}
         <div className="md:col-span-2 mt-2">
-          <ErrorMessage message={error} />
+          <ErrorMessage message={errorMessage} />
           <FormButtons
             isSubmitting={isLoading}
             showSuccess={createSuccess}

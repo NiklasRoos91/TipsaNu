@@ -6,7 +6,7 @@ interface PredictionResultBadgeProps {
   prediction: { predictedHomeScore: number; predictedAwayScore: number } | null;
   matchResult: { scoreHome: number | null; scoreAway: number | null };
   matchStatus: MatchStatusEnum;
-  isExpanded?: boolean; // för styling om kortet är expanderat
+  isExpanded?: boolean;
 }
 
 export const PredictionResultBadge: React.FC<PredictionResultBadgeProps> = ({

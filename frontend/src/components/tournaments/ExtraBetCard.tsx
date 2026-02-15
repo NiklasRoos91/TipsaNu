@@ -1,37 +1,18 @@
-
 import React, { useState, useEffect } from 'react';
 import { AlertCircle, ChevronDown, ChevronUp, Check, Edit2 } from 'lucide-react';
+import { FormButtons } from '../commons/FormButtons';
+import type { ExtraBetOptionForUser } from '../../types/extrabetTypes';
+import { ErrorMessage } from '../commons/ErrorMessage';
+import { ExtraBetResultBadge } from '../extraBets/ExtraBetResultBadge';
+import { useGetExtraBetOptionCorrectValues } from '../../hooks/useGetExtraBetOptionCorrectValues';
 
-// Mock för ExtraBetPrediction
 export type ExtraBetPrediction = {
   betId: string;
   selectedOption: string;
 };
 
-// Mock-funktion som ersätter submitExtraBet
-export const submitExtraBet = async (betId: string, value: string): Promise<ExtraBetPrediction> => {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve({ betId, selectedOption: value });
-    }, 500); // simulerar liten delay
-  });
-};
-
-// Mock för ExtraBet
-export type ExtraBet = {
-  id: string;         
-  question: string; 
-  description?: string;  
-  points: number;         
-  deadline: string;       
-  allowedValues?: string[]; 
-  requiresValue: boolean;   
-};
-
-import { FormButtons } from '../commons/FormButtons';
-
 interface ExtraBetCardProps {
-  bet: ExtraBet;
+  bet: ExtraBetOptionForUser;
   initialPrediction?: ExtraBetPrediction;
   isExpired: boolean;
   onSavePrediction: (prediction: ExtraBetPrediction) => void;
@@ -48,17 +29,22 @@ export const ExtraBetCard: React.FC<ExtraBetCardProps> = ({
   const [customValue, setCustomValue] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);    
+  const [currentPrediction, setCurrentPrediction] = useState<ExtraBetPrediction | undefined>(initialPrediction);
+  const { values: correctValues, loading: loadingCorrectValues, error: correctValuesError } = useGetExtraBetOptionCorrectValues(bet.optionId);
+
 
   // Initialize custom value if the prediction doesn't match predefined options
   useEffect(() => {
     if (initialPrediction) {
       setSelectedValue(initialPrediction.selectedOption);
-      const isPredefined = bet.allowedValues?.includes(initialPrediction.selectedOption);
-      if (!isPredefined && bet.requiresValue) {
+      const isPredefined = bet.choices?.includes(initialPrediction.selectedOption);
+      if (!isPredefined && bet.allowCustomChoice) {
         setCustomValue(initialPrediction.selectedOption);
       }
+      setCurrentPrediction(initialPrediction);
     }
-  }, [initialPrediction, bet.allowedValues, bet.requiresValue]);
+  }, [initialPrediction, bet.choices, bet.allowCustomChoice]);
 
   const handleSelectOption = (val: string) => {
     if (isExpired) return;
@@ -68,8 +54,8 @@ export const ExtraBetCard: React.FC<ExtraBetCardProps> = ({
 
   const handleCancel = () => {
     setSelectedValue(initialPrediction?.selectedOption || '');
-    const isPredefined = bet.allowedValues?.includes(initialPrediction?.selectedOption || '');
-    if (!isPredefined && bet.requiresValue) {
+    const isPredefined = bet.choices?.includes(initialPrediction?.selectedOption || '');
+    if (!isPredefined && bet.allowCustomChoice) {
       setCustomValue(initialPrediction?.selectedOption || '');
     } else {
       setCustomValue('');
@@ -83,28 +69,30 @@ export const ExtraBetCard: React.FC<ExtraBetCardProps> = ({
 
     const finalValue = selectedValue === 'custom' ? customValue : selectedValue;
     if (!finalValue.trim()) {
-      alert("Vänligen välj eller skriv ett alternativ.");
+      setErrorMessage("Vänligen välj eller skriv ett alternativ.");
       return;
     }
 
     setIsSubmitting(true);
+    setErrorMessage(null);
     try {
-      const result = await submitExtraBet(bet.id, finalValue);
+      const result: ExtraBetPrediction = { betId: bet.optionId.toString(), selectedOption: finalValue }; // korrekt i TypeScript
       onSavePrediction(result);
+      setCurrentPrediction(result);
       setShowSuccess(true);
       setTimeout(() => {
         setShowSuccess(false);
         setIsExpanded(false);
       }, 2000);
     } catch (err) {
-      alert("Kunde inte spara ditt tips.");
+      setErrorMessage("Kunde inte spara ditt tips.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const hasPrediction = !!initialPrediction;
-  const isCustomActive = selectedValue === 'custom' || (selectedValue !== '' && !bet.allowedValues?.includes(selectedValue));
+  const hasPrediction = !!currentPrediction;
+  const isCustomActive = selectedValue === 'custom' || (selectedValue !== '' && !bet.choices?.includes(selectedValue));
 
   return (
     <div 
@@ -121,7 +109,7 @@ export const ExtraBetCard: React.FC<ExtraBetCardProps> = ({
       >
         <div className="flex justify-between items-start mb-4">
           <div className="flex-1">
-            <h3 className="text-lg font-bold text-primary pr-8">{bet.question}</h3>
+            <h3 className="text-lg font-bold text-primary pr-8">{bet.name}</h3>
             {bet.description && <p className="text-sm text-slate-500 mt-1">{bet.description}</p>}
           </div>
           <div className="flex flex-col items-end gap-2">
@@ -135,22 +123,16 @@ export const ExtraBetCard: React.FC<ExtraBetCardProps> = ({
         <div className="flex items-center justify-between mt-2">
           <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-tight">
             <span className={`flex items-center gap-1 ${isExpired ? 'text-red-500' : 'text-slate-400'}`}>
-              <AlertCircle size={14} /> {isExpired ? 'Stängd' : `Deadline: ${new Date(bet.deadline).toLocaleString('sv-SE', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}`}
+              <AlertCircle size={14} /> {isExpired ? 'Stängd' : `Deadline: ${new Date(bet.expiresAt ?? '').toLocaleString('sv-SE', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}`} {/* CHANGED */}
             </span>
             {isExpired && <span className="bg-red-100 text-red-600 px-2 py-0.5 rounded ml-2">STÄNGD</span>}
           </div>
 
-          {hasPrediction && (
-            <div className="flex items-center gap-2 bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full border border-emerald-100 text-xs font-bold animate-fade-in shadow-sm">
-              <Check size={14} />
-              <span>Ditt tips: {initialPrediction.selectedOption}</span>
-            </div>
-          )}
-          {!hasPrediction && !isExpired && !isExpanded && (
-            <div className="text-[10px] font-bold text-slate-400 bg-slate-100 px-2.5 py-1 rounded-full uppercase tracking-wider">
-              Tippa nu
-            </div>
-          )}
+          <ExtraBetResultBadge 
+            prediction={currentPrediction?.selectedOption || null}
+            correctAnswer={correctValues?.map(c => c.value) || []}
+            isExpanded={isExpanded}
+          />
         </div>
       </div>
 
@@ -162,7 +144,7 @@ export const ExtraBetCard: React.FC<ExtraBetCardProps> = ({
               <p className="text-xs font-bold text-slate-500 uppercase tracking-widest text-center mb-4">Välj ditt alternativ</p>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {bet.allowedValues?.map((val) => (
+                {bet.choices?.map((val) => (
                   <button
                     key={val}
                     type="button"
@@ -178,7 +160,7 @@ export const ExtraBetCard: React.FC<ExtraBetCardProps> = ({
                   </button>
                 ))}
                 
-                {bet.requiresValue && (
+                {bet.allowCustomChoice && (
                   <button
                     type="button"
                     onClick={() => handleSelectOption('custom')}
@@ -197,7 +179,7 @@ export const ExtraBetCard: React.FC<ExtraBetCardProps> = ({
                 )}
               </div>
 
-              {(selectedValue === 'custom' || isCustomActive) && bet.requiresValue && (
+              {(selectedValue === 'custom' || isCustomActive) && bet.allowCustomChoice && (
                 <div className="mt-4 animate-fade-in">
                   <input 
                     type="text"
@@ -209,6 +191,8 @@ export const ExtraBetCard: React.FC<ExtraBetCardProps> = ({
                   />
                 </div>
               )}
+
+              {errorMessage && <ErrorMessage message={errorMessage} />}
             </div>
 
             <div className="pt-4">

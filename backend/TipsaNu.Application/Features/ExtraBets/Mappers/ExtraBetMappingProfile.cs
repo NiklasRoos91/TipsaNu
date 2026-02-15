@@ -27,6 +27,8 @@ namespace TipsaNu.Application.Features.ExtraBets.Mappers
             CreateMap<CreateExtraBetDto, ExtraBet>()
                 .ForMember(dest => dest.SubmittedAt, opt => opt.MapFrom(_ => DateTime.UtcNow))
                 .ForMember(dest => dest.UserId, opt => opt.Ignore());
+
+            CreateMap<ExtraBetOptionCorrectValue, ExtraBetOptionCorrectValueDto>();
         }
     }
 }
