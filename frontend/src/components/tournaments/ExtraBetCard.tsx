@@ -5,6 +5,7 @@ import type { ExtraBetOptionForUser } from '../../types/extrabetTypes';
 import { ErrorMessage } from '../commons/ErrorMessage';
 import { ExtraBetResultBadge } from '../extraBets/ExtraBetResultBadge';
 import { useGetExtraBetOptionCorrectValues } from '../../hooks/useGetExtraBetOptionCorrectValues';
+import { useSubmitExtraBet } from "../../hooks/extraBets/useSubmitExtraBet";
 
 export type ExtraBetPrediction = {
   betId: string;
@@ -32,7 +33,7 @@ export const ExtraBetCard: React.FC<ExtraBetCardProps> = ({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);    
   const [currentPrediction, setCurrentPrediction] = useState<ExtraBetPrediction | undefined>(initialPrediction);
   const { values: correctValues, loading: loadingCorrectValues, error: correctValuesError } = useGetExtraBetOptionCorrectValues(bet.optionId);
-
+  const { submit, loading: submitting, error: submitError } = useSubmitExtraBet(bet.optionId);
 
   // Initialize custom value if the prediction doesn't match predefined options
   useEffect(() => {
@@ -64,32 +65,29 @@ export const ExtraBetCard: React.FC<ExtraBetCardProps> = ({
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (isExpired || isSubmitting) return;
+  e.preventDefault();
+  if (isExpired || submitting) return;
 
-    const finalValue = selectedValue === 'custom' ? customValue : selectedValue;
-    if (!finalValue.trim()) {
-      setErrorMessage("Vänligen välj eller skriv ett alternativ.");
-      return;
-    }
+  const finalValue = selectedValue === 'custom' ? customValue : selectedValue;
+  if (!finalValue.trim()) {
+    setErrorMessage("Vänligen välj eller skriv ett alternativ.");
+    return;
+  }
 
-    setIsSubmitting(true);
-    setErrorMessage(null);
-    try {
-      const result: ExtraBetPrediction = { betId: bet.optionId.toString(), selectedOption: finalValue }; // korrekt i TypeScript
-      onSavePrediction(result);
-      setCurrentPrediction(result);
-      setShowSuccess(true);
-      setTimeout(() => {
-        setShowSuccess(false);
-        setIsExpanded(false);
-      }, 2000);
-    } catch (err) {
-      setErrorMessage("Kunde inte spara ditt tips.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  setErrorMessage(null);
+
+  try {
+    const result = await submit({ value: finalValue }); 
+    setCurrentPrediction({ betId: bet.optionId.toString(), selectedOption: result.value });
+    setShowSuccess(true);
+    setTimeout(() => {
+      setShowSuccess(false);
+      setIsExpanded(false);
+    }, 2000);
+  } catch {
+    setErrorMessage("Kunde inte spara ditt tips.");
+  }
+};
 
   const hasPrediction = !!currentPrediction;
   const isCustomActive = selectedValue === 'custom' || (selectedValue !== '' && !bet.choices?.includes(selectedValue));

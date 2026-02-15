@@ -42,3 +42,20 @@ export type ExtraBetOptionCorrectValueDto = {
   optionId: number;
   value: string;
 };
+
+export type CreateExtraBetDto = {
+  value: string;
+};
+
+export type ExtraBetForUserDto = {
+  extraBetId: number;
+  value: string;
+  pointsAwarded?: number | null;
+  submittedAt: string;
+};
+
+export type SetExtraBetOptionCorrectValuesDto = {
+  correctValues: string[];
+};
+
+export type ExtraBetOptionCorrectValuesResponse = boolean;

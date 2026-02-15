@@ -69,7 +69,7 @@ export const PredictionResultBadge: React.FC<PredictionResultBadgeProps> = ({
   // 3. Ingen tippning och matchen är ej avslutad → TIPPA
   return (
     <div className={`text-[10px] font-bold px-2 py-0.5 rounded-full transition-colors ${
-      isExpanded ? 'bg-accent text-white' : 'text-slate-400 bg-slate-100'
+      isExpanded ? 'bg-blue-200 text-blue-800' : 'text-slate-400 bg-slate-100'
     }`}>
       TIPPA
     </div>

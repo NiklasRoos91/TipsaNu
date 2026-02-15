@@ -1,5 +1,5 @@
 import { api } from "./apiClient";
-import type { CreateExtraBetOptionDto, ExtraBetOptionDto, ExtraBetOptionForUser, ExtraBetOptionCorrectValueDto } from "../types/extrabetTypes";
+import type { CreateExtraBetOptionDto, ExtraBetOptionDto, ExtraBetOptionForUser, ExtraBetOptionCorrectValueDto, CreateExtraBetDto, ExtraBetForUserDto, SetExtraBetOptionCorrectValuesDto, ExtraBetOptionCorrectValuesResponse } from "../types/extrabetTypes";
 
 export const extraBetService = {
   createExtraBetOption: async (
@@ -10,6 +10,17 @@ export const extraBetService = {
       dto
     );
 
+    return response.data;
+  },
+
+      createCorrectValues: async (
+    optionId: number,
+    dto: SetExtraBetOptionCorrectValuesDto
+  ): Promise<ExtraBetOptionCorrectValuesResponse> => {
+    const response = await api.post<ExtraBetOptionCorrectValuesResponse>(
+      `/admin/extrabets/options/${optionId}/correct-values`,
+      dto
+    );
     return response.data;
   },
 
@@ -28,5 +39,15 @@ export const extraBetService = {
     );
     return response.data;
   },
-};
 
+  submitMyExtraBet: async (
+    optionId: number,
+    dto: CreateExtraBetDto
+  ): Promise<ExtraBetForUserDto> => {
+    const response = await api.post<ExtraBetForUserDto>(
+      `/extrabets/${optionId}/mine`,
+      dto
+    );
+    return response.data;
+  },
+};

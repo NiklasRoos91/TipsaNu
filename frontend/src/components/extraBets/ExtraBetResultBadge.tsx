@@ -17,7 +17,7 @@ export const ExtraBetResultBadge: React.FC<ExtraBetResultBadgeProps> = ({
   // Ingen correctAnswer → grå oavsett prediction
   if (!hasCorrectAnswer) {
     return (
-      <div className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${isExpanded ? 'bg-accent text-white' : 'bg-slate-100 text-slate-400'}`}>
+      <div className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${isExpanded ? 'bg-blue-200 text-blue-800' : 'bg-slate-100 text-slate-400'}`}>
         {prediction || 'TIPPA'}
       </div>
     );

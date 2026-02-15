@@ -52,7 +52,6 @@ namespace TipsaNu.Api.AdminControllers
             return Ok(result.Data);
         }
 
-
         // PATCH: api/admin/extrabets/options/{optionId}/correct-values
         // Adds correct values for an ExtraBetOption. Frontend should call this to add new values without affecting existing ones.
         [HttpPatch("{optionId}/correct-values")]
