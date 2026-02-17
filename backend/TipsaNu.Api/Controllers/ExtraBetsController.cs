@@ -5,6 +5,7 @@ using TipsaNu.Application.Features.ExtraBets.Commands.CreateExtraBet;
 using TipsaNu.Application.Features.ExtraBets.DTOs;
 using TipsaNu.Application.Features.ExtraBets.Queries.GetExtraBetOptionCorrectValuesByOptionId;
 using TipsaNu.Application.Features.ExtraBets.Queries.GetExtraBetOptionsForUser;
+using TipsaNu.Application.Features.ExtraBets.Queries.GetMyExtraBetByOptionId;
 
 namespace TipsaNu.Api.Controllers
 {
@@ -48,12 +49,29 @@ namespace TipsaNu.Api.Controllers
         }
 
         // GET /api/extrabets/{optionId}/correct-values
+        // 
         [HttpGet("{optionId:int}/correct-values")]
         public async Task<IActionResult> GetCorrectValuesByOptionId(
             int optionId,
             CancellationToken cancellationToken)
         {
             var query = new GetExtraBetOptionCorrectValuesByOptionIdQuery(optionId);
+            var result = await _mediator.Send(query, cancellationToken);
+
+            if (!result.IsSuccess)
+                return NotFound(result.ErrorMessages ?? new List<string> { result.ErrorMessage! });
+
+            return Ok(result.Data);
+        }
+
+        // GET /api/extrabets/options/{optionId}/me
+        //
+        [HttpGet("options/{optionId:int}/me")]
+        public async Task<IActionResult> GetMyExtraBetByOptionId(
+            int optionId,
+            CancellationToken cancellationToken)
+        {
+            var query = new GetMyExtraBetByOptionIdQuery(optionId);
             var result = await _mediator.Send(query, cancellationToken);
 
             if (!result.IsSuccess)

@@ -29,6 +29,9 @@ namespace TipsaNu.Application.Features.ExtraBets.Mappers
                 .ForMember(dest => dest.UserId, opt => opt.Ignore());
 
             CreateMap<ExtraBetOptionCorrectValue, ExtraBetOptionCorrectValueDto>();
+
+            CreateMap<ExtraBet, ExtraBetDto>();
+
         }
     }
 }

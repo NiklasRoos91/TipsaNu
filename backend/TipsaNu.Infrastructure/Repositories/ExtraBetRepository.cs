@@ -121,5 +121,16 @@ namespace TipsaNu.Infrastructure.Repositories
                 await _context.SaveChangesAsync(cancellationToken);
             }
         }
+
+        // This method gets all extrabets for a user using OptionId
+        public async Task<ExtraBet?> GetMyExtraBetByOptionIdAsync(int optionId, int userId, CancellationToken cancellationToken = default)
+        {
+            return await _context.ExtraBets
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x =>
+                    x.OptionId == optionId &&
+                    x.UserId == userId,
+                    cancellationToken);
+        }
     }
 }
