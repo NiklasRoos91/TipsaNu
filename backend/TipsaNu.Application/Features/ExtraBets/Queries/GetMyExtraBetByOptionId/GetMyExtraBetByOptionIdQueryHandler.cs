@@ -42,8 +42,7 @@ namespace TipsaNu.Application.Features.ExtraBets.Queries.GetMyExtraBetByOptionId
 
             if (entity is null)
             {
-                return OperationResult<ExtraBetDto>.Failure(
-                    $"No bet found for optionId={request.OptionId} for this user.");
+                return OperationResult<ExtraBetDto>.Success(null);
             }
 
             var dto = _mapper.Map<ExtraBetDto>(entity);

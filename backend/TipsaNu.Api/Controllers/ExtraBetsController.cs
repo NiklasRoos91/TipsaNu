@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using TipsaNu.Application.Features.ExtraBets.Commands.CreateExtraBet;
 using TipsaNu.Application.Features.ExtraBets.DTOs;
 using TipsaNu.Application.Features.ExtraBets.Queries.GetExtraBetOptionCorrectValuesByOptionId;
-using TipsaNu.Application.Features.ExtraBets.Queries.GetExtraBetOptionsForUser;
+using TipsaNu.Application.Features.ExtraBets.Queries.GetExtraBetOptions;
 using TipsaNu.Application.Features.ExtraBets.Queries.GetMyExtraBetByOptionId;
 
 namespace TipsaNu.Api.Controllers
@@ -19,20 +19,6 @@ namespace TipsaNu.Api.Controllers
         public ExtraBetsController(IMediator mediator)
         {
             _mediator = mediator;
-        }
-
-        // GET: /api/extrabets/options?tournamentId=123&me
-        // Retrieves all extra bet options for a specific tournament, including the user's current bets.
-        [HttpGet("options")]
-        public async Task<IActionResult> GetOptionsForUser([FromQuery] int tournamentId, CancellationToken cancellationToken)
-        {
-            var result = await _mediator.Send(
-                new GetExtraBetOptionsForUserQuery(tournamentId), cancellationToken);
-
-            if (!result.IsSuccess)
-                return BadRequest(new { message = result.ErrorMessage });
-
-            return Ok(result.Data);
         }
 
         // POST: /api/extrabets/{optionId}/mine
@@ -67,11 +53,22 @@ namespace TipsaNu.Api.Controllers
         // GET /api/extrabets/options/{optionId}/me
         //
         [HttpGet("options/{optionId:int}/me")]
-        public async Task<IActionResult> GetMyExtraBetByOptionId(
-            int optionId,
-            CancellationToken cancellationToken)
+        public async Task<IActionResult> GetMyExtraBetByOptionId(int optionId, CancellationToken cancellationToken)
         {
             var query = new GetMyExtraBetByOptionIdQuery(optionId);
+            var result = await _mediator.Send(query, cancellationToken);
+
+            if (!result.IsSuccess)
+                return NotFound(result.ErrorMessages ?? new List<string> { result.ErrorMessage! });
+
+            return Ok(result.Data);
+        }
+
+        // Get api/extrabets/options?tournamentId={tournamentId}&status={all|open|closed 
+        [HttpGet("options")]
+        public async Task<IActionResult> GetExtraBetOptions([FromQuery] int tournamentId, [FromQuery] string status = "all", CancellationToken cancellationToken = default)
+        {
+            var query = new GetExtraBetOptionsQuery(tournamentId, status);
             var result = await _mediator.Send(query, cancellationToken);
 
             if (!result.IsSuccess)

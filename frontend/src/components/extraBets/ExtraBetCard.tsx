@@ -8,7 +8,7 @@ import { useGetExtraBetOptionCorrectValues } from '../../hooks/extraBets/useGetE
 import { useSubmitExtraBet } from "../../hooks/extraBets/useSubmitExtraBet";
 import { ExtraBetCorrectValuesForm } from './ExtraBetCorrectValuesForm';
 import { useAuth } from '../../hooks/useAuth';
-
+import { useGetMyExtraBetByOptionId } from '../../hooks/extraBets/useGetMyExtraBetByOptionId';
 
 export type ExtraBetPrediction = {
   betId: string;
@@ -34,22 +34,23 @@ export const ExtraBetCard: React.FC<ExtraBetCardProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);    
-  const [currentPrediction, setCurrentPrediction] = useState<ExtraBetPrediction | undefined>(initialPrediction);
+  const [currentPrediction, setCurrentPrediction] = useState<ExtraBetPrediction | undefined>(undefined);
   const { values: correctValues, loading: loadingCorrectValues, error: correctValuesError } = useGetExtraBetOptionCorrectValues(bet.optionId);
   const { submit, loading: submitting, error: submitError } = useSubmitExtraBet(bet.optionId);
   const { isAdmin } = useAuth();
+  const { myBet, loading: loadingMyBet, error: myBetError, refetch: refetchMyBet } = useGetMyExtraBetByOptionId(bet.optionId);
 
-  // Initialize custom value if the prediction doesn't match predefined options
   useEffect(() => {
-    if (initialPrediction) {
-      setSelectedValue(initialPrediction.selectedOption);
-      const isPredefined = bet.choices?.includes(initialPrediction.selectedOption);
+    const prediction = initialPrediction ?? (myBet ? { betId: myBet.extraBetId.toString(), selectedOption: myBet.value ?? '' } : undefined);
+    if (prediction) {
+      setSelectedValue(prediction.selectedOption);
+      const isPredefined = bet.choices?.some(choice => choice.value === prediction.selectedOption);
       if (!isPredefined && bet.allowCustomChoice) {
-        setCustomValue(initialPrediction.selectedOption);
+        setCustomValue(prediction.selectedOption);
       }
-      setCurrentPrediction(initialPrediction);
+      setCurrentPrediction(prediction);
     }
-  }, [initialPrediction, bet.choices, bet.allowCustomChoice]);
+  }, [initialPrediction, bet.choices, myBet]);
 
   const handleSelectOption = (val: string) => {
     if (isExpired) return;
@@ -58,10 +59,11 @@ export const ExtraBetCard: React.FC<ExtraBetCardProps> = ({
   };
 
   const handleCancel = () => {
-    setSelectedValue(initialPrediction?.selectedOption || '');
-    const isPredefined = bet.choices?.includes(initialPrediction?.selectedOption || '');
+    const prediction = currentPrediction ?? (myBet ? { betId: myBet.extraBetId.toString(), selectedOption: myBet.value ?? '' } : undefined);
+    setSelectedValue(prediction?.selectedOption || '');
+    const isPredefined = bet.choices?.some(choice => choice.value === prediction?.selectedOption || '');
     if (!isPredefined && bet.allowCustomChoice) {
-      setCustomValue(initialPrediction?.selectedOption || '');
+      setCustomValue(prediction?.selectedOption || '');
     } else {
       setCustomValue('');
     }
@@ -82,11 +84,12 @@ export const ExtraBetCard: React.FC<ExtraBetCardProps> = ({
 
   try {
     const result = await submit({ value: finalValue }); 
-    setCurrentPrediction({ betId: bet.optionId.toString(), selectedOption: result.value });
+    setCurrentPrediction({ betId: bet.optionId.toString(), selectedOption: result.value ?? finalValue });
     setShowSuccess(true);
     setTimeout(() => {
       setShowSuccess(false);
       setIsExpanded(false);
+      refetchMyBet();
     }, 2000);
   } catch {
     setErrorMessage("Kunde inte spara ditt tips.");
@@ -94,7 +97,10 @@ export const ExtraBetCard: React.FC<ExtraBetCardProps> = ({
 };
 
   const hasPrediction = !!currentPrediction;
-  const isCustomActive = selectedValue === 'custom' || (selectedValue !== '' && !bet.choices?.includes(selectedValue));
+  const isCustomActive = selectedValue === 'custom' || (selectedValue !== '' && !bet.choices?.some(choice => choice.value === selectedValue));
+
+  if (loadingMyBet) return <div>Laddar ditt tips...</div>;
+  if (myBetError) return <ErrorMessage message={myBetError} />;
 
   return (
     <div 
@@ -146,19 +152,19 @@ export const ExtraBetCard: React.FC<ExtraBetCardProps> = ({
               <p className="text-xs font-bold text-slate-500 uppercase tracking-widest text-center mb-4">Välj ditt alternativ</p>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {bet.choices?.map((val) => (
+                {bet.choices?.map((choice) => (
                   <button
-                    key={val}
+                    key={choice.choiceId}
                     type="button"
-                    onClick={() => handleSelectOption(val)}
+                    onClick={() => handleSelectOption(choice.value)}
                     className={`px-4 py-3 rounded-xl border text-sm font-bold transition-all text-left flex items-center justify-between ${
-                      selectedValue === val 
+                      selectedValue === choice.value
                         ? 'bg-accent border-accent text-white shadow-md transform scale-[1.02]' 
                         : 'bg-white border-slate-200 text-slate-600 hover:border-accent hover:text-accent'
                     }`}
                   >
-                    {val}
-                    {selectedValue === val && <Check size={16} />}
+                    {choice.value}
+                    {selectedValue === choice.value && <Check size={16} />}
                   </button>
                 ))}
                 

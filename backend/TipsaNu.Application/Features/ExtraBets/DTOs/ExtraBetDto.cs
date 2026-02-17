@@ -6,7 +6,7 @@
         public int OptionId { get; set; }
 
         public int? ChoiceId { get; set; }
-        public string? CustomValue { get; set; }
+        public string? Value { get; set; }
         public int? PointsAwarded { get; set; }
         public DateTime SubmittedAt { get; set; }
     }

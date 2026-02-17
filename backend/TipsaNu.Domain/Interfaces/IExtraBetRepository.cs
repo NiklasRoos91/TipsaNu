@@ -15,5 +15,6 @@ namespace TipsaNu.Domain.Interfaces
         Task UpdateRangeAsync(List<ExtraBet> bets, CancellationToken cancellationToken = default);
         Task RemoveCorrectValuesAsync(int optionId, CancellationToken cancellationToken = default);
         Task<ExtraBet?> GetMyExtraBetByOptionIdAsync(int optionId,int userId, CancellationToken cancellationToken = default);
+        Task<List<ExtraBetOption>> GetExtraBetOptionsAsync(int tournamentId, string status, CancellationToken cancellationToken = default);
     }
 }

@@ -1,10 +1,11 @@
-
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { ActionButton } from '../commons/ActionButton';
 import { ExtraBetOptionForm } from '../extraBets/ExtraBetOptionForm';
 import { ExtraBetCard } from '../extraBets/ExtraBetCard';
-import { useGetOptionsForUser } from '../../hooks/useGetOptionsForUser';
 import type { ExtraBetOptionForUser } from '../../types/extrabetTypes';
+import { useGetExtraBetOptions } from "../../hooks/extraBets/useGetExtraBetOptions";
+import { CategoryFilterBar   } from '../commons/CategoryFilterBar';
+import { ExtraBetFilterEnum } from '../../types/enums/extraBetEnums';
 
 interface TournamentExtraBetsProps {
   tournamentId: string;
@@ -16,27 +17,49 @@ export const TournamentExtraBets: React.FC<TournamentExtraBetsProps> = ({
   isAdmin
 }) => {
   const [showForm, setShowForm] = React.useState(false);
-  const { options: extraBets, loading, error, refetch } = useGetOptionsForUser(Number(tournamentId));
+  const [selectedFilter, setSelectedFilter] = useState<ExtraBetFilterEnum>(ExtraBetFilterEnum.All);
+  const categories: ExtraBetFilterEnum[] = [
+    ExtraBetFilterEnum.All,
+    ExtraBetFilterEnum.Open,
+    ExtraBetFilterEnum.Closed,
+  ];
+
+  const { options: extraBets, loading, error, refetch: refetchOptions } =
+    useGetExtraBetOptions(Number(tournamentId), selectedFilter);
 
   const handleFormCreated = () => {
     setShowForm(false);
-    refetch();
-  };
+    refetchOptions();
+  };  
+
+  useEffect(() => {
+    if (selectedFilter) refetchOptions();
+  }, [selectedFilter, refetchOptions]);
 
 return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <h2 className="text-2xl font-bold text-primary">Extratips</h2>
-        {isAdmin && (
-          <div className="w-auto ml-auto">
-            <ActionButton
-              label="Skapa ny"
-              onClick={() => setShowForm(!showForm)}
-              isActive={showForm}
-            />
-          </div>
-        )}
+
+        <div className="flex items-center gap-2 sm:w-auto">
+          {/* Filter/Category bar */}
+          <CategoryFilterBar
+            categories={categories}
+            currentCategory={selectedFilter}
+            onCategoryChange={setSelectedFilter}
+          />
+
+          {isAdmin && (
+            <div className="w-auto ml-auto">
+              <ActionButton
+                label="Skapa ny"
+                onClick={() => setShowForm(!showForm)}
+                isActive={showForm}
+              />
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Form */}
@@ -48,7 +71,7 @@ return (
         />
       )}
 
-      {/* Lista med extrabet-options */}
+      {/* List with extrabet options */}
       <div className="grid gap-4">
         {loading && <div>Laddar extratips...</div>}
         {error && <div className="text-red-500">{error}</div>}
@@ -57,8 +80,9 @@ return (
             Inga extratips skapade för denna turnering ännu.
           </div>
         )}
+
         {!loading && !error && extraBets.map((bet: ExtraBetOptionForUser) => {
-          const initialPrediction = bet.myBet
+          const initialPrediction: { betId: string; selectedOption: string } | undefined = bet.myBet
             ? { betId: bet.myBet.extraBetId.toString(), selectedOption: bet.myBet.value }
             : undefined;
 

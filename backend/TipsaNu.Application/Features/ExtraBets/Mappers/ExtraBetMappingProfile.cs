@@ -16,14 +16,6 @@ namespace TipsaNu.Application.Features.ExtraBets.Mappers
                 )
                 .ForMember(dest => dest.AllowCustomChoice, opt => opt.MapFrom(src => src.AllowCustomChoice));
 
-            CreateMap<ExtraBet, ExtraBetForUserDto>();
-
-            CreateMap<ExtraBetOption, ExtraBetOptionForUserDto>()
-                .ForMember(dest => dest.Choices,
-                    opt => opt.MapFrom(src => src.ExtraBetOptionChoices.Select(c => c.Value).ToList()))
-                .ForMember(dest => dest.MyBet,
-                    opt => opt.MapFrom(src => src.ExtraBets.FirstOrDefault()));
-
             CreateMap<CreateExtraBetDto, ExtraBet>()
                 .ForMember(dest => dest.SubmittedAt, opt => opt.MapFrom(_ => DateTime.UtcNow))
                 .ForMember(dest => dest.UserId, opt => opt.Ignore());
@@ -32,6 +24,11 @@ namespace TipsaNu.Application.Features.ExtraBets.Mappers
 
             CreateMap<ExtraBet, ExtraBetDto>();
 
+            CreateMap<ExtraBetOptionChoice, ExtraBetOptionChoiceDto>();
+
+            CreateMap<ExtraBetOption, ExtraBetOptionDto>()
+                .ForMember(dest => dest.Choices, opt => opt.MapFrom(src => src.ExtraBetOptionChoices))
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status.ToString()));
         }
     }
 }

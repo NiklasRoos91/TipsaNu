@@ -10,6 +10,7 @@
         public int Points { get; set; }
         public DateTime? ExpiresAt { get; set; }
         public bool AllowCustomChoice { get; set; }
-        public List<string> Choices { get; set; } = new();
+        public string Status { get; set; } = null!;
+        public List<ExtraBetOptionChoiceDto> Choices { get; set; } = new();
     }
 }
