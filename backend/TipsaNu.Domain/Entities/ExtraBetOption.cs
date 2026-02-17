@@ -1,4 +1,6 @@
-﻿namespace TipsaNu.Domain.Entities
+﻿using TipsaNu.Domain.Enums;
+
+namespace TipsaNu.Domain.Entities
 {
     public class ExtraBetOption
     {
@@ -10,6 +12,7 @@
         public int? MatchId { get; set; }
         public DateTime? ExpiresAt { get; set; }
         public bool AllowCustomChoice { get; set; } = false;
+        public ExtraBetOptionStatus Status { get; set; } = ExtraBetOptionStatus.Open;
 
         // Navigation
         public Tournament Tournament { get; set; } = null!;

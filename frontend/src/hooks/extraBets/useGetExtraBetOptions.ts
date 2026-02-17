@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback } from "react";
-import type { ExtraBetOptionForUser } from "../types/extrabetTypes";
-import { extraBetService } from "../services/extraBetService";
+import type { ExtraBetOptionDto } from "../../types/extrabetTypes";
+import { extraBetService } from "../../services/extraBetService";
 
-export const useGetOptionsForUser = (tournamentId: number) => {
-  const [options, setOptions] = useState<ExtraBetOptionForUser[]>([]);
+export const useGetExtraBetOptions = (tournamentId: number, status: string = "all") => {
+  const [options, setOptions] = useState<ExtraBetOptionDto[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -12,7 +12,7 @@ export const useGetOptionsForUser = (tournamentId: number) => {
     setError(null);
 
     try {
-      const data = await extraBetService.getOptionsForUser(tournamentId);
+      const data = await extraBetService.getExtraBetOptions(tournamentId, status);
       setOptions(data);
     } catch (err: any) {
       console.error(err);
@@ -20,13 +20,11 @@ export const useGetOptionsForUser = (tournamentId: number) => {
     } finally {
       setLoading(false);
     }
-  }, [tournamentId]);
+  }, [tournamentId, status]);
 
   useEffect(() => {
-    if (tournamentId) {
-      fetchOptions();
-    }
-  }, [tournamentId, fetchOptions]);
+    if (tournamentId) fetchOptions();
+  }, [tournamentId, status, fetchOptions]);
 
   return { options, loading, error, refetch: fetchOptions };
 };

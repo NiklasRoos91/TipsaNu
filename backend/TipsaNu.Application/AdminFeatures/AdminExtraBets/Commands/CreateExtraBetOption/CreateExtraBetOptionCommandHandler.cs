@@ -3,6 +3,7 @@ using MediatR;
 using TipsaNu.Application.Commons.Results;
 using TipsaNu.Application.Features.ExtraBets.DTOs;
 using TipsaNu.Domain.Entities;
+using TipsaNu.Domain.Enums;
 using TipsaNu.Domain.Interfaces;
 
 namespace TipsaNu.Application.AdminFeatures.AdminExtraBets.Commands.CreateExtraBetOption
@@ -39,7 +40,8 @@ namespace TipsaNu.Application.AdminFeatures.AdminExtraBets.Commands.CreateExtraB
                 Description = request.CreateExtraBetOptionDto.Description,
                 Points = request.CreateExtraBetOptionDto.Points,
                 ExpiresAt = request.CreateExtraBetOptionDto.ExpiresAt,
-                AllowCustomChoice = request.CreateExtraBetOptionDto.AllowCustomChoice
+                AllowCustomChoice = request.CreateExtraBetOptionDto.AllowCustomChoice,
+                Status = ExtraBetOptionStatus.Open
             };
 
             var createdOption = await _extraBetsRepository.AddExtraBetOptionAsync(newOption, cancellationToken);

@@ -9,32 +9,8 @@ export type CreateExtraBetOptionDto = {
   choices: string[];
 };
 
-export type ExtraBetOptionDto = {
-  optionId: number;
-  tournamentId: number;
-  matchId?: number | null;
-  name: string;
-  description: string;
-  points: number;
-  expiresAt?: string | null;
-  allowCustomChoice: boolean;
-  choices: string[];
-};
-
-export type ExtraBetOptionForUser = {
-  optionId: number;
-  name: string;
-  description: string;
-  points: number;
-  expiresAt?: string | null;
-  allowCustomChoice: boolean;
-  choices: string[];
-  myBet?: {
-    extraBetId: number;
-    value: string;
-    pointsAwarded?: number | null;
-    submittedAt: string;
-  } | null;
+export type ExtraBetOptionForUser = ExtraBetOptionDto & {
+  myBet?: ExtraBetDto | null;
 };
 
 export type ExtraBetOptionCorrectValueDto = {
@@ -47,15 +23,36 @@ export type CreateExtraBetDto = {
   value: string;
 };
 
-export type ExtraBetForUserDto = {
-  extraBetId: number;
-  value: string;
-  pointsAwarded?: number | null;
-  submittedAt: string;
-};
-
 export type SetExtraBetOptionCorrectValuesDto = {
-  correctValues: string[];
+  values: string[];
 };
 
 export type ExtraBetOptionCorrectValuesResponse = boolean;
+
+export type ExtraBetOptionChoiceDto = {
+  choiceId: number;
+  optionId: number;
+  value: string;
+};
+
+export type ExtraBetOptionDto = {
+  optionId: number;
+  tournamentId: number;
+  matchId?: number | null;
+  name: string;
+  description: string;
+  points: number;
+  expiresAt?: string | null;
+  allowCustomChoice: boolean;
+  status: string; // "Open" | "Closed" | "Cancelled" (string från backend)
+  choices: ExtraBetOptionChoiceDto[];
+};
+
+export type ExtraBetDto = {
+  extraBetId: number;
+  optionId: number;
+  choiceId?: number | null;
+  value?: string | null;
+  pointsAwarded?: number | null;
+  submittedAt: string;
+};

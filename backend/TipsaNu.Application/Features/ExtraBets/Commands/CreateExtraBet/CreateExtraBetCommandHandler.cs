@@ -9,7 +9,7 @@ using TipsaNu.Domain.Interfaces;
 namespace TipsaNu.Application.Features.ExtraBets.Commands.CreateExtraBet
 {
     public class CreateExtraBetCommandHandler
-    : IRequestHandler<CreateExtraBetCommand, OperationResult<ExtraBetForUserDto>>
+    : IRequestHandler<CreateExtraBetCommand, OperationResult<ExtraBetDto>>
     {
         private readonly IExtraBetRepository _extraBetRepository;
         private readonly IGenericRepository<ExtraBet> _genericExtraBetRepository;
@@ -28,28 +28,28 @@ namespace TipsaNu.Application.Features.ExtraBets.Commands.CreateExtraBet
             _mapper = mapper;
         }
 
-        public async Task<OperationResult<ExtraBetForUserDto>> Handle(CreateExtraBetCommand request, CancellationToken cancellationToken)
+        public async Task<OperationResult<ExtraBetDto>> Handle(CreateExtraBetCommand request, CancellationToken cancellationToken)
         {
             var userId = _currentUser.UserId;
             if (userId <= 0)
-                return OperationResult<ExtraBetForUserDto>.Failure("Unauthorized");
+                return OperationResult<ExtraBetDto>.Failure("Unauthorized");
 
             var option = await _extraBetRepository
                 .GetOptionByIdWithChoicesAsync(request.OptionId, cancellationToken);
 
             if (option == null)
-                return OperationResult<ExtraBetForUserDto>.Failure("ExtraBetOption not found");
+                return OperationResult<ExtraBetDto>.Failure("ExtraBetOption not found");
 
             if (option.ExpiresAt.HasValue && option.ExpiresAt.Value <= DateTime.UtcNow)
-                return OperationResult<ExtraBetForUserDto>.Failure("ExtraBetOption has expired");
+                return OperationResult<ExtraBetDto>.Failure("ExtraBetOption has expired");
 
             var alreadyPlaced = await _extraBetRepository
                 .UserHasBetOnOptionAsync(userId, request.OptionId, cancellationToken);
             if (alreadyPlaced)
-                return OperationResult<ExtraBetForUserDto>.Failure("You have already placed a bet for this option");
+                return OperationResult<ExtraBetDto>.Failure("You have already placed a bet for this option");
 
             if (!option.AllowCustomChoice && !option.ExtraBetOptionChoices.Any(c => c.Value == request.CreateExtraBetDto.Value.Trim()))            
-                return OperationResult<ExtraBetForUserDto>.Failure("Invalid value for this ExtraBetOption");
+                return OperationResult<ExtraBetDto>.Failure("Invalid value for this ExtraBetOption");
 
             var extraBet = _mapper.Map<ExtraBet>(request.CreateExtraBetDto);
             extraBet.UserId = userId;
@@ -57,9 +57,9 @@ namespace TipsaNu.Application.Features.ExtraBets.Commands.CreateExtraBet
 
             await _genericExtraBetRepository.AddAsync(extraBet, cancellationToken);
 
-            var dto = _mapper.Map<ExtraBetForUserDto>(extraBet);
+            var dto = _mapper.Map<ExtraBetDto>(extraBet);
 
-            return OperationResult<ExtraBetForUserDto>.Success(dto);
+            return OperationResult<ExtraBetDto>.Success(dto);
         }
     }
 }

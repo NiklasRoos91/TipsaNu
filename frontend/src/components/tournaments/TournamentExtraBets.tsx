@@ -3,8 +3,8 @@ import React, {useState} from 'react';
 import { ActionButton } from '../commons/ActionButton';
 import { ExtraBetOptionForm } from '../extraBets/ExtraBetOptionForm';
 import { ExtraBetCard } from '../extraBets/ExtraBetCard';
-import { useGetOptionsForUser } from '../../hooks/useGetOptionsForUser';
-import type { ExtraBetOptionForUser } from '../../types/extrabetTypes';
+import type { ExtraBetOptionForUser, ExtraBetDto } from '../../types/extrabetTypes';
+import { useGetExtraBetOptions } from "../../hooks/extraBets/useGetExtraBetOptions";
 
 interface TournamentExtraBetsProps {
   tournamentId: string;
@@ -16,11 +16,13 @@ export const TournamentExtraBets: React.FC<TournamentExtraBetsProps> = ({
   isAdmin
 }) => {
   const [showForm, setShowForm] = React.useState(false);
-  const { options: extraBets, loading, error, refetch } = useGetOptionsForUser(Number(tournamentId));
+  const { options: extraBets, loading, error, refetch: refetchOptions } =
+    useGetExtraBetOptions(Number(tournamentId));
+
 
   const handleFormCreated = () => {
     setShowForm(false);
-    refetch();
+    refetchOptions();
   };
 
 return (
@@ -57,8 +59,9 @@ return (
             Inga extratips skapade för denna turnering ännu.
           </div>
         )}
+
         {!loading && !error && extraBets.map((bet: ExtraBetOptionForUser) => {
-          const initialPrediction = bet.myBet
+          const initialPrediction: { betId: string; selectedOption: string } | undefined = bet.myBet
             ? { betId: bet.myBet.extraBetId.toString(), selectedOption: bet.myBet.value }
             : undefined;
 

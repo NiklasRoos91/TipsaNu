@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TipsaNu.Domain.Entities;
+using TipsaNu.Domain.Enums;
 using TipsaNu.Domain.Interfaces;
 using TipsaNu.Infrastructure.Presistence;
 
@@ -131,6 +132,22 @@ namespace TipsaNu.Infrastructure.Repositories
                     x.OptionId == optionId &&
                     x.UserId == userId,
                     cancellationToken);
+        }
+
+        // This method gets all extrabetoptions wit there choices for tournament
+        public async Task<List<ExtraBetOption>> GetExtraBetOptionsAsync(int tournamentId, string status, CancellationToken cancellationToken = default)
+        {
+            var query = _context.ExtraBetOptions
+                .AsNoTracking()
+                .Include(x => x.ExtraBetOptionChoices)
+                .Where(x => x.TournamentId == tournamentId);
+
+            if (status.Equals("open", StringComparison.OrdinalIgnoreCase))
+                query = query.Where(x => x.Status == ExtraBetOptionStatus.Open);
+            else if (status.Equals("closed", StringComparison.OrdinalIgnoreCase))
+                query = query.Where(x => x.Status == ExtraBetOptionStatus.Closed);
+
+            return await query.ToListAsync(cancellationToken);
         }
     }
 }

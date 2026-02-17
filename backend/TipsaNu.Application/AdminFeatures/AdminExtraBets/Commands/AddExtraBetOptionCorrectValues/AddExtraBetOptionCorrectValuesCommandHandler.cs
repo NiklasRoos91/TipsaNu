@@ -2,6 +2,7 @@
 using TipsaNu.Application.AdminFeatures.AdminExtraBets.Events;
 using TipsaNu.Application.Commons.Results;
 using TipsaNu.Domain.Entities;
+using TipsaNu.Domain.Enums;
 using TipsaNu.Domain.Interfaces;
 
 namespace TipsaNu.Application.AdminFeatures.AdminExtraBets.Commands.AddExtraBetOptionCorrectValues
@@ -38,6 +39,12 @@ namespace TipsaNu.Application.AdminFeatures.AdminExtraBets.Commands.AddExtraBetO
             foreach (var value in valuesToAdd)
             {
                 await _extraBetRepository.AddCorrectValueAsync(request.OptionId, value, cancellationToken);
+            }
+
+            if (valuesToAdd.Any())
+            {
+                option.Status = ExtraBetOptionStatus.Closed;
+                await _genericExtraBetOptionRepository.UpdateAsync(option, cancellationToken);
             }
 
             await _mediator.Publish(new ExtraBetOptionCorrectValuesUpdatedEvent(request.OptionId), cancellationToken);

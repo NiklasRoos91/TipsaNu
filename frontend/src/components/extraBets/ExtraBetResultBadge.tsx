@@ -14,7 +14,6 @@ export const ExtraBetResultBadge: React.FC<ExtraBetResultBadgeProps> = ({
 }) => {
   const hasCorrectAnswer = Array.isArray(correctAnswer) ? correctAnswer.length > 0 : !!correctAnswer;
 
-  // Ingen correctAnswer → grå oavsett prediction
   if (!hasCorrectAnswer) {
     return (
       <div className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${isExpanded ? 'bg-blue-200 text-blue-800' : 'bg-slate-100 text-slate-400'}`}>
@@ -23,7 +22,6 @@ export const ExtraBetResultBadge: React.FC<ExtraBetResultBadgeProps> = ({
     );
   }
 
-  // Finns correctAnswer → titta om prediction matchar
   const isCorrect = Array.isArray(correctAnswer)
     ? prediction && correctAnswer.includes(prediction)
     : prediction === correctAnswer;
