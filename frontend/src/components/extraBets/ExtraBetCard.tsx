@@ -40,7 +40,6 @@ export const ExtraBetCard: React.FC<ExtraBetCardProps> = ({
   const { isAdmin } = useAuth();
   const { myBet, loading: loadingMyBet, error: myBetError, refetch: refetchMyBet } = useGetMyExtraBetByOptionId(bet.optionId);
 
-  // Initialize custom value if the prediction doesn't match predefined options
   useEffect(() => {
     const prediction = initialPrediction ?? (myBet ? { betId: myBet.extraBetId.toString(), selectedOption: myBet.value ?? '' } : undefined);
     if (prediction) {

@@ -1,9 +1,4 @@
 ﻿namespace TipsaNu.Domain.Enums
 {
-    public enum ExtraBetOptionStatus
-    {
-        Open,
-        Closed,
-        Cancelled
-    }
+    public enum ExtraBetOptionStatus{Open, Closed, Cancelled}
 }

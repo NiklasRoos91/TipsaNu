@@ -1,3 +1,5 @@
+import { ExtraBetOptionStatusEnum } from './enums/extraBetEnums';
+
 export type CreateExtraBetOptionDto = {
   tournamentId: number;
   matchId?: number | null;
@@ -44,7 +46,7 @@ export type ExtraBetOptionDto = {
   points: number;
   expiresAt?: string | null;
   allowCustomChoice: boolean;
-  status: string; // "Open" | "Closed" | "Cancelled" (string från backend)
+  status: ExtraBetOptionStatusEnum;
   choices: ExtraBetOptionChoiceDto[];
 };
 

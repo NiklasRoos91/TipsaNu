@@ -142,10 +142,15 @@ namespace TipsaNu.Infrastructure.Repositories
                 .Include(x => x.ExtraBetOptionChoices)
                 .Where(x => x.TournamentId == tournamentId);
 
-            if (status.Equals("open", StringComparison.OrdinalIgnoreCase))
-                query = query.Where(x => x.Status == ExtraBetOptionStatus.Open);
-            else if (status.Equals("closed", StringComparison.OrdinalIgnoreCase))
-                query = query.Where(x => x.Status == ExtraBetOptionStatus.Closed);
+            if (!status.Equals("all", StringComparison.OrdinalIgnoreCase))
+            {
+                if (status.Equals("open", StringComparison.OrdinalIgnoreCase))
+                    query = query.Where(x => x.Status == ExtraBetOptionStatus.Open);
+                else if (status.Equals("closed", StringComparison.OrdinalIgnoreCase))
+                    query = query.Where(x => x.Status == ExtraBetOptionStatus.Closed);
+                else if (status.Equals("cancelled", StringComparison.OrdinalIgnoreCase))
+                    query = query.Where(x => x.Status == ExtraBetOptionStatus.Cancelled);
+            }
 
             return await query.ToListAsync(cancellationToken);
         }
