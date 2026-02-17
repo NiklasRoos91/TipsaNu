@@ -13,6 +13,7 @@ interface CategoryFilterBarProps {
   onCategoryChange: (category: ExtraBetFilterEnum) => void;
 }
 
+
 export const CategoryFilterBar: React.FC<CategoryFilterBarProps> = ({
   categories,
   currentCategory,
