@@ -6,9 +6,10 @@ interface MatchListProps {
   matches: Match[];
   predictions: UIPrediction [];
   groups: any[];
+  refreshPredictions?: () => void;
 }
 
-export const MatchList: React.FC<MatchListProps> = ({matches, predictions, groups}) => {
+export const MatchList: React.FC<MatchListProps> = ({matches, predictions, groups, refreshPredictions }) => {
   return (
     <div className="space-y-4 animate-fade-in">
       {matches.length > 0 ? (
@@ -23,6 +24,7 @@ export const MatchList: React.FC<MatchListProps> = ({matches, predictions, group
               match={match}
               prediction={mappedPrediction}
               groups={groups}
+              refreshPredictions={refreshPredictions}
             />
           );
         })

@@ -12,10 +12,11 @@ import { PredictionResultBadge } from './PredictionResultBadge';
 interface MatchCardProps {
   match: Match;
   prediction: { homeScore: number; awayScore: number } | null;
-  groups: { name: string, groupId: number }[]; 
+  groups: { name: string, groupId: number }[];
+  refreshPredictions?: () => void; 
 }
 
-export const MatchCard: React.FC<MatchCardProps> = ({ match, prediction: initialPrediction, groups }) => {
+export const MatchCard: React.FC<MatchCardProps> = ({ match, prediction: initialPrediction, groups, refreshPredictions }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [homePred, setHomePred] = useState<number | ''>(initialPrediction?.homeScore ?? 0);
   const [awayPred, setAwayPred] = useState<number | ''>(initialPrediction?.awayScore ?? 0);
@@ -65,6 +66,9 @@ export const MatchCard: React.FC<MatchCardProps> = ({ match, prediction: initial
 const handlePredictionSubmit = async (homeScore: number, awayScore: number) => {
   if (isSubmitting || isLocked || isFinished) return;
   await handleSubmitPrediction(match.matchId, homeScore, awayScore);
+  if (refreshPredictions) {
+    await refreshPredictions();
+  }
 };
 
   const handleCancel = () => {
