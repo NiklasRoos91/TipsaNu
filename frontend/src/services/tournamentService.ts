@@ -51,3 +51,13 @@ export const getStandings = async (groupId: number): Promise<GroupStanding[]> =>
     throw new Error(err.response?.data?.message || 'Fel vid hämtning av tabell');
   }
 };
+
+export const getMatchesByTournamentId = async (tournamentId: number): Promise<Match[]> => {
+  try {
+    const response = await api.get<Match[]>(`/tournaments/${tournamentId}/matches`);
+    return response.data;
+  } catch (err: any) {
+    console.error(`Error fetching matches for tournament ${tournamentId}`, err);
+    throw new Error(err.response?.data?.message || 'Error fetching tournament matches');
+  }
+};

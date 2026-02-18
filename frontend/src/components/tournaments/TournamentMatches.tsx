@@ -2,11 +2,12 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { Filter } from 'lucide-react';
 import { MatchCard } from '../matches/MatchCard';
 import { useGroups } from '../../hooks/useGroups';
-import { useGroupMatches } from '../../hooks/matches/useGroupMatches';
 import { useUserPredictions } from '../../hooks/useUserPredictions';
 import { ActionButton } from '../commons/ActionButton';
 import { useAuth } from '../../hooks/useAuth'; 
 import { CreateMatch } from '../matches/CreateMatch';
+import { useTournamentMatches } from '../../hooks/useTournamentMatches'; 
+import { MatchTypeEnum } from '../../types/enums/matchEnums'; 
 
 interface TournamentMatchesProps {
   tournamentId: string;
@@ -18,28 +19,38 @@ export const TournamentMatches: React.FC<TournamentMatchesProps> = ({
   tournamentId 
 }) => {
   const [matchCategory, setMatchCategory] = useState<MatchCategory>('groups');
-  const [selectedFilter, setSelectedFilter] = useState<string | null>(null);
+  const [selectedFilter, setSelectedFilter] = useState<string | MatchTypeEnum | null>(null);
   const { groups } = useGroups(Number(tournamentId));
+  const { matches, loading: loadingMatches, error: matchesError, fetchMatches } = useTournamentMatches();
   const [showCreate, setShowCreate] = useState(false);
-  const groupId = selectedFilter ? groups.find(g => g.name === selectedFilter)?.groupId ?? null : null;
-  const { matches, loading: loadingMatches, error: matchesError } = useGroupMatches(groupId);
   const { predictions, loading: loadingPredictions, error: predictionsError } = useUserPredictions();
   const { isAdmin } = useAuth();  
 
-  const matchGroups = useMemo(() => {
-    const categories = {
-      groups: groups.map(g => g.name),
-      knockout: [] as string[]
-    };
+  useEffect(() => {
+  fetchMatches(Number(tournamentId));
+  }, [tournamentId]);
 
-    categories.groups.sort();
+  const matchGroups = useMemo(() => {
+    const categories = { 
+      groups: groups.map(g => g.name).sort(),
+      knockout: Array.from(
+        new Set(
+        matches?.filter(m => m.matchType !== MatchTypeEnum.Group)
+          .map(m => m.matchType)
+        )
+      ) as MatchTypeEnum[]
+    };
     return categories;
-  }, [groups]);
+  }, [groups, matches]);
 
   useEffect(() => {
     const availableFilters = matchGroups[matchCategory];
     if (availableFilters.length > 0) {
-      if (!selectedFilter || !availableFilters.includes(selectedFilter)) {
+      const isSelectedValid = availableFilters.some(
+        f => f === selectedFilter
+      );
+
+      if (!selectedFilter || !isSelectedValid) {
         setSelectedFilter(availableFilters[0]);
       }
     } else {
@@ -47,10 +58,16 @@ export const TournamentMatches: React.FC<TournamentMatchesProps> = ({
     }
   }, [matchCategory, matchGroups]);
 
-  const filteredMatches = useMemo(() => {
-    if (!selectedFilter) return [];
-    return matches;
-  }, [matches, selectedFilter]);
+const filteredMatches = useMemo(() => {
+  if (!matches || !selectedFilter) return [];
+
+  if (matchCategory === 'groups') {
+    const group = groups.find(g => g.name === selectedFilter);
+    return matches.filter(m => m.matchType === MatchTypeEnum.Group && m.groupId === group?.groupId);
+  } else {
+    return matches.filter(m => m.matchType !== MatchTypeEnum.Group && m.matchType === selectedFilter);
+  }
+}, [matches, selectedFilter, matchCategory, groups]);
 
   const filteredPredictions = useMemo(() => {
     return predictions.filter(p => filteredMatches.some(m => m.matchId === p.matchId));
@@ -58,6 +75,10 @@ export const TournamentMatches: React.FC<TournamentMatchesProps> = ({
 
   return (
     <div className="space-y-6">
+      
+      {loadingMatches && <p>Laddar matcher...</p>}
+      {matchesError && <p className="text-red-500">{matchesError}</p>}
+
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-bold text-primary">Matcher</h2>
