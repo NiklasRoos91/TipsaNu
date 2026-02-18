@@ -8,7 +8,7 @@ import { useTournamentMatches } from '../../hooks/useTournamentMatches';
 import { MatchTypeEnum } from '../../types/enums/matchEnums'; 
 import { MatchCategorySelector } from './MatchCategorySelector';
 import { MatchFilterChips } from './MatchFilterChips';
-import { PredictionProgressBar } from '../matches/PredictionProgressBar';
+import { PredictionProgressBar } from '../commons/ProgressBar';
 import { MatchList } from '../matches/MatchList';
 import { Match, UIPrediction  } from '../../types/matchTypes';
 
@@ -24,7 +24,7 @@ export const TournamentMatches: React.FC<TournamentMatchesProps> = ({
   const { groups } = useGroups(Number(tournamentId));
   const { matches, fetchMatches, loading: loadingMatches, error: matchesError } = useTournamentMatches();
   const [showCreate, setShowCreate] = useState(false);
-  const { predictions } = useUserPredictions();
+  const { predictions, loading, error, refreshPredictions } = useUserPredictions();
   const { isAdmin } = useAuth();  
 
   useEffect(() => {
@@ -108,14 +108,16 @@ export const TournamentMatches: React.FC<TournamentMatchesProps> = ({
         )}
       
         <PredictionProgressBar 
-          totalMatches={filteredMatches.length} 
-          predictedMatches={filteredPredictions.length} 
+          total={filteredMatches.length} 
+          progress={filteredPredictions.length} 
+          label='Tippade matcher'
         />
 
         <MatchList 
           matches={filteredMatches} 
           predictions={filteredPredictions} 
           groups={groups} 
+          refreshPredictions={refreshPredictions}
          />
       </div>
     </div>

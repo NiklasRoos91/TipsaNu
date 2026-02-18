@@ -29,7 +29,10 @@ export const MatchFilterChips: React.FC<MatchFilterChipsProps> = ({
                   : 'bg-white border-slate-200 text-slate-500 hover:border-accent hover:text-accent'
               }`}
             >
-              {filter.toString()}
+              {typeof filter === 'number' 
+                ? MatchTypeEnum[filter]
+                : filter.toString()
+              }
             </button>
           ))
         ) : (
