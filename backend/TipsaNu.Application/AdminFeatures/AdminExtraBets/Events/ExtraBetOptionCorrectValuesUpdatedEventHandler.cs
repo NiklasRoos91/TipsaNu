@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using TipsaNu.Application.AdminFeatures.AdminLeaderboards.Events.LeaderboardEntryUpdateRequested;
 using TipsaNu.Domain.Interfaces;
 
 namespace TipsaNu.Application.AdminFeatures.AdminExtraBets.Events
@@ -7,10 +8,12 @@ namespace TipsaNu.Application.AdminFeatures.AdminExtraBets.Events
     : INotificationHandler<ExtraBetOptionCorrectValuesUpdatedEvent>
     {
         private readonly IExtraBetRepository _extraBetRepository;
+        private readonly IMediator _mediator;
 
-        public ExtraBetOptionCorrectValuesUpdatedEventHandler(IExtraBetRepository extraBetRepository)
+        public ExtraBetOptionCorrectValuesUpdatedEventHandler(IExtraBetRepository extraBetRepository, IMediator mediator)
         {
             _extraBetRepository = extraBetRepository;
+            _mediator = mediator;
         }
 
         public async Task Handle(ExtraBetOptionCorrectValuesUpdatedEvent notification, CancellationToken cancellationToken)
@@ -25,6 +28,11 @@ namespace TipsaNu.Application.AdminFeatures.AdminExtraBets.Events
                     .Any(cv => string.Equals(cv.Value.Trim(), bet.Value.Trim(), StringComparison.OrdinalIgnoreCase))
                     ? bet.ExtraBetOption.Points
                     : 0;
+
+                await _mediator.Publish(
+                    new LeaderboardEntryUpdateRequestedEvent(bet.ExtraBetOption.TournamentId, bet.UserId),
+                    cancellationToken
+                    );
             }
 
             await _extraBetRepository.UpdateRangeAsync(bets, cancellationToken);

@@ -1,6 +1,4 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Filter } from 'lucide-react';
-import { MatchCard } from '../matches/MatchCard';
 import { useGroups } from '../../hooks/useGroups';
 import { useUserPredictions } from '../../hooks/useUserPredictions';
 import { ActionButton } from '../commons/ActionButton';
@@ -8,69 +6,65 @@ import { useAuth } from '../../hooks/useAuth';
 import { CreateMatch } from '../matches/CreateMatch';
 import { useTournamentMatches } from '../../hooks/useTournamentMatches'; 
 import { MatchTypeEnum } from '../../types/enums/matchEnums'; 
+import { MatchCategorySelector } from './MatchCategorySelector';
+import { MatchFilterChips } from './MatchFilterChips';
+import { PredictionProgressBar } from '../matches/PredictionProgressBar';
+import { MatchList } from '../matches/MatchList';
+import { Match, UIPrediction  } from '../../types/matchTypes';
 
 interface TournamentMatchesProps {
   tournamentId: string;
 }
 
-type MatchCategory = 'groups' | 'knockout';
-
 export const TournamentMatches: React.FC<TournamentMatchesProps> = ({ 
   tournamentId 
 }) => {
-  const [matchCategory, setMatchCategory] = useState<MatchCategory>('groups');
+  const [matchCategory, setMatchCategory] = useState<'groups' | 'knockout'>('groups');
   const [selectedFilter, setSelectedFilter] = useState<string | MatchTypeEnum | null>(null);
   const { groups } = useGroups(Number(tournamentId));
-  const { matches, loading: loadingMatches, error: matchesError, fetchMatches } = useTournamentMatches();
+  const { matches, fetchMatches, loading: loadingMatches, error: matchesError } = useTournamentMatches();
   const [showCreate, setShowCreate] = useState(false);
-  const { predictions, loading: loadingPredictions, error: predictionsError } = useUserPredictions();
+  const { predictions } = useUserPredictions();
   const { isAdmin } = useAuth();  
 
   useEffect(() => {
   fetchMatches(Number(tournamentId));
   }, [tournamentId]);
 
-  const matchGroups = useMemo(() => {
-    const categories = { 
-      groups: groups.map(g => g.name).sort(),
-      knockout: Array.from(
-        new Set(
-        matches?.filter(m => m.matchType !== MatchTypeEnum.Group)
-          .map(m => m.matchType)
-        )
-      ) as MatchTypeEnum[]
-    };
-    return categories;
-  }, [groups, matches]);
+  const matchGroups = useMemo(() => ({
+    groups: groups.map(g => g.name).sort(),
+    knockout: Array.from(new Set(matches?.filter(m => m.matchType !== MatchTypeEnum.Group).map(m => m.matchType))) as MatchTypeEnum[]
+  }), [groups, matches]);
 
   useEffect(() => {
     const availableFilters = matchGroups[matchCategory];
     if (availableFilters.length > 0) {
-      const isSelectedValid = availableFilters.some(
-        f => f === selectedFilter
-      );
-
-      if (!selectedFilter || !isSelectedValid) {
-        setSelectedFilter(availableFilters[0]);
-      }
+      const isSelectedValid = availableFilters.some(f => f === selectedFilter);
+      if (!selectedFilter || !isSelectedValid) {setSelectedFilter(availableFilters[0]);}
     } else {
       setSelectedFilter(null);
     }
-  }, [matchCategory, matchGroups]);
+  }, [matchCategory, matchGroups, matches]);
 
-const filteredMatches = useMemo(() => {
-  if (!matches || !selectedFilter) return [];
+  const filteredMatches: Match[] = useMemo(() => {
+    if (!matches || !selectedFilter) return [];
 
-  if (matchCategory === 'groups') {
-    const group = groups.find(g => g.name === selectedFilter);
-    return matches.filter(m => m.matchType === MatchTypeEnum.Group && m.groupId === group?.groupId);
-  } else {
-    return matches.filter(m => m.matchType !== MatchTypeEnum.Group && m.matchType === selectedFilter);
-  }
-}, [matches, selectedFilter, matchCategory, groups]);
+    if (matchCategory === 'groups') {
+      const group = groups.find(g => g.name === selectedFilter);
+      return matches.filter(m => m.matchType === MatchTypeEnum.Group && m.groupId === group?.groupId);
+    } else {
+      return matches.filter(m => m.matchType !== MatchTypeEnum.Group && m.matchType === selectedFilter);
+    }
+  }, [matches, selectedFilter, matchCategory, groups]);
 
-  const filteredPredictions = useMemo(() => {
-    return predictions.filter(p => filteredMatches.some(m => m.matchId === p.matchId));
+  const filteredPredictions: UIPrediction[] = useMemo(() => {
+    return predictions
+      .filter(p => filteredMatches.some(m => m.matchId === p.matchId))
+      .map(p => ({
+        matchId: p.matchId,
+        predictedHomeScore: p.predictedHomeScore,
+        predictedAwayScore: p.predictedAwayScore,
+      }));
   }, [predictions, filteredMatches]);
 
   return (
@@ -83,117 +77,46 @@ const filteredMatches = useMemo(() => {
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-bold text-primary">Matcher</h2>
 
-          <div className="flex items-center gap-2">  {/* wrapper för Grupp/Slut + knapp */}
-            <div className="flex bg-slate-100 p-1 rounded-lg">
-              <button 
-                onClick={() => setMatchCategory('groups')}
-                className={`px-4 py-1.5 text-xs font-bold rounded-md transition-all ${matchCategory === 'groups' ? 'bg-white text-primary shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
-              >
-                Gruppspel
-              </button>
-              <button 
-                onClick={() => setMatchCategory('knockout')}
-                className={`px-4 py-1.5 text-xs font-bold rounded-md transition-all ${matchCategory === 'knockout' ? 'bg-white text-primary shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
-              >
-                Slutspel
-              </button>
-            </div>
-
-             {isAdmin && (
-              <div className="w-auto ml-auto">
-                <ActionButton
-                  label="Skapa ny"
-                  onClick={() => setShowCreate(!showCreate)}
-                  isActive={showCreate}
-                />
-              </div>
-              )}
-            </div>
-          </div>
-
-            {showCreate && isAdmin && (
-              <div className="mb-10 animate-fade-in">
-                <CreateMatch onCreated={() => setShowCreate(false)} />
-              </div>
+          <div className="flex items-center gap-2">
+            <MatchCategorySelector matchCategory={matchCategory} setMatchCategory={setMatchCategory} />
+            {isAdmin && (
+              <ActionButton
+                label="Skapa ny"
+                onClick={() => setShowCreate(!showCreate)}
+                isActive={showCreate}
+              />
             )}
-
-
-        {/* Filter Chips */}
-        <div className="flex flex-wrap gap-2 py-2">
-          {matchGroups[matchCategory].length > 0 ? (
-            matchGroups[matchCategory].map(filter => (
-              <button
-                key={filter}
-                onClick={() => setSelectedFilter(filter)}
-                className={`px-3 py-1.5 md:px-4 md:py-2 rounded-full text-[11px] md:text-xs font-bold border transition-all ${
-                  selectedFilter === filter 
-                  ? 'bg-accent border-accent text-white shadow-md' 
-                  : 'bg-white border-slate-200 text-slate-500 hover:border-accent hover:text-accent'
-                }`}
-              >
-                {filter}
-              </button>
-            ))
-          ) : (
-            <p className="text-sm text-slate-400 italic py-2">Inga matcher tillgängliga för denna kategori.</p>
-          )}
+          </div>
         </div>
 
-        {selectedFilter && (
-          <div className="flex items-center gap-2 text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
-            <Filter size={14} />
-            <span>Visar {filteredMatches.length} matcher i {selectedFilter}</span>
+        {showCreate && isAdmin && <CreateMatch onCreated={() => setShowCreate(false)} />}
+
+        <MatchFilterChips 
+          filters={matchGroups[matchCategory]}
+          selectedFilter={selectedFilter}
+          onSelectFilter={setSelectedFilter}
+          filteredCount={filteredMatches.length}
+        />
+
+        {matchCategory === 'groups' && selectedFilter && (
+          <div className="animate-fade-in">
+            <div className="h-32 bg-slate-50 rounded-xl animate-pulse border border-slate-100" />
+            <div className="p-4 bg-slate-50 rounded-xl text-xs text-slate-400 italic mb-6">
+              Ingen tabell tillgänglig för denna grupp.
+            </div>
           </div>
         )}
-      </div>
+      
+        <PredictionProgressBar 
+          totalMatches={filteredMatches.length} 
+          predictedMatches={filteredPredictions.length} 
+        />
 
-      {/* Group Standings Table */}
-      {matchCategory === 'groups' && selectedFilter && (
-        <div className="animate-fade-in">
-          {/* Placeholder för loading */}
-          <div className="h-32 bg-slate-50 rounded-xl animate-pulse border border-slate-100" />
-          
-          {/* Placeholder för när ingen data finns */}
-          <div className="p-4 bg-slate-50 rounded-xl text-xs text-slate-400 italic mb-6">
-            Ingen tabell tillgänglig för denna grupp.
-          </div>
-        </div>
-      )}
-      
-      <div className="mb-4">
-        <div className="flex justify-between items-center mb-2">
-          <span className="text-sm text-slate-600">Tippade matcher</span>
-          <span className="font-bold text-primary">{filteredPredictions.length} / {filteredMatches.length}</span>
-        </div>
-        <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
-          <div 
-            className="bg-accent h-2 rounded-full transition-all duration-1000 ease-out" 
-            style={{ width: `${filteredMatches.length > 0 ? (filteredPredictions.length / filteredMatches.length) * 100 : 0}%` }}
-          ></div>
-        </div>
-      </div>
-      
-      <div className="space-y-4 animate-fade-in">
-        {filteredMatches.length > 0 ? (
-          filteredMatches.map(match => {
-            const initialPrediction = filteredPredictions.find(p => p.matchId === match.matchId) ?? null;
-            const mappedPrediction = initialPrediction
-              ? { homeScore: initialPrediction.predictedHomeScore, awayScore: initialPrediction.predictedAwayScore }
-              : null;
-            return (
-            <MatchCard 
-              key={match.matchId} 
-              match={match} 
-              prediction={mappedPrediction} 
-              groups={groups}
-            />
-            );
-          })
-        ) : selectedFilter ? (
-          <div className="text-center p-12 bg-white rounded-xl border border-slate-200 text-slate-400">
-            Inga matcher hittades för det valda filtret.
-          </div>
-        ) : null}
+        <MatchList 
+          matches={filteredMatches} 
+          predictions={filteredPredictions} 
+          groups={groups} 
+         />
       </div>
     </div>
   );

@@ -11,7 +11,10 @@ namespace TipsaNu.Application.Features.Leagues.Mappers
             CreateMap<League, LeagueDto>();
 
             CreateMap<LeagueMember, LeaderboardEntryDto>()
-                .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.User.Username));
+                .ForMember(dest => dest.LeagueMemberId, opt => opt.MapFrom(src => src.LeagueMemberId))
+                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
+                .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.User.Username))
+                .ForMember(dest => dest.TotalPoints, opt => opt.MapFrom(src => src.LeaderboardEntry != null ? src.LeaderboardEntry.TotalPoints : 0));
 
             CreateMap<League, LeagueWithLeaderboardDto>()
                 .ForMember(dest => dest.CurrentMembers, opt => opt.MapFrom(src => src.Members.Count))
