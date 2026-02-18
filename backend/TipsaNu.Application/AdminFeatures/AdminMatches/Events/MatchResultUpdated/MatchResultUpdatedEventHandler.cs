@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using TipsaNu.Application.AdminFeatures.AdminLeaderboards.Events.LeaderboardEntryUpdateRequested;
 using TipsaNu.Application.Services.Interfaces;
 using TipsaNu.Domain.Interfaces;
 
@@ -10,19 +11,21 @@ namespace TipsaNu.Application.AdminFeatures.AdminMatches.Events.MatchResultUpdat
         private readonly IPredictionRepository _predictionRepository;
         private readonly IPointRuleRepository _pointRuleRepository;
         private readonly IPointsCalculatorService _pointsCalculator;
-
+        private readonly IMediator _mediator;
 
         public MatchResultUpdatedEventHandler(
             IMatchRepository matchRepository,
             IPredictionRepository predictionRepository,
             IPointRuleRepository pointRuleRepository,
-            IPointsCalculatorService pointsCalculatorService
+            IPointsCalculatorService pointsCalculatorService,
+            IMediator mediator
             )
         {
             _matchRepository = matchRepository;
             _predictionRepository = predictionRepository;
             _pointRuleRepository = pointRuleRepository;
             _pointsCalculator = pointsCalculatorService;
+            _mediator = mediator;
         }
 
         public async Task Handle(MatchResultUpdatedEvent notification, CancellationToken cancellationToken)
@@ -48,6 +51,11 @@ namespace TipsaNu.Application.AdminFeatures.AdminMatches.Events.MatchResultUpdat
             foreach (var prediction in predictions)
             {
                 prediction.PointsAwarded = _pointsCalculator.CalculatePoints(prediction, match, pointRules);
+
+                await _mediator.Publish(
+                    new LeaderboardEntryUpdateRequestedEvent(match.TournamentId, prediction.UserId),
+                    cancellationToken
+                    );
             }
 
             await _predictionRepository.UpdateRangeAsync(predictions, cancellationToken);

@@ -35,6 +35,7 @@ namespace TipsaNu.Infrastructure.Extensions
             services.AddScoped<IPointRuleRepository, PointRuleRepository>();
             services.AddScoped<ILeagueRepository, LeagueRepository>();
             services.AddScoped<IExtraBetRepository, ExtraBetRepository>();
+            services.AddScoped<ILeaderboardRepository, LeaderboardRepository>();
 
             services.AddHttpContextAccessor();
             services.AddScoped<ICurrentUserService, CurrentUserService>();

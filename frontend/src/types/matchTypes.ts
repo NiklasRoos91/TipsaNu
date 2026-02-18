@@ -56,3 +56,8 @@ export interface CreateMyPredictionRequestDto {
   predictedHomeScore: number;
   predictedAwayScore: number;
 }
+export type UIPrediction = {
+  matchId: number;
+  predictedHomeScore: number;
+  predictedAwayScore: number;
+};
