@@ -10,6 +10,7 @@ namespace TipsaNu.Test.Features.AdminExtraBet
     public class DeleteExtraBetOptionCorrectValuesHandlerTests
     {
         private readonly Mock<IExtraBetRepository> _repoMock = new();
+        private readonly Mock<IGenericRepository<ExtraBetOption>> _genericRepoMock = new();
         private readonly Mock<IMediator> _mediatorMock = new();
 
         [Fact]
@@ -20,6 +21,7 @@ namespace TipsaNu.Test.Features.AdminExtraBet
 
             var handler = new DeleteExtraBetOptionCorrectValuesCommandHandler(
                 _repoMock.Object,
+                _genericRepoMock.Object,
                 _mediatorMock.Object
             );
 
@@ -43,6 +45,7 @@ namespace TipsaNu.Test.Features.AdminExtraBet
 
             var handler = new DeleteExtraBetOptionCorrectValuesCommandHandler(
                 _repoMock.Object,
+                _genericRepoMock.Object,
                 _mediatorMock.Object
             );
 
@@ -64,6 +67,7 @@ namespace TipsaNu.Test.Features.AdminExtraBet
 
             var handler = new DeleteExtraBetOptionCorrectValuesCommandHandler(
                 _repoMock.Object,
+                _genericRepoMock.Object,
                 _mediatorMock.Object
             );
 
