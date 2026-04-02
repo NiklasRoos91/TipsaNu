@@ -9,19 +9,27 @@ namespace TipsaNu.Test.Features.AdminExtraBet
 {
     public class DeleteSingleExtraBetOptionCorrectValueHandlerTests
     {
+
         private readonly Mock<IGenericRepository<ExtraBetOptionCorrectValue>> _repoMock = new();
+        private readonly Mock<IGenericRepository<ExtraBetOption>> _extraBetOptionGenericRepositoryMock = new();
+        private readonly Mock<IExtraBetRepository> _extraBetRepositoryMock = new();
         private readonly Mock<IMediator> _mediatorMock = new();
 
         [Fact]
         public async Task Handle_ShouldReturnFailure_IfValueNotFound()
         {
+            // Arrange
             _repoMock.Setup(r => r.GetByIdAsync(1, It.IsAny<CancellationToken>()))
-                     .ReturnsAsync((ExtraBetOptionCorrectValue?)null);
+                .ReturnsAsync((ExtraBetOptionCorrectValue)null!);
+            
+            var handler = new DeleteSingleExtraBetOptionCorrectValueCommandHandler(_repoMock.Object,
+                _extraBetOptionGenericRepositoryMock.Object, _extraBetRepositoryMock.Object, _mediatorMock.Object);
 
-            var handler = new DeleteSingleExtraBetOptionCorrectValueCommandHandler(_repoMock.Object, _mediatorMock.Object);
+            // Act
+            var result = await handler.Handle(new DeleteSingleExtraBetOptionCorrectValueCommand(1),
+                CancellationToken.None);
 
-            var result = await handler.Handle(new DeleteSingleExtraBetOptionCorrectValueCommand(1), CancellationToken.None);
-
+            // Assert
             Assert.False(result.IsSuccess);
             Assert.Equal("CorrectValue not found.", result.ErrorMessage);
         }
@@ -31,11 +39,17 @@ namespace TipsaNu.Test.Features.AdminExtraBet
         {
             var value = new ExtraBetOptionCorrectValue { CorrectValueId = 1, OptionId = 2 };
             _repoMock.Setup(r => r.GetByIdAsync(1, It.IsAny<CancellationToken>()))
-                     .ReturnsAsync(value);
+                .ReturnsAsync(value);
 
-            var handler = new DeleteSingleExtraBetOptionCorrectValueCommandHandler(_repoMock.Object, _mediatorMock.Object);
+            _extraBetRepositoryMock
+                .Setup(r => r.GetCorrectValuesByOptionIdAsync(value.OptionId, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new List<ExtraBetOptionCorrectValue>());
+            
+            var handler = new DeleteSingleExtraBetOptionCorrectValueCommandHandler(_repoMock.Object,
+                _extraBetOptionGenericRepositoryMock.Object, _extraBetRepositoryMock.Object, _mediatorMock.Object);
 
-            var result = await handler.Handle(new DeleteSingleExtraBetOptionCorrectValueCommand(1), CancellationToken.None);
+            var result = await handler.Handle(new DeleteSingleExtraBetOptionCorrectValueCommand(1),
+                CancellationToken.None);
 
             Assert.True(result.IsSuccess);
             _repoMock.Verify(r => r.DeleteAsync(value.CorrectValueId, It.IsAny<CancellationToken>()), Times.Once);
@@ -44,14 +58,22 @@ namespace TipsaNu.Test.Features.AdminExtraBet
         [Fact]
         public async Task Handle_ShouldPublishEvent()
         {
+            // Arrange
             var value = new ExtraBetOptionCorrectValue { CorrectValueId = 1, OptionId = 2 };
             _repoMock.Setup(r => r.GetByIdAsync(1, It.IsAny<CancellationToken>()))
-                     .ReturnsAsync(value);
+                .ReturnsAsync(value);
 
-            var handler = new DeleteSingleExtraBetOptionCorrectValueCommandHandler(_repoMock.Object, _mediatorMock.Object);
+            _extraBetRepositoryMock
+                .Setup(r => r.GetCorrectValuesByOptionIdAsync(value.OptionId, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new List<ExtraBetOptionCorrectValue>());
+            
+            var handler = new DeleteSingleExtraBetOptionCorrectValueCommandHandler(_repoMock.Object,
+                _extraBetOptionGenericRepositoryMock.Object, _extraBetRepositoryMock.Object, _mediatorMock.Object);
 
+            // Act
             await handler.Handle(new DeleteSingleExtraBetOptionCorrectValueCommand(1), CancellationToken.None);
 
+            // Assert
             _mediatorMock.Verify(m => m.Publish(
                 It.Is<ExtraBetOptionCorrectValuesUpdatedEvent>(e => e.OptionId == value.OptionId),
                 It.IsAny<CancellationToken>()), Times.Once);
