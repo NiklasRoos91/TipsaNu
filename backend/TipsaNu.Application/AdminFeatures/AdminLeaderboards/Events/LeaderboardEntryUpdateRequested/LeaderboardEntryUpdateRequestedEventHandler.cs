@@ -3,25 +3,18 @@ using TipsaNu.Domain.Interfaces;
 
 namespace TipsaNu.Application.AdminFeatures.AdminLeaderboards.Events.LeaderboardEntryUpdateRequested
 {
-    public class LeaderboardEntryUpdateRequestedEventHandler
+    public class LeaderboardEntryUpdateRequestedEventHandler(ILeaderboardRepository leaderboardRepository)
         : INotificationHandler<LeaderboardEntryUpdateRequestedEvent>
     {
-        private readonly ILeaderboardRepository _leaderboardRepository;
-
-        public LeaderboardEntryUpdateRequestedEventHandler(ILeaderboardRepository leaderboardRepository)
-        {
-            _leaderboardRepository = leaderboardRepository;
-        }
-
         public async Task Handle(LeaderboardEntryUpdateRequestedEvent notification, CancellationToken cancellationToken)
         {
-            var totalPoints = await _leaderboardRepository.GetTotalPointsForUserInTournamentAsync(
+            var totalPoints = await leaderboardRepository.GetTotalPointsForUserInTournamentAsync(
                 notification.UserId,
                 notification.TournamentId,
                 cancellationToken
             );
 
-            await _leaderboardRepository.UpdateLeaderboardEntriesAsync(
+            await leaderboardRepository.UpdateLeaderboardEntriesAsync(
                 notification.UserId,
                 notification.TournamentId,
                 totalPoints,

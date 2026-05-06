@@ -11,6 +11,6 @@
         public DateTime? ExpiresAt { get; set; }
         public bool AllowCustomChoice { get; set; }
         public string Status { get; set; } = null!;
-        public List<ExtraBetOptionChoiceDto> Choices { get; set; } = new();
+        public List<string> Choices { get; set; } = new();
     }
 }

@@ -1,22 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TipsaNu.Domain.Entities;
 using TipsaNu.Domain.Interfaces;
-using TipsaNu.Infrastructure.Presistence;
+using TipsaNu.Infrastructure.Persistence;
 
 namespace TipsaNu.Infrastructure.Repositories
 {
-    public class GroupRepository : IGroupRepository
+    public class GroupRepository(AppDbContext context) : IGroupRepository
     {
-        private readonly AppDbContext _context;
-
-        public GroupRepository(AppDbContext context)
-        {
-            _context = context;
-        }
-
         public async Task<IEnumerable<Group>> GetGroupsByTournamentIdAsync(int tournamentId, CancellationToken cancellationToken = default)
         {
-            return await _context.Groups
+            return await context.Groups
                                  .Where(g => g.TournamentId == tournamentId)
                                  .ToListAsync(cancellationToken);
         }

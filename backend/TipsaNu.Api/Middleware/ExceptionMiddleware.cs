@@ -4,21 +4,12 @@ using TipsaNu.Application.Commons.Results;
 
 namespace TipsaNu.Api.Middleware
 {
-    public class ExceptionMiddleware : IMiddleware
+    public class ExceptionMiddleware(ILogger<ExceptionMiddleware> logger, IHostEnvironment env) : IMiddleware
     {
-        private readonly ILogger<ExceptionMiddleware> _logger;
-        private readonly IHostEnvironment _env;
-
-        private static readonly JsonSerializerOptions _jsonOptions = new()
+        private static readonly JsonSerializerOptions JsonOptions = new()
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase
         };
-
-        public ExceptionMiddleware(ILogger<ExceptionMiddleware> logger, IHostEnvironment env)
-        {
-            _logger = logger;
-            _env = env;
-        }
 
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
@@ -28,14 +19,14 @@ namespace TipsaNu.Api.Middleware
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Unhandled exception");
+                logger.LogError(ex, "Unhandled exception");
 
                 context.Response.ContentType = "application/json";
                 context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
                 var result = OperationResult<object>.Failure(BuildErrorMessages(ex));
 
-                await context.Response.WriteAsync(JsonSerializer.Serialize(result, _jsonOptions));
+                await context.Response.WriteAsync(JsonSerializer.Serialize(result, JsonOptions));
             }
         }
 
@@ -43,7 +34,7 @@ namespace TipsaNu.Api.Middleware
         {
             var messages = new List<string>();
 
-            if (_env.IsDevelopment())
+            if (env.IsDevelopment())
             {
                 var current = ex;
                 while (current != null)

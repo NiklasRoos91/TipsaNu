@@ -17,9 +17,9 @@ namespace TipsaNu.Infrastructure.Data.Configurations
             builder.Property(gs => gs.Rank).IsRequired();
             builder.Property(gs => gs.Points).IsRequired();
             builder.Property(gs => gs.Played).IsRequired();
-            builder.Property(gs => gs.Wins).IsRequired();
-            builder.Property(gs => gs.Draws).IsRequired();
-            builder.Property(gs => gs.Losses).IsRequired();
+            builder.Property(gs => gs.Won).IsRequired();
+            builder.Property(gs => gs.Draw).IsRequired();
+            builder.Property(gs => gs.Lost).IsRequired();
             builder.Property(gs => gs.GoalsFor).IsRequired();
             builder.Property(gs => gs.GoalsAgainst).IsRequired();
             builder.Property(gs => gs.GoalDifference).IsRequired();

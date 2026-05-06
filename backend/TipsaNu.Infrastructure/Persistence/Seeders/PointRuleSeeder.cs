@@ -1,7 +1,7 @@
 ﻿
 using TipsaNu.Domain.Entities;
 using TipsaNu.Domain.Enums;
-using TipsaNu.Infrastructure.Presistence;
+using TipsaNu.Infrastructure.Persistence;
 
 namespace TipsaNu.Infrastructure.Persistence.Seeders
 {

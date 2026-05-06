@@ -10,22 +10,15 @@ namespace TipsaNu.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AuthController : ControllerBase
+    public class AuthController(IMediator mediator) : ControllerBase
     {
-        private readonly IMediator _mediator;
-
-        public AuthController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
-
         // Post: /api/auth/register
         // Register a new user with email, username and password, return JWT token if successful, otherwise return 400 Bad Request
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequestDto request, CancellationToken cancellationToken)
         {
             var command = new RegisterUserCommand(request);
-            var result = await _mediator.Send(command, cancellationToken);
+            var result = await mediator.Send(command, cancellationToken);
 
             if (!result.IsSuccess)
                 return BadRequest(result.ErrorMessages);
@@ -39,7 +32,7 @@ namespace TipsaNu.Api.Controllers
         public async Task<IActionResult> Login([FromBody] LoginRequestDto request, CancellationToken cancellationToken)
         {
             var command = new LoginUserCommand(request);
-            var result = await _mediator.Send(command, cancellationToken);
+            var result = await mediator.Send(command, cancellationToken);
 
             if (!result.IsSuccess)
                 return Unauthorized(result.ErrorMessages);
@@ -52,7 +45,7 @@ namespace TipsaNu.Api.Controllers
         [HttpPost("refresh")]
         public async Task<IActionResult> Refresh([FromBody] RefreshTokenRequestDto request, CancellationToken cancellationToken)
         {
-            var result = await _mediator.Send(new RefreshTokenCommand(request), cancellationToken);
+            var result = await mediator.Send(new RefreshTokenCommand(request), cancellationToken);
 
             if (!result.IsSuccess)
                 return Unauthorized(result.ErrorMessages);
@@ -65,7 +58,7 @@ namespace TipsaNu.Api.Controllers
         [HttpGet("me")]
         public async Task<IActionResult> Me(CancellationToken cancellationToken)
         {
-            var result = await _mediator.Send(new GetMeQuery(), cancellationToken);
+            var result = await mediator.Send(new GetMeQuery(), cancellationToken);
 
             if (!result.IsSuccess)
                 return BadRequest(result.ErrorMessage);

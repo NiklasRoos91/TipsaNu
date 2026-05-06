@@ -4,28 +4,22 @@
 
 namespace TipsaNu.Application.Behaviors
 {
-    public class ValidationBehavior<TRequest, TData> : IPipelineBehavior<TRequest, OperationResult<TData>>
+    public class ValidationBehavior<TRequest, TData>(IEnumerable<IValidator<TRequest>> validators)
+        : IPipelineBehavior<TRequest, OperationResult<TData>>
         where TRequest : IRequest<OperationResult<TData>>
     {
-        private readonly IEnumerable<IValidator<TRequest>> _validators;
-
-        public ValidationBehavior(IEnumerable<IValidator<TRequest>> validators)
-        {
-            _validators = validators;
-        }
-
         public async Task<OperationResult<TData>> Handle(
             TRequest request,
             RequestHandlerDelegate<OperationResult<TData>> next,
             CancellationToken cancellationToken)
         {
-            if (!_validators.Any())
+            if (!validators.Any())
                 return await next();
 
             var context = new ValidationContext<TRequest>(request);
 
             var validationResults = await Task.WhenAll(
-                _validators.Select(v => v.ValidateAsync(context, cancellationToken))
+                validators.Select(v => v.ValidateAsync(context, cancellationToken))
             );
 
             var failures = validationResults

@@ -1,19 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TipsaNu.Application.Features.Auth.Interfaces;
 using TipsaNu.Domain.Entities;
-using TipsaNu.Infrastructure.Presistence;
+using TipsaNu.Infrastructure.Persistence;
 
 namespace TipsaNu.Infrastructure.Auth
 {
-    public class RefreshTokenService : IRefreshTokenService
+    public class RefreshTokenService(AppDbContext db) : IRefreshTokenService
     {
-        private readonly AppDbContext _db;
-
-        public RefreshTokenService(AppDbContext db)
-        {
-            _db = db;
-        }
-
         public async Task<RefreshToken> CreateRefreshTokenAsync(User user, CancellationToken cancellationToken = default)
         {
             var token = new RefreshToken
@@ -25,14 +18,14 @@ namespace TipsaNu.Infrastructure.Auth
                 Revoked = false
             };
 
-            _db.RefreshTokens.Add(token);
-            await _db.SaveChangesAsync(cancellationToken);
+            db.RefreshTokens.Add(token);
+            await db.SaveChangesAsync(cancellationToken);
             return token;
         }
 
         public async Task<RefreshToken?> GetRefreshTokenAsync(string token, CancellationToken cancellationToken = default)
         {
-            return await _db.RefreshTokens
+            return await db.RefreshTokens
                 .Include(rt => rt.User)
                 .FirstOrDefaultAsync(rt =>
                     rt.Token == token &&
@@ -43,7 +36,7 @@ namespace TipsaNu.Infrastructure.Auth
         public async Task RevokeRefreshTokenAsync(RefreshToken token, CancellationToken cancellationToken = default)
         {
             token.Revoked = true;
-            await _db.SaveChangesAsync(cancellationToken);
+            await db.SaveChangesAsync(cancellationToken);
         }
     }
 }

@@ -1,24 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using TipsaNu.Domain.Interfaces;
-using TipsaNu.Infrastructure.Presistence;
+using TipsaNu.Infrastructure.Persistence;
 
 namespace TipsaNu.Infrastructure.Repositories
 {
-    public class GenericRepository<T> : IGenericRepository<T> where T : class
+    public class GenericRepository<T>(AppDbContext context) : IGenericRepository<T>
+        where T : class
     {
-        private readonly AppDbContext _context;
-        private readonly DbSet<T> _dbSet;
-        public GenericRepository(AppDbContext context)
-        {
-            _context = context;
-            _dbSet = context.Set<T>();
-        }
+        private readonly DbSet<T> _dbSet = context.Set<T>();
 
         public async Task AddAsync(T entity, CancellationToken cancellationToken = default)
         {
             await _dbSet.AddAsync(entity, cancellationToken);
-            await _context.SaveChangesAsync(cancellationToken);
+            await context.SaveChangesAsync(cancellationToken);
         }
 
         public async Task<bool> DeleteAsync(int id, CancellationToken cancellationToken = default)
@@ -30,7 +25,7 @@ namespace TipsaNu.Infrastructure.Repositories
                 if (entity == null) return false;
 
                 _dbSet.Remove(entity);
-                await _context.SaveChangesAsync(cancellationToken);
+                await context.SaveChangesAsync(cancellationToken);
                 return true;
             }
             catch (Exception ex)
@@ -51,7 +46,7 @@ namespace TipsaNu.Infrastructure.Repositories
             return await query.ToListAsync(cancellationToken);
         }
 
-        public async Task<T> GetByIdAsync(int id, CancellationToken cancellationToken = default)
+        public async Task<T?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
             return await _dbSet.FindAsync(id, cancellationToken);
         }
@@ -59,7 +54,7 @@ namespace TipsaNu.Infrastructure.Repositories
         public async Task UpdateAsync(T entity, CancellationToken cancellationToken = default)
         {
             _dbSet.Update(entity);
-            await _context.SaveChangesAsync(cancellationToken);
+            await context.SaveChangesAsync(cancellationToken);
         }
         public async Task<bool> ExistsAsync(int id, CancellationToken cancellationToken = default)
         {

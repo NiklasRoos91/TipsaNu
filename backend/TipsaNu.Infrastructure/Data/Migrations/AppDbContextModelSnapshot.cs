@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using TipsaNu.Infrastructure.Presistence;
+using TipsaNu.Infrastructure.Persistence;
 
 #nullable disable
 
@@ -231,7 +231,7 @@ namespace TipsaNu.Infrastructure.Data.Migrations
                     b.Property<int>("CompetitorId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Draws")
+                    b.Property<int>("Draw")
                         .HasColumnType("int");
 
                     b.Property<int>("GoalDifference")
@@ -246,7 +246,7 @@ namespace TipsaNu.Infrastructure.Data.Migrations
                     b.Property<int>("GroupId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Losses")
+                    b.Property<int>("Lost")
                         .HasColumnType("int");
 
                     b.Property<int>("Played")
@@ -258,7 +258,7 @@ namespace TipsaNu.Infrastructure.Data.Migrations
                     b.Property<int>("Rank")
                         .HasColumnType("int");
 
-                    b.Property<int>("Wins")
+                    b.Property<int>("Won")
                         .HasColumnType("int");
 
                     b.HasKey("StandingId");
@@ -659,7 +659,7 @@ namespace TipsaNu.Infrastructure.Data.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasDefaultValue("User");
 
-                    b.Property<string>("Username")
+                    b.Property<string>("UserName")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");

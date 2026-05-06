@@ -7,28 +7,20 @@ namespace TipsaNu.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class GroupsController : ControllerBase
+    public class GroupsController(IMediator mediator) : ControllerBase
     {
-        private readonly IMediator _mediator;
-
-        public GroupsController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
-
         // GET /api/groups/{groupId}/matches
         // Retrieves all matches for a specific group.
         [HttpGet("{groupId:int}/matches")]
         public async Task<IActionResult> GetMatchesByGroupId(int groupId, CancellationToken cancellationToken)
         {
-            var result = await _mediator.Send(new GetMatchesByGroupIdQuery(groupId), cancellationToken);
+            var result = await mediator.Send(new GetMatchesByGroupIdQuery(groupId), cancellationToken);
 
             if (!result.IsSuccess)
             {
-                if (result.ErrorMessages?.Any() == true)
-                    return BadRequest(result.ErrorMessages);
-
-                return NotFound(result.ErrorMessage);
+                return result.ErrorMessages?.Any() == true
+                    ? BadRequest(result.ErrorMessages)
+                    :NotFound(result.ErrorMessage);
             }
 
             return Ok(result.Data);
@@ -39,14 +31,13 @@ namespace TipsaNu.Api.Controllers
         [HttpGet("{groupId:int}/standings")]
         public async Task<IActionResult> GetGroupStandings(int groupId, CancellationToken cancellationToken)
         {
-            var result = await _mediator.Send(new GetGroupStandingsByGroupIdQuery(groupId), cancellationToken);
+            var result = await mediator.Send(new GetGroupStandingsByGroupIdQuery(groupId), cancellationToken);
 
             if (!result.IsSuccess)
             {
-                if (result.ErrorMessages?.Any() == true)
-                    return BadRequest(result.ErrorMessages);
-
-                return NotFound(result.ErrorMessage);
+                return result.ErrorMessages?.Any() == true
+                    ? BadRequest(result.ErrorMessages)
+                    :NotFound(result.ErrorMessage);
             }
 
             return Ok(result.Data);

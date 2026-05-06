@@ -1,35 +1,26 @@
-﻿using AutoMapper;
-using MediatR;
+﻿using MediatR;
 using TipsaNu.Application.Commons.Interfaces;
 using TipsaNu.Application.Commons.Results;
 using TipsaNu.Application.Features.Leagues.DTOs;
+using TipsaNu.Application.Features.Leagues.Mappers;
 using TipsaNu.Domain.Interfaces;
 
 namespace TipsaNu.Application.Features.Leagues.Queries.GetLeagueDetails
 {
-    public class GetLeagueDetailsQueryHandler
+    public class GetLeagueDetailsQueryHandler(
+        ILeagueRepository leagueRepository,
+        ICurrentUserService currentUser)
         : IRequestHandler<GetLeagueDetailsQuery, OperationResult<LeagueWithLeaderboardDto>>
     {
-        private readonly ILeagueRepository _leagueRepository;
-        private readonly ICurrentUserService _currentUser;
-        private readonly IMapper _mapper;
-
-        public GetLeagueDetailsQueryHandler(ILeagueRepository leagueRepository, ICurrentUserService currentUser, IMapper mapper)
-        {
-            _leagueRepository = leagueRepository;
-            _currentUser = currentUser;
-            _mapper = mapper;
-        }
-
         public async Task<OperationResult<LeagueWithLeaderboardDto>> Handle(
             GetLeagueDetailsQuery request,
             CancellationToken cancellationToken)
         {
-            var userId = _currentUser.UserId;
+            var userId = currentUser.UserId;
             if (userId <= 0)
                 return OperationResult<LeagueWithLeaderboardDto>.Failure("Unauthorized");
 
-            var league = await _leagueRepository
+            var league = await leagueRepository
                 .GetLeagueWithMembersAndLeaderboardAsync(request.LeagueId, cancellationToken);
 
             if (league == null)
@@ -39,9 +30,7 @@ namespace TipsaNu.Application.Features.Leagues.Queries.GetLeagueDetails
             if (!isMemberOrAdmin)
                 return OperationResult<LeagueWithLeaderboardDto>.Failure("You are not a member of this league");
 
-            var dto = _mapper.Map<LeagueWithLeaderboardDto>(league);
-
-            return OperationResult<LeagueWithLeaderboardDto>.Success(dto);
+            return OperationResult<LeagueWithLeaderboardDto>.Success(league.ToLeagueWithLeaderboardDto());
         }
     }
 }

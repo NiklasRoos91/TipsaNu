@@ -12,21 +12,14 @@ namespace TipsaNu.Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize] 
-    public class ExtraBetsController : ControllerBase
+    public class ExtraBetsController(IMediator mediator) : ControllerBase
     {
-        private readonly IMediator _mediator;
-
-        public ExtraBetsController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
-
         // POST: /api/extrabets/{optionId}/mine
         // Creates a new extra bet for the authenticated user on the specified option.
         [HttpPost("{optionId}/mine")]
         public async Task<IActionResult> CreateExtraBet(int optionId, [FromBody] CreateExtraBetDto dto, CancellationToken cancellationToken)
         {
-            var result = await _mediator.Send(new CreateExtraBetCommand(optionId, dto), cancellationToken);
+            var result = await mediator.Send(new CreateExtraBetCommand(optionId, dto), cancellationToken);
 
             if (!result.IsSuccess)
                 return BadRequest(new { message = result.ErrorMessage });
@@ -42,10 +35,10 @@ namespace TipsaNu.Api.Controllers
             CancellationToken cancellationToken)
         {
             var query = new GetExtraBetOptionCorrectValuesByOptionIdQuery(optionId);
-            var result = await _mediator.Send(query, cancellationToken);
+            var result = await mediator.Send(query, cancellationToken);
 
             if (!result.IsSuccess)
-                return NotFound(result.ErrorMessages ?? new List<string> { result.ErrorMessage! });
+                return NotFound(result.ErrorMessages ?? [result.ErrorMessage!]);
 
             return Ok(result.Data);
         }
@@ -56,10 +49,10 @@ namespace TipsaNu.Api.Controllers
         public async Task<IActionResult> GetMyExtraBetByOptionId(int optionId, CancellationToken cancellationToken)
         {
             var query = new GetMyExtraBetByOptionIdQuery(optionId);
-            var result = await _mediator.Send(query, cancellationToken);
+            var result = await mediator.Send(query, cancellationToken);
 
             if (!result.IsSuccess)
-                return NotFound(result.ErrorMessages ?? new List<string> { result.ErrorMessage! });
+                return NotFound(result.ErrorMessages ?? [result.ErrorMessage!]);
 
             return Ok(result.Data);
         }
@@ -69,10 +62,10 @@ namespace TipsaNu.Api.Controllers
         public async Task<IActionResult> GetExtraBetOptions([FromQuery] int tournamentId, [FromQuery] string status = "all", CancellationToken cancellationToken = default)
         {
             var query = new GetExtraBetOptionsQuery(tournamentId, status);
-            var result = await _mediator.Send(query, cancellationToken);
+            var result = await mediator.Send(query, cancellationToken);
 
             if (!result.IsSuccess)
-                return NotFound(result.ErrorMessages ?? new List<string> { result.ErrorMessage! });
+                return NotFound(result.ErrorMessages ?? [result.ErrorMessage!]);
 
             return Ok(result.Data);
         }
