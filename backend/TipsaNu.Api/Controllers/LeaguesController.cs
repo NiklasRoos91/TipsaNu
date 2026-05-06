@@ -12,21 +12,14 @@ namespace TipsaNu.Api.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class LeaguesController : ControllerBase
+    public class LeaguesController(IMediator mediator) : ControllerBase
     {
-        private readonly IMediator _mediator;
-
-        public LeaguesController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
-
         // POST: api/leagues
         // Creates a new league based on the provided data.
         [HttpPost]
         public async Task<IActionResult> CreateLeague([FromBody] CreateLeagueDto dto, CancellationToken cancellationToken)
         {
-            var result = await _mediator.Send(new CreateLeagueCommand(dto), cancellationToken);
+            var result = await mediator.Send(new CreateLeagueCommand(dto), cancellationToken);
 
             if (!result.IsSuccess)
                 return BadRequest(new { message = result.ErrorMessage });
@@ -36,10 +29,10 @@ namespace TipsaNu.Api.Controllers
 
         // GET: api/leagues/{tournamentId}/leagues/me
         // Retrieves the leagues that the current user is a member of within a specific tournament.
-        [HttpGet("{tournamentId}/leagues/me")]
+        [HttpGet("{tournamentId:int}/leagues/me")]
         public async Task<IActionResult> GetMyLeagues(int tournamentId, CancellationToken cancellationToken)
         {
-            var result = await _mediator.Send(
+            var result = await mediator.Send(
                 new GetMyLeaguesInTournamentQuery(tournamentId),
                 cancellationToken);
 
@@ -52,10 +45,10 @@ namespace TipsaNu.Api.Controllers
 
         // POST: api/leagues/{tournamentId}/join
         // Allows a user to join a league using an invitation code.
-        [HttpPost("{tournamentId}/join")]
+        [HttpPost("{tournamentId:int}/join")]
         public async Task<IActionResult> JoinLeague(int tournamentId, [FromBody] JoinLeagueDto dto, CancellationToken cancellationToken)
         {
-            var result = await _mediator.Send(new JoinLeagueCommand(tournamentId, dto), cancellationToken);
+            var result = await mediator.Send(new JoinLeagueCommand(tournamentId, dto), cancellationToken);
 
             if (!result.IsSuccess)
                 return BadRequest(new { message = result.ErrorMessage });
@@ -65,10 +58,10 @@ namespace TipsaNu.Api.Controllers
 
         // 	GET /api/leagues/{leagueId}
         // Retrieves detailed information about a specific league, including its leaderboard.
-        [HttpGet("{leagueId}")]
+        [HttpGet("{leagueId:int}")]
         public async Task<IActionResult> GetLeagueDetails(int leagueId, CancellationToken cancellationToken)
         {
-            var result = await _mediator.Send(new GetLeagueDetailsQuery(leagueId), cancellationToken);
+            var result = await mediator.Send(new GetLeagueDetailsQuery(leagueId), cancellationToken);
 
             if (!result.IsSuccess)
                 return BadRequest(new { message = result.ErrorMessage });

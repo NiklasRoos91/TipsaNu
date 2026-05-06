@@ -1,22 +1,16 @@
 ﻿using TipsaNu.Domain.Entities;
 using TipsaNu.Domain.Interfaces;
-using TipsaNu.Infrastructure.Presistence;
 using Microsoft.EntityFrameworkCore;
+using TipsaNu.Infrastructure.Persistence;
 
 namespace TipsaNu.Infrastructure.Repositories
 {
-    public class MatchRepository : IMatchRepository
+    public class MatchRepository(AppDbContext context) : IMatchRepository
     {
-        private readonly AppDbContext _context;
-
-        public MatchRepository(AppDbContext context)
-        {
-            _context = context;
-        }
 
         public async Task<List<Match>> GetMatchesByGroupIdAsync(int groupId, CancellationToken cancellationToken = default)
         {
-            return await _context.Matches
+            return await context.Matches
                 .Where(m => m.GroupId == groupId)
                 .Include(m => m.HomeCompetitor)
                 .Include(m => m.AwayCompetitor)
@@ -26,14 +20,14 @@ namespace TipsaNu.Infrastructure.Repositories
         }
         public async Task<Match?> GetMatchWithCompetitorsAsync(int matchId, CancellationToken cancellationToken = default)
         {
-            return await _context.Matches
+            return await context.Matches
                 .Include(m => m.HomeCompetitor)
                 .Include(m => m.AwayCompetitor)
                 .FirstOrDefaultAsync(m => m.MatchId == matchId, cancellationToken);
         }
         public async Task<Match?> GetMatchWithTournamentAsync(int matchId, CancellationToken cancellationToken = default)
         {
-            return await _context.Matches
+            return await context.Matches
                 .Include(m => m.Tournament)
                 .FirstOrDefaultAsync(m => m.MatchId == matchId, cancellationToken);
         }

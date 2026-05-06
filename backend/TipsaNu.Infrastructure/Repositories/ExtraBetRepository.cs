@@ -2,18 +2,13 @@
 using TipsaNu.Domain.Entities;
 using TipsaNu.Domain.Enums;
 using TipsaNu.Domain.Interfaces;
-using TipsaNu.Infrastructure.Presistence;
+using TipsaNu.Infrastructure.Persistence;
 
 namespace TipsaNu.Infrastructure.Repositories
 {
-    public class ExtraBetRepository : IExtraBetRepository
+    public class ExtraBetRepository(AppDbContext context) : IExtraBetRepository
     {
-        private readonly AppDbContext _context;
-
-        public ExtraBetRepository(AppDbContext context)
-        {
-            _context = context;
-        }
+        private readonly AppDbContext _context = context;
 
         // This method adds a new extra bet option to the database. It takes an ExtraBetOption entity and a cancellation token as parameters,
         public async Task<ExtraBetOption> AddExtraBetOptionAsync(ExtraBetOption option, CancellationToken cancellationToken = default)

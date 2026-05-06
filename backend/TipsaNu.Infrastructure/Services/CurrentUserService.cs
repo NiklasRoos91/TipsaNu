@@ -5,20 +5,13 @@ using TipsaNu.Application.Commons.Interfaces;
 
 namespace TipsaNu.Infrastructure.Services
 {
-    public sealed class CurrentUserService : ICurrentUserService
+    public sealed class CurrentUserService(IHttpContextAccessor http) : ICurrentUserService
     {
-        private readonly IHttpContextAccessor _http;
-
-        public CurrentUserService(IHttpContextAccessor http)
-        {
-            _http = http;
-        }
-
         public int UserId
         {
             get
             {
-                var user = _http.HttpContext?.User;
+                var user = http.HttpContext?.User;
                 if (user == null || !user.Identity!.IsAuthenticated)
                     return 0;
 

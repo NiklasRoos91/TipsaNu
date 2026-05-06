@@ -8,36 +8,29 @@ using TipsaNu.Domain.Entities;
 
 namespace TipsaNu.Infrastructure.Auth
 {
-    public sealed class JwtTokenService : IJwtTokenService
+    public sealed class JwtTokenService(IConfiguration config) : IJwtTokenService
     {
-        private readonly IConfiguration _config;
-
-        public JwtTokenService(IConfiguration config)
-        {
-            _config = config;
-        }
-
         public string GenerateToken(User user)
         {
-            var secret = _config["Jwt:Secret"];
+            var secret = config["Jwt:Secret"];
             if (string.IsNullOrWhiteSpace(secret))
                 throw new InvalidOperationException("Jwt:Secret saknas i appsettings.json");
 
-            var issuer = _config["Jwt:Issuer"];
+            var issuer = config["Jwt:Issuer"];
             if (string.IsNullOrWhiteSpace(issuer))
                 throw new InvalidOperationException("Jwt:Issuer saknas i appsettings.json");
 
-            var audience = _config["Jwt:Audience"];
+            var audience = config["Jwt:Audience"];
             if (string.IsNullOrWhiteSpace(audience))
                 throw new InvalidOperationException("Jwt:Audience saknas i appsettings.json");
 
-            var expiryHours = _config.GetValue<int?>("Jwt:ExpiryHours") ?? 4;
+            var expiryHours = config.GetValue<int?>("Jwt:ExpiryHours") ?? 4;
 
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.UserId.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim("username", user.Username),
+                new Claim("username", user.UserName),
                 new Claim(ClaimTypes.Role, user.Role.ToString()),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64)

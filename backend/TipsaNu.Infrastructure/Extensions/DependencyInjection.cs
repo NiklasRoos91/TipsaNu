@@ -5,8 +5,8 @@ using TipsaNu.Application.Commons.Interfaces;
 using TipsaNu.Application.Features.Auth.Interfaces;
 using TipsaNu.Domain.Interfaces;
 using TipsaNu.Infrastructure.Auth;
+using TipsaNu.Infrastructure.Persistence;
 using TipsaNu.Infrastructure.Persistence.Seeders;
-using TipsaNu.Infrastructure.Presistence;
 using TipsaNu.Infrastructure.Repositories;
 using TipsaNu.Infrastructure.Services;
 
@@ -46,7 +46,7 @@ namespace TipsaNu.Infrastructure.Extensions
                 var context = serviceProvider.GetRequiredService<AppDbContext>();
                 var passwordService = serviceProvider.GetRequiredService<IPasswordService>();
 
-                DBSeeder.SeedAllAsync(context, passwordService).GetAwaiter().GetResult();
+                DbSeeder.SeedAllAsync(context, passwordService).GetAwaiter().GetResult();
             }
 
             return services;

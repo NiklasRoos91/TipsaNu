@@ -2,12 +2,10 @@
 using TipsaNu.Domain.Entities;
 using TipsaNu.Infrastructure.Data.Configurations;
 
-namespace TipsaNu.Infrastructure.Presistence
+namespace TipsaNu.Infrastructure.Persistence
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
-
         public DbSet<User> Users => Set<User>();
         public DbSet<RefreshToken> RefreshTokens { get; set; } = null!;
         public DbSet<TournamentTemplate> TournamentTemplates => Set<TournamentTemplate>();

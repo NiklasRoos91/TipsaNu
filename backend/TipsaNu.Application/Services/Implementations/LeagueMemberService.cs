@@ -5,15 +5,8 @@ using TipsaNu.Domain.Interfaces;
 
 namespace TipsaNu.Application.Services.Implementations
 {
-    public class LeagueMemberService : ILeagueMemberService
+    public class LeagueMemberService(ILeagueRepository leagueRepository) : ILeagueMemberService
     {
-        private readonly ILeagueRepository _leagueRepository;
-
-        public LeagueMemberService(ILeagueRepository leagueRepository)
-        {
-            _leagueRepository = leagueRepository;
-        }
-
         public async Task<LeagueMemberDto> AddMemberWithLeaderboardAsync(int leagueId, int userId, CancellationToken cancellationToken)
         {
             var member = new LeagueMember
@@ -22,7 +15,7 @@ namespace TipsaNu.Application.Services.Implementations
                 UserId = userId,
                 JoinedAt = DateTime.UtcNow
             };
-            await _leagueRepository.AddLeagueMemberAsync(member, cancellationToken);
+            await leagueRepository.AddLeagueMemberAsync(member, cancellationToken);
 
             var leaderboardEntry = new LeaderboardEntry
             {
@@ -30,7 +23,7 @@ namespace TipsaNu.Application.Services.Implementations
                 TotalPoints = 0,
                 LastUpdated = DateTime.UtcNow
             };
-            await _leagueRepository.AddLeaderboardEntryAsync(leaderboardEntry, cancellationToken);
+            await leagueRepository.AddLeaderboardEntryAsync(leaderboardEntry, cancellationToken);
 
             return new LeagueMemberDto
             {

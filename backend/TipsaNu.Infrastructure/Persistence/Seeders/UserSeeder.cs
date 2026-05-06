@@ -2,7 +2,6 @@
 using TipsaNu.Application.Features.Auth.Interfaces;
 using TipsaNu.Domain.Entities;
 using TipsaNu.Domain.Enums;
-using TipsaNu.Infrastructure.Presistence;
 
 namespace TipsaNu.Infrastructure.Persistence.Seeders
 {
@@ -15,7 +14,7 @@ namespace TipsaNu.Infrastructure.Persistence.Seeders
 
             var admin = new User
             {
-                Username = "Admin",
+                UserName = "Admin",
                 Email = "admin@admin.com",
                 PasswordHash = passwordService.Hash("admin123"),
                 Role = UserRoleEnum.Admin,
@@ -23,7 +22,7 @@ namespace TipsaNu.Infrastructure.Persistence.Seeders
             };
             var user = new User
             {
-                Username = "User",
+                UserName = "User",
                 Email = "user@user.com",
                 PasswordHash = passwordService.Hash("user123"),
                 Role = UserRoleEnum.User,

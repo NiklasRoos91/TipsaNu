@@ -9,21 +9,14 @@ namespace TipsaNu.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TournamentsController : ControllerBase
+    public class TournamentsController(IMediator mediator) : ControllerBase
     {
-        private readonly IMediator _mediator;
-
-        public TournamentsController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
-
         // GET /api/Tournaments
         // Retrieves all tournaments.
         [HttpGet]
         public async Task<IActionResult> GetAllTournaments(CancellationToken cancellationToken)
         {
-            var result = await _mediator.Send(new GetAllTournamentsQuery(), cancellationToken);
+            var result = await mediator.Send(new GetAllTournamentsQuery(), cancellationToken);
 
             if (!result.IsSuccess)
                 return BadRequest(new { errors = result.ErrorMessages ?? new List<string> { result.ErrorMessage ?? "Unknown error" } });
@@ -37,7 +30,7 @@ namespace TipsaNu.Api.Controllers
         [HttpGet("{tournamentId:int}")]
         public async Task<IActionResult> GetTournamentById(int tournamentId, CancellationToken cancellationToken)
         {
-            var result = await _mediator.Send(new GetTournamentByIdQuery(tournamentId), cancellationToken);
+            var result = await mediator.Send(new GetTournamentByIdQuery(tournamentId), cancellationToken);
 
             if (!result.IsSuccess)
                 return NotFound(new { message = result.ErrorMessage });
@@ -49,14 +42,13 @@ namespace TipsaNu.Api.Controllers
         [HttpGet("{tournamentId:int}/matches")]
         public async Task<IActionResult> GetMatchesByTournamentId(int tournamentId, CancellationToken cancellationToken)
         {
-            var result = await _mediator.Send(new GetMatchesByTournamentIdQuery(tournamentId), cancellationToken);
+            var result = await mediator.Send(new GetMatchesByTournamentIdQuery(tournamentId), cancellationToken);
 
             if (!result.IsSuccess)
             {
-                if (result.ErrorMessages?.Any() == true)
-                    return BadRequest(result.ErrorMessages);
-
-                return NotFound(result.ErrorMessage);
+                return result.ErrorMessages?.Any() == true
+                    ? BadRequest(result.ErrorMessages)
+                    :NotFound(result.ErrorMessage);
             }
 
             return Ok(result.Data);
@@ -67,7 +59,7 @@ namespace TipsaNu.Api.Controllers
         [HttpGet("{tournamentId:int}/groups")]
         public async Task<IActionResult> GetGroupsByTournament(int tournamentId, CancellationToken cancellationToken)
         {
-            var result = await _mediator.Send(new GetGroupsByTournamentIdQuery(tournamentId), cancellationToken);
+            var result = await mediator.Send(new GetGroupsByTournamentIdQuery(tournamentId), cancellationToken);
 
             if (!result.IsSuccess)
                 return NotFound(new { message = result.ErrorMessage });

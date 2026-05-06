@@ -1,19 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TipsaNu.Domain.Entities;
 using TipsaNu.Domain.Interfaces;
-using TipsaNu.Infrastructure.Presistence;
+using TipsaNu.Infrastructure.Persistence;
 
 namespace TipsaNu.Infrastructure.Repositories
 {
-    public class LeagueRepository : ILeagueRepository
+    public class LeagueRepository(AppDbContext context) : ILeagueRepository
     {
 
-        private readonly AppDbContext _context;
-
-        public LeagueRepository(AppDbContext context)
-        {
-            _context = context;
-        }
+        private readonly AppDbContext _context = context;
 
         public async Task<List<League>> GetByUserIdAsync(int userId, int tournamentId, CancellationToken cancellationToken = default)
         {

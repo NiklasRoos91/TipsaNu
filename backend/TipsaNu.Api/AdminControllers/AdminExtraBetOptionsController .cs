@@ -14,21 +14,14 @@ namespace TipsaNu.Api.AdminControllers
     [Route("api/admin/extrabets/options")]
     [ApiController]
     [Authorize(Roles = "Admin")]
-    public class AdminExtraBetOptionsController : ControllerBase
+    public class AdminExtraBetOptionsController(IMediator mediator) : ControllerBase
     {
-        private readonly IMediator _mediator;
-
-        public AdminExtraBetOptionsController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
-
         // POST: api/admin/extrabets/options
         // Creates a new extra bet option for a tournament or match.
-        [HttpPost()]
+        [HttpPost]
         public async Task<IActionResult> CreateExtraBetOption([FromBody] CreateExtraBetOptionDto dto, CancellationToken cancellationToken)
         {
-            var result = await _mediator.Send(new CreateExtraBetOptionCommand(dto), cancellationToken);
+            var result = await mediator.Send(new CreateExtraBetOptionCommand(dto), cancellationToken);
 
             if (!result.IsSuccess)
                 return BadRequest(new { message = result.ErrorMessage });
@@ -44,7 +37,7 @@ namespace TipsaNu.Api.AdminControllers
             [FromBody] SetExtraBetOptionCorrectValuesDto dto,
             CancellationToken cancellationToken)
         {
-            var result = await _mediator.Send(new CreateExtraBetOptionCorrectValuesCommand(optionId, dto), cancellationToken);
+            var result = await mediator.Send(new CreateExtraBetOptionCorrectValuesCommand(optionId, dto), cancellationToken);
 
             if (!result.IsSuccess)
                 return BadRequest(new { message = result.ErrorMessage });
@@ -58,7 +51,7 @@ namespace TipsaNu.Api.AdminControllers
         public async Task<IActionResult> AddOrUpdateExtraBetOptionCorrectValues(int optionId, [FromBody] SetExtraBetOptionCorrectValuesDto dto)
         {
             var command = new AddExtraBetOptionCorrectValuesCommand(optionId, dto);
-            var result = await _mediator.Send(command);
+            var result = await mediator.Send(command);
 
             if (!result.IsSuccess)
                 return BadRequest(new { message = result.ErrorMessage });
@@ -72,7 +65,7 @@ namespace TipsaNu.Api.AdminControllers
         public async Task<IActionResult> DeleteExtraBetOptionCorrectValues(int optionId)
         {
             var command = new DeleteExtraBetOptionCorrectValuesCommand(optionId);
-            var result = await _mediator.Send(command);
+            var result = await mediator.Send(command);
 
             if (!result.IsSuccess)
                 return BadRequest(new { message = result.ErrorMessage });
@@ -86,7 +79,7 @@ namespace TipsaNu.Api.AdminControllers
         public async Task<IActionResult> ReplaceExtraBetOptionCorrectValues(int optionId, [FromBody] SetExtraBetOptionCorrectValuesDto dto)
         {
             var command = new ReplaceExtraBetOptionCorrectValuesCommand(optionId, dto);
-            var result = await _mediator.Send(command);
+            var result = await mediator.Send(command);
 
             if (!result.IsSuccess)
                 return BadRequest(new { message = result.ErrorMessage });
@@ -100,7 +93,7 @@ namespace TipsaNu.Api.AdminControllers
         public async Task<IActionResult> DeleteSingleExtraBetOptionCorrectValue(int correctValueId)
         {
             var command = new DeleteSingleExtraBetOptionCorrectValueCommand(correctValueId);
-            var result = await _mediator.Send(command);
+            var result = await mediator.Send(command);
 
             if (!result.IsSuccess)
                 return BadRequest(new { message = result.ErrorMessage });

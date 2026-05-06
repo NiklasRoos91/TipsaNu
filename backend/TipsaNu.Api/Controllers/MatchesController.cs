@@ -10,21 +10,14 @@ namespace TipsaNu.Api.Controllers
     [ApiController]
     [Route("api/matches")]
     [Authorize]
-    public class MatchesController : ControllerBase
+    public class MatchesController(IMediator mediator) : ControllerBase
     {
-        private readonly IMediator _mediator;
-
-        public MatchesController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
-
         // GET /api/matches/{matchId}
         [HttpGet("{matchId}")]
         public async Task<IActionResult> GetMatchById(int matchId, CancellationToken cancellationToken)
         {
             var query = new GetMatchByIdQuery(matchId);
-            var result = await _mediator.Send(query, cancellationToken);
+            var result = await mediator.Send(query, cancellationToken);
 
             if (!result.IsSuccess)
                 return NotFound(result.ErrorMessages ?? new List<string> { result.ErrorMessage! });
@@ -38,7 +31,7 @@ namespace TipsaNu.Api.Controllers
         public async Task<IActionResult> CreateMyPrediction(int matchId, [FromBody] CreateMyPredictionRequestDto predictionDto, CancellationToken cancellationToken)
         {
             var command = new CreateMyPredictionCommand(predictionDto, matchId);
-            var result = await _mediator.Send(command, cancellationToken);
+            var result = await mediator.Send(command, cancellationToken);
 
             if (!result.IsSuccess)
                 return BadRequest(result.ErrorMessages ?? new List<string> { result.ErrorMessage! });

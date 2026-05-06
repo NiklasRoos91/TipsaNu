@@ -1,10 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TipsaNu.Application.Features.Auth.Interfaces;
-using TipsaNu.Infrastructure.Presistence;
 
 namespace TipsaNu.Infrastructure.Persistence.Seeders
 {
-        public static class DBSeeder
+        public static class DbSeeder
         {
         public static async Task SeedAllAsync(AppDbContext context, IPasswordService passwordService)
         {

@@ -1,31 +1,24 @@
-﻿using AutoMapper;
+﻿using System.Reflection.Metadata;
 using MediatR;
 using TipsaNu.Application.Commons.Results;
 using TipsaNu.Application.Features.Groups.DTOs;
+using TipsaNu.Application.Features.Groups.Mappers;
 using TipsaNu.Domain.Interfaces;
 
 namespace TipsaNu.Application.Features.Groups.Queries.GetGroupsByTournamentID
 {
-    public class GetGroupsByTournamentHandler : IRequestHandler<GetGroupsByTournamentIdQuery, OperationResult<List<GroupDto>>>
+    public class GetGroupsByTournamentHandler(IGroupRepository groupRepository)
+        : IRequestHandler<GetGroupsByTournamentIdQuery, OperationResult<List<GroupDto>>>
     {
-        private readonly IGroupRepository _groupRepository;
-        private readonly IMapper _mapper;
-
-        public GetGroupsByTournamentHandler(IGroupRepository groupRepository, IMapper mapper)
-        {
-            _groupRepository = groupRepository;
-            _mapper = mapper;
-        }
-
         public async Task<OperationResult<List<GroupDto>>> Handle(GetGroupsByTournamentIdQuery request, CancellationToken cancellationToken)
         {
-            var groups = await _groupRepository.GetGroupsByTournamentIdAsync(request.TournamentId, cancellationToken);
+            var groups = await groupRepository.GetGroupsByTournamentIdAsync(request.TournamentId, cancellationToken);
 
             if (!groups.Any())
                 return OperationResult<List<GroupDto>>.Failure("No groups found for this tournament");
 
-            var dtoList = _mapper.Map<List<GroupDto>>(groups);
-            return OperationResult<List<GroupDto>>.Success(dtoList);
+            return OperationResult<List<GroupDto>>.Success(
+                groups.Select(g => g.ToDto()).ToList());
         }
     }
 }

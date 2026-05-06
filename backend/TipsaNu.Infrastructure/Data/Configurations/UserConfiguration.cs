@@ -14,7 +14,7 @@ namespace TipsaNu.Infrastructure.Data.Configurations
             builder.HasKey(u => u.UserId);
             builder.Property(u => u.UserId).ValueGeneratedOnAdd();
 
-            builder.Property(u => u.Username)
+            builder.Property(u => u.UserName)
                    .IsRequired()
                    .HasMaxLength(100);
 

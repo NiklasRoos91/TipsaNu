@@ -2,15 +2,9 @@
 
 namespace TipsaNu.Application.AdminFeatures.AdminLeaderboards.Events.LeaderboardEntryUpdateRequested
 {
-    public class LeaderboardEntryUpdateRequestedEvent : INotification
+    public class LeaderboardEntryUpdateRequestedEvent(int tournamentId, int userId) : INotification
     {
-        public int TournamentId { get; }
-        public int UserId { get; }
-
-        public LeaderboardEntryUpdateRequestedEvent(int tournamentId, int userId)
-        {
-            TournamentId = tournamentId;
-            UserId = userId;
-        }
+        public int TournamentId { get; } = tournamentId;
+        public int UserId { get; } = userId;
     }
 }

@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TipsaNu.Domain.Entities;
 using TipsaNu.Domain.Enums;
-using TipsaNu.Infrastructure.Presistence;
 
 namespace TipsaNu.Infrastructure.Persistence.Seeders
 {

@@ -5,37 +5,28 @@ using TipsaNu.Application.Features.Auth.DTOs;
 
 namespace TipsaNu.Application.Features.Auth.Commands.RefreshToken
 {
-    public class RefreshTokenCommandHandler
-    : IRequestHandler<RefreshTokenCommand, OperationResult<AuthResponseDto>>
+    public class RefreshTokenCommandHandler(
+        IRefreshTokenService refreshService,
+        IJwtTokenService jwt)
+        : IRequestHandler<RefreshTokenCommand, OperationResult<AuthResponseDto>>
     {
-        private readonly IRefreshTokenService _refreshService;
-        private readonly IJwtTokenService _jwt;
-
-        public RefreshTokenCommandHandler(
-            IRefreshTokenService refreshService,
-            IJwtTokenService jwt)
-        {
-            _refreshService = refreshService;
-            _jwt = jwt;
-        }
-
         public async Task<OperationResult<AuthResponseDto>> Handle(
             RefreshTokenCommand request,
             CancellationToken cancellationToken)
         {
-            var refreshToken = await _refreshService
-                .GetRefreshTokenAsync(request.Request.RefreshToken);
+            var refreshToken = await refreshService
+                .GetRefreshTokenAsync(request.Request.RefreshToken, cancellationToken);
 
             if (refreshToken == null)
                 return OperationResult<AuthResponseDto>
                     .Failure("Invalid or expired refresh token");
 
             // rotera tokens (best practice)
-            await _refreshService.RevokeRefreshTokenAsync(refreshToken);
+            await refreshService.RevokeRefreshTokenAsync(refreshToken, cancellationToken);
 
-            var accessToken = _jwt.GenerateToken(refreshToken.User);
-            var newRefreshToken = await _refreshService
-                .CreateRefreshTokenAsync(refreshToken.User);
+            var accessToken = jwt.GenerateToken(refreshToken.User);
+            var newRefreshToken = await refreshService
+                .CreateRefreshTokenAsync(refreshToken.User, cancellationToken);
 
             return OperationResult<AuthResponseDto>.Success(
                 new AuthResponseDto(accessToken, newRefreshToken.Token)
