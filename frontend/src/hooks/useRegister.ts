@@ -4,10 +4,11 @@ import { useAuth } from './useAuth';
 
 export const useRegister = () => {
   const [formData, setFormData] = useState({
-    username: '',
+    userName: '',
     email: '',
     password: '',
     confirmPassword: '',
+    signupCode: '',
   });
   const [error, setError] = useState<string | null>(null);
   const [isRegistering, setIsRegistering] = useState(false);
@@ -23,10 +24,11 @@ export const useRegister = () => {
     e.preventDefault();
     setError(null);
     if (
-      !formData.username.trim() ||
+      !formData.userName.trim() ||
       !formData.email.trim() ||
       !formData.password.trim() ||
-      !formData.confirmPassword.trim()
+      !formData.confirmPassword.trim() ||
+      !formData.signupCode.trim()
     ) {
       setError('Alla fält måste fyllas i');
       return;
@@ -40,12 +42,13 @@ export const useRegister = () => {
     setIsRegistering(true);
     try {
     const registerData = {
-      Email: formData.email,
-      Username: formData.username,
-      Password: formData.password,
+      email: formData.email,
+      userName: formData.userName,
+      password: formData.password,
+      signupCode: formData.signupCode,
   };
   
-    await register(registerData); // använder contextens register
+    await register(registerData);
     navigate('/tournaments');
   } catch (err) {
     setError('Registreringen misslyckades. Försök igen.');

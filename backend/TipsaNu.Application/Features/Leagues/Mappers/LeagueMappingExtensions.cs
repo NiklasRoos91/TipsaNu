@@ -16,7 +16,7 @@ namespace TipsaNu.Application.Features.Leagues.Mappers
                 MaxMembers = entity.MaxMembers,
                 CurrentMembers = entity.Members?.Count ?? 0,
                 AdminUserId = entity.AdminUserId,
-                AdminUsername = entity.AdminUser?.UserName ?? "Okänd",
+                AdminUserName = entity.AdminUser?.UserName ?? "Okänd",
                 
                 Leaderboard = entity.Members?
                     .Select(m => m.ToLeaderboardEntryDto())

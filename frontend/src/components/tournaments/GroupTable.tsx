@@ -1,7 +1,6 @@
 
 import React from 'react';
 import type { GroupStanding } from "../../mocks/groupMock";
-import { MOCK_GROUP_STANDINGS } from "../../mocks/groupMock";
 
 interface GroupTableProps {
   standings: GroupStanding[];
@@ -10,7 +9,6 @@ interface GroupTableProps {
 export const GroupTable: React.FC<GroupTableProps> = ({ standings }) => {
   if (!standings || standings.length === 0) return null;
 
-  // Ensure sorted by rank
   const sortedStandings = [...standings].sort((a, b) => a.rank - b.rank);
 
   return (

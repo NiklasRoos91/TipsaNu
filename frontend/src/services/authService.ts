@@ -29,7 +29,7 @@ export const updateProfile = async (data: Partial<User>): Promise<User> => {
 
 // --- Refresh Token ---
 export const refreshToken = async (data: RefreshTokenRequest): Promise<AuthResponse> => {
-  const res = await api.post<AuthResponse>('/auth/refresh-token', data);
+  const res = await api.post<AuthResponse>('/auth/refresh', data);
   return res.data;
 };
 

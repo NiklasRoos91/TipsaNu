@@ -1,7 +1,7 @@
 // --- User (frontend-version) ---
 export interface User {
   id: string;
-  username: string;
+  userName: string;
   email: string;
   displayName: string;
   avatarUrl?: string;
@@ -24,20 +24,21 @@ export interface RefreshTokenRequest {
 
 // --- Register Request ---
 export interface RegisterRequest {
-  Email: string;
-  Username: string;
-  Password: string;
+  email: string;
+  userName: string;
+  password: string;
+  signupCode: string;
 }
 
 // --- Login Request ---
 export interface LoginRequest {
-  Email: string;
-  Password: string;
+  email: string;
+  password: string;
 }
 
 // --- JWT Payload ---
 export interface TokenPayload {
   sub: string;
-  username: string;
+  userName: string;
   'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'?: string;
 }

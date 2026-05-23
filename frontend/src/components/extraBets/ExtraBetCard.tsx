@@ -131,9 +131,8 @@ export const ExtraBetCard: React.FC<ExtraBetCardProps> = ({
         <div className="flex items-center justify-between mt-2">
           <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-tight">
             <span className={`flex items-center gap-1 ${isExpired ? 'text-red-500' : 'text-slate-400'}`}>
-              <AlertCircle size={14} /> {isExpired ? 'Stängd' : `Deadline: ${new Date(bet.expiresAt ?? '').toLocaleString('sv-SE', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}`} {/* CHANGED */}
+              <AlertCircle size={14} /> {isExpired ? 'Stängd' : `Deadline: ${new Date(bet.expiresAt ?? '').toLocaleString('sv-SE', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}`}
             </span>
-            {isExpired && <span className="bg-red-100 text-red-600 px-2 py-0.5 rounded ml-2">STÄNGD</span>}
           </div>
 
           <ExtraBetResultBadge 

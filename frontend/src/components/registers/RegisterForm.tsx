@@ -3,10 +3,11 @@ import React from 'react';
 
 interface RegisterFormProps {
   formData: {
-    username: string;
+    userName: string;
     email: string;
     password: string;
     confirmPassword: string;
+    signupCode: string;
   };
   onUpdateField: (field: any, value: string) => void;
   onSubmit: (e: React.FormEvent) => void;
@@ -22,16 +23,31 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
   return (
     <form onSubmit={onSubmit} className="space-y-4">
       <div>
+        <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">
+          Inbjudningskod
+        </label>
+        <input
+          type="text"
+          placeholder="Ange din hemliga kod"
+          required
+          value={formData.signupCode}
+          onChange={(e) => onUpdateField('signupCode', e.target.value)}
+          className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-4 focus:ring-accent/10 focus:border-accent transition-all text-slate-900 font-medium shadow-inner"
+        />
+      </div>
+
+      <div>
         <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Användarnamn</label>
         <input
           type="text"
           placeholder="Användarnamn"
           required
-          value={formData.username}
-          onChange={(e) => onUpdateField('username', e.target.value)}
+          value={formData.userName}
+          onChange={(e) => onUpdateField('userName', e.target.value)}
           className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-4 focus:ring-accent/10 focus:border-accent transition-all text-slate-900 font-medium shadow-inner"
         />
       </div>
+
       <div>
         <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">E-post</label>
         <input
@@ -43,6 +59,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
           className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-4 focus:ring-accent/10 focus:border-accent transition-all text-slate-900 font-medium shadow-inner"
         />
       </div>
+
       <div>
         <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Lösenord</label>
         <input
@@ -54,6 +71,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({
           className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:ring-4 focus:ring-accent/10 focus:border-accent transition-all text-slate-900 font-medium shadow-inner"
         />
       </div>
+      
       <div>
         <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Bekräfta lösenord</label>
         <input

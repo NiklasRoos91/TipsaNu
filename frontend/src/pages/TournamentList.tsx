@@ -22,7 +22,7 @@ export const TournamentList = () => {
             </p>
         </div>
         
-        {isAdmin && (
+        {/* {isAdmin && (
           <div className="w-auto ml-auto">
             <ActionButton 
               label="Skapa ny" 
@@ -30,7 +30,7 @@ export const TournamentList = () => {
               isActive={showCreate}
             />
           </div>
-        )}
+        )} */}
       </div>
 
       {showCreate && isAdmin && (

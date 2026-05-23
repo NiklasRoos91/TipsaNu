@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './useAuth';
 
 interface Credentials {
-  Email: string;
-  Password: string;
+  email: string;
+  password: string;
 }
 
 export const useLogin = () => {
@@ -13,19 +13,21 @@ export const useLogin = () => {
   const { login, error: authError, loading: authLoading, isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/tournaments');
+    }
+  }, [isAuthenticated, navigate]);
+
   const handleLogin = async (e?: React.FormEvent, credentials?: Credentials) => {
     if (e) e.preventDefault();
 
     const loginData: Credentials = credentials
       ? credentials
-      : { Email: email, Password: password };
+      : { email: email, password: password };
 
     try {
       await login(loginData);
-
-      console.log('isAuthenticated efter login:', isAuthenticated);
-      
-      navigate('/tournaments');
     } catch (err) {
       console.error('Login failed:', err);
     }
@@ -33,11 +35,11 @@ export const useLogin = () => {
 
   const quickLogin = (type: 'user' | 'admin') => {
     const creds = type === 'admin' 
-      ? { Email: 'admin@admin.com', Password: 'Password123!' } 
-      : { Email: 'user@user.com', Password: 'Password123!' };
+      ? { email: 'admin@admin.com', password: 'Password123!' } 
+      : { email: 'user@user.com', password: 'Password123!' };
     
-    setEmail(creds.Email);
-    setPassword(creds.Password);
+    setEmail(creds.email);
+    setPassword(creds.password);
     handleLogin(undefined, creds);
   };
 

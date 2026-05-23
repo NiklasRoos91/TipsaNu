@@ -9,7 +9,7 @@
         public int MaxMembers { get; set; }
         public int CurrentMembers { get; set; }
         public int AdminUserId { get; set; }
-        public string AdminUsername { get; set; } = null!;
+        public string AdminUserName { get; set; } = null!;
 
         // 
         public List<LeaderboardEntryDto> Leaderboard { get; set; } = new();

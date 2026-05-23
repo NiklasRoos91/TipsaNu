@@ -6,7 +6,7 @@ import { MessageSquare, Send } from 'lucide-react';
 export interface LeaguePostDto {
   postId: number | string;
   userId?: number;
-  username: string;
+  userName: string;
   content: string;
   createdAt: string; // ISO string
 }
@@ -40,11 +40,11 @@ export const Forum: React.FC<ForumProps> = ({ posts, onAddPost }) => {
         {posts.length > 0 ? posts.map(post => (
           <div key={post.postId} className="flex gap-3 animate-fade-in">
             <div className="w-8 h-8 rounded-full bg-slate-200 flex-shrink-0 flex items-center justify-center font-bold text-xs text-slate-600 border border-slate-300">
-              {post.username.charAt(0).toUpperCase()}
+              {post.userName.charAt(0).toUpperCase()}
             </div>
             <div className="flex-1">
               <div className="bg-slate-50 p-3 rounded-2xl rounded-tl-none border border-slate-100 shadow-sm relative">
-                <p className="text-[10px] font-bold text-slate-500 mb-1">{post.username}</p>
+                <p className="text-[10px] font-bold text-slate-500 mb-1">{post.userName}</p>
                 <p className="text-sm text-slate-800 leading-relaxed">{post.content}</p>
               </div>
               <span className="text-[9px] text-slate-400 ml-2 mt-1 block font-medium">

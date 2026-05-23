@@ -3,15 +3,15 @@ import { useState, useEffect } from 'react';
 // Mock-typ för Post
 export type Post = {
   id: string | number;
-  username: string;
+  userName: string;
   content: string;
   createdAt: string;
 };
 
 // Mock-data
 const mockPosts: Post[] = [
-  { id: 1, username: 'Alice', content: 'Hej alla!', createdAt: new Date().toISOString() },
-  { id: 2, username: 'Bob', content: 'Vi behöver fler lag!', createdAt: new Date().toISOString() }
+  { id: 1, userName: 'Alice', content: 'Hej alla!', createdAt: new Date().toISOString() },
+  { id: 2, userName: 'Bob', content: 'Vi behöver fler lag!', createdAt: new Date().toISOString() }
 ];
 
 // Mock-funktioner som ersätter API-anrop
@@ -28,7 +28,7 @@ const createPost = async (leagueId: string, content: string): Promise<Post> => {
     setTimeout(() => {
       const newPost: Post = {
         id: Date.now(),
-        username: 'Du', // mockar användaren
+        userName: 'Du',
         content,
         createdAt: new Date().toISOString()
       };

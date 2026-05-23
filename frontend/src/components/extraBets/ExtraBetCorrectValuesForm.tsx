@@ -16,7 +16,7 @@ export const ExtraBetCorrectValuesForm: React.FC<ExtraBetCorrectValuesFormProps>
     e.preventDefault();
     if (!correctValue.trim()) return;
 
-    await createCorrectValues({ correctValues: [correctValue.trim()] } as SetExtraBetOptionCorrectValuesDto);
+    await createCorrectValues({ values: [correctValue.trim()] } as SetExtraBetOptionCorrectValuesDto);
     setCorrectValue("");
   };
 

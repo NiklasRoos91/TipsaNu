@@ -13,7 +13,7 @@ namespace TipsaNu.Api.Controllers
     public class AuthController(IMediator mediator) : ControllerBase
     {
         // Post: /api/auth/register
-        // Register a new user with email, username and password, return JWT token if successful, otherwise return 400 Bad Request
+        // Register a new user with email, userName and password, return JWT token if successful, otherwise return 400 Bad Request
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequestDto request, CancellationToken cancellationToken)
         {

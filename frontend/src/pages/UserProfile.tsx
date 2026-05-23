@@ -45,7 +45,7 @@ export const UserProfile = () => {
           </div>
           <div>
             <h3 className="text-2xl font-bold text-primary">{user.displayName}</h3>
-            <p className="text-slate-500 font-medium">@{user.username}</p>
+            <p className="text-slate-500 font-medium">@{user.userName}</p>
           </div>
         </div>
 
@@ -78,12 +78,16 @@ export const UserProfile = () => {
         {/* Action Buttons */}
         <div className="flex justify-end pt-4 border-t border-slate-100">
           <button 
-            onClick={handleSave}
-            disabled={isSaving}
+            // onClick={handleSave}
+            // disabled={isSaving}
+            disabled={true}
             className="bg-accent hover:bg-emerald-600 text-white px-10 py-3 rounded-xl font-bold transition-all shadow-lg active:scale-95 disabled:opacity-50 text-sm uppercase tracking-widest"
           >
             {isSaving ? 'Sparar...' : 'Spara ändringar'}
           </button>
+          <p className="text-[10px] text-slate-400 mt-2 italic font-medium">
+            Profilinställningar kan inte ändras för tillfället.
+          </p>
         </div>
       </div>
     </div>
