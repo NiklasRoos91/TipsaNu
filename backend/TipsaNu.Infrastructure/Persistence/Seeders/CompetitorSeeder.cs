@@ -12,18 +12,18 @@ namespace TipsaNu.Infrastructure.Persistence.Seeders
 
             var teamNames = new[]
             {
-                "Mexiko","Sydkorea","Sydafrika","Treor_A",
-                "Kanada","Schweiz","Qatar","Treor_B",
-                "Brasilien","Marocko","Skottland","Haiti",
-                "USA","Australien","Paraguay","Treor_D",
-                "Tyskland","Ecuador","Elfenbenskusten","Curaçao",
-                "Nederländerna","Japan","Tunisien","Treor_F",
-                "Belgien","Iran","Egypten","Nya Zeeland",
-                "Spanien","Uruguay","Saudiarabien","Kap Verde",
-                "Frankrike","Senegal","Norge","Treor_I",
-                "Argentina","Österrike","Algeriet","Jordanien",
-                "Portugal","Colombia","Uzbekistan","Treor_K",
-                "England","Kroatien","Panama","Ghana"
+                "Mexiko", "Sydafrika", "Sydkorea", "Tjeckien",
+                "Kanada", "Bosnien och Hercegovina", "Qatar", "Schweiz",
+                "Brasilien", "Marocko", "Skottland", "Haiti",
+                "USA", "Paraguay", "Australien", "Turkiet",
+                "Tyskland", "Curaçao", "Elfenbenskusten", "Ecuador",
+                "Nederländerna", "Japan", "Sverige", "Tunisien",
+                "Belgien", "Iran", "Egypten", "Nya Zeeland",
+                "Spanien", "Kap Verde", "Saudiarabien", "Uruguay",
+                "Frankrike", "Senegal", "Irak", "Norge",
+                "Argentina", "Algeriet", "Österrike", "Jordanien",
+                "Portugal", "Kongo DR", "Uzbekistan", "Colombia",
+                "England", "Kroatien", "Panama", "Ghana"
             };
 
             var competitors = teamNames.Select(n => new Competitor { Name = n, IsIndividual = false }).ToList();

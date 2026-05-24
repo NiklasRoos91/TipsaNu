@@ -1,5 +1,5 @@
 ﻿namespace TipsaNu.Domain.Enums
 {
-    public enum UserRoleEnum { Admin, User }
+    public enum UserRoleEnum { User, Admin }
 
 }

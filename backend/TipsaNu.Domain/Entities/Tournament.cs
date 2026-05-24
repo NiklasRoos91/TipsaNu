@@ -17,6 +17,7 @@ namespace TipsaNu.Domain.Entities
         public ICollection<Group> Groups { get; set; } = new List<Group>();
         public ICollection<Match> Matches { get; set; } = new List<Match>();
         public ICollection<League> Leagues { get; set; } = new List<League>();
+        public ICollection<TournamentCompetitor> TournamentCompetitors { get; set; } = new List<TournamentCompetitor>();
         public ICollection<TournamentTiebreaker> TournamentTiebreakers { get; set; } = new List<TournamentTiebreaker>();
         public ICollection<ExtraBetOption> ExtraBetOptions { get; set; } = new List<ExtraBetOption>();
     }

@@ -7,6 +7,7 @@
         public bool IsIndividual { get; set; }
 
         // Navigation
+        public ICollection<TournamentCompetitor> TournamentCompetitors { get; set; } = new List<TournamentCompetitor>();
         public ICollection<GroupCompetitor> GroupCompetitors { get; set; } = new List<GroupCompetitor>();
         public ICollection<GroupStanding> GroupStandings { get; set; } = new List<GroupStanding>();
         public ICollection<Match> HomeMatches { get; set; } = new List<Match>();

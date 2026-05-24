@@ -20,6 +20,7 @@ namespace TipsaNu.Infrastructure.Persistence
         public DbSet<Group> Groups => Set<Group>();
         public DbSet<GroupCompetitor> GroupCompetitors => Set<GroupCompetitor>();
         public DbSet<GroupStanding> GroupStandings => Set<GroupStanding>();
+        public DbSet<TournamentCompetitor> TournamentCompetitors => Set<TournamentCompetitor>();
         public DbSet<TournamentTiebreaker> TournamentTiebreakers => Set<TournamentTiebreaker>();
         public DbSet<ExtraBetOption> ExtraBetOptions => Set<ExtraBetOption>();
         public DbSet<ExtraBet> ExtraBets => Set<ExtraBet>();
@@ -29,8 +30,7 @@ namespace TipsaNu.Infrastructure.Persistence
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
-
+            
             modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder.ApplyConfiguration(new TournamentTemplateConfiguration());
             modelBuilder.ApplyConfiguration(new PointRuleConfiguration());
@@ -45,6 +45,7 @@ namespace TipsaNu.Infrastructure.Persistence
             modelBuilder.ApplyConfiguration(new GroupConfiguration());
             modelBuilder.ApplyConfiguration(new GroupCompetitorConfiguration());
             modelBuilder.ApplyConfiguration(new GroupStandingConfiguration());
+            modelBuilder.ApplyConfiguration(new TournamentConfiguration());
             modelBuilder.ApplyConfiguration(new ExtraBetOptionConfiguration());
             modelBuilder.ApplyConfiguration(new ExtraBetOptionChoiceConfiguration());
             modelBuilder.ApplyConfiguration(new ExtraBetOptionCorrectValueConfiguration());
