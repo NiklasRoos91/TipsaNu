@@ -20,10 +20,6 @@ export interface Match {
 }
 
 
-export type SetMatchResultDto = {
-  scoreHome: number;
-  scoreAway: number;
-};
 
 // Prediction
 export interface Prediction {
@@ -56,8 +52,32 @@ export interface CreateMyPredictionRequestDto {
   predictedHomeScore: number;
   predictedAwayScore: number;
 }
+
 export type UIPrediction = {
   matchId: number;
   predictedHomeScore: number;
   predictedAwayScore: number;
 };
+
+// Admin DTOs
+export interface CreateMatchDto {
+  tournamentId: number;
+  homeCompetitorId: number;
+  awayCompetitorId: number;
+  matchType: MatchTypeEnum;
+  roundNumber: number;
+  groupId: number | null;
+  startTime: string;
+  predictionDeadline: string | null;
+}
+
+export type SetMatchResultDto = {
+  scoreHome: number;
+  scoreAway: number;
+};
+
+export interface Competitor {
+  competitorId: number;
+  name: string;
+  isIndividual: boolean;
+}

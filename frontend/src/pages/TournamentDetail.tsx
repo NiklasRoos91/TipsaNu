@@ -62,7 +62,7 @@ if (isNaN(tournamentId)) {
         </div>
 
         {/* Sidebar Actions */}
-        <div className="space-y-6">
+        {/* <div className="space-y-6">
           <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
             <h3 className="text-lg font-bold text-primary mb-4 flex items-center gap-2">
               <Trophy size={20} className="text-accent" />
@@ -75,7 +75,7 @@ if (isNaN(tournamentId)) {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

@@ -35,8 +35,8 @@ export const useLogin = () => {
 
   const quickLogin = (type: 'user' | 'admin') => {
     const creds = type === 'admin' 
-      ? { email: 'admin@admin.com', password: 'Password123!' } 
-      : { email: 'user@user.com', password: 'Password123!' };
+      ? { email: 'admin@admin.com', password: 'admin123' } 
+      : { email: 'user@user.com', password: 'user123' };
     
     setEmail(creds.email);
     setPassword(creds.password);

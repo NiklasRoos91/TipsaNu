@@ -1,13 +1,13 @@
-import { Match, CreateMyPredictionRequestDto, MatchPredictionDto } from '../types/matchTypes';
+import { Match, CreateMyPredictionRequestDto, MatchPredictionDto, CreateMatchDto } from '../types/matchTypes';
 import { api } from './apiClient';
 
 export const getMatchById = async (matchId: number): Promise<Match> => {
   try {
     const response = await api.get<Match>(`/matches/${matchId}`);
     return response.data;
-  } catch (error) {
-    console.error(`Error fetching details for match ${matchId}`, error);
-    throw new Error(error.response?.data?.message || 'Error fetching match details');
+  } catch (err: any) {
+    console.error(`Error fetching details for match ${matchId}`, err);
+    throw new Error(err.response?.data?.message || 'Error fetching match details');
   }
 };
 

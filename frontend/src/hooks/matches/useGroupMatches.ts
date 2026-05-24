@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { getMatches } from '../../services/tournamentService';
 import { Match } from '../../types/matchTypes';
 
@@ -7,8 +7,8 @@ export const useGroupMatches = (groupId: number | null) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (!groupId) return;
+  const fetchMatches = useCallback(() => {
+  if (!groupId) return;
 
     setLoading(true);
     setError(null);
@@ -19,5 +19,9 @@ export const useGroupMatches = (groupId: number | null) => {
       .finally(() => setLoading(false));
   }, [groupId]);
 
-  return { matches, loading, error };
+  useEffect(() => {
+    fetchMatches();
+  }, [fetchMatches]);
+
+  return { matches, loading, error, refetch: fetchMatches };
 };
