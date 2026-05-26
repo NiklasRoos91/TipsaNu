@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using TipsaNu.Application.AdminFeatures.AdminMatches.Commands.CreateMatch;
 using TipsaNu.Application.AdminFeatures.AdminMatches.Commands.SetMatchResult;
 using TipsaNu.Application.AdminFeatures.AdminMatches.DTOs;
+using TipsaNu.Application.AdminFeatures.AdminMatches.Queries.GetFilteredCompetitors;
 
 namespace TipsaNu.Api.AdminControllers
 {
@@ -12,6 +13,28 @@ namespace TipsaNu.Api.AdminControllers
     [Authorize(Roles = "Admin")]
     public class AdminMatchesController(IMediator mediator) : ControllerBase
     {
+        // GET: api/admin/matches/competitors
+        // Fetches teams/competitors filtered by tournament, optional group and optional search term.
+        [HttpGet("competitors")]
+        public async Task<IActionResult> GetFilteredCompetitors(
+            [FromQuery] int tournamentId,
+            [FromQuery] int? groupId,
+            [FromQuery] string? searchTerm,
+            CancellationToken cancellationToken)
+        {
+            var query = new GetFilteredCompetitorsQuery(tournamentId, groupId, searchTerm);
+            var result = await mediator.Send(query, cancellationToken);
+
+            if (!result.IsSuccess)
+            {
+                return result.ErrorMessages?.Any() is true 
+                    ? BadRequest(result.ErrorMessages) 
+                    : BadRequest(result.ErrorMessage);
+            }
+
+            return Ok(result.Data);
+        }
+        
         // POST: api/admin/matches
         // // Creates a new match between two competitors.
         [HttpPost]

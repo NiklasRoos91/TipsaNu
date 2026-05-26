@@ -22,10 +22,18 @@ namespace TipsaNu.Infrastructure.Persistence.Seeders
             {
                 for (int i = 0; i < 4; i++)
                 {
+                    var competitorId = competitors[compIndex++].CompetitorId;
+
                     await context.GroupCompetitors.AddAsync(new GroupCompetitor
                     {
                         GroupId = group.GroupId,
-                        CompetitorId = competitors[compIndex++].CompetitorId
+                        CompetitorId = competitorId
+                    });
+
+                    await context.TournamentCompetitors.AddAsync(new TournamentCompetitor
+                    {
+                        TournamentId = tournament.TournamentId,
+                        CompetitorId = competitorId
                     });
                 }
             }

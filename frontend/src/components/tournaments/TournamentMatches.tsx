@@ -89,7 +89,14 @@ export const TournamentMatches: React.FC<TournamentMatchesProps> = ({
           </div>
         </div>
 
-        {showCreate && isAdmin && <CreateMatch onCreated={() => setShowCreate(false)} />}
+        {showCreate && isAdmin && (
+          <CreateMatch
+            tournamentId={Number(tournamentId)}
+            onCreated={() =>{
+              fetchMatches(Number(tournamentId));
+              setShowCreate(false)}}
+          />
+        )}
 
         <MatchFilterChips 
           filters={matchGroups[matchCategory]}

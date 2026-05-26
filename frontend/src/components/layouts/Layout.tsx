@@ -10,9 +10,8 @@ export const Layout = ({ children }: { children?: React.ReactNode }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const isAdmin = user?.username === 'admin';
+  const isAdmin = user?.userName === 'admin';
 
-  // Build nav items dynamically
   const navItems = [
     { label: 'Turneringar', path: '/tournaments', icon: Trophy },
   ];

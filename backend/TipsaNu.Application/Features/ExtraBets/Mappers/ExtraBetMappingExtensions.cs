@@ -39,8 +39,12 @@ namespace TipsaNu.Application.Features.ExtraBets.Mappers
                 AllowCustomChoice = entity.AllowCustomChoice,
         
                 Choices = entity.ExtraBetOptionChoices?
-                    .Select(c => c.Value)
-                    .ToList() ?? new List<string>()
+                    .Select(c => new ExtraBetOptionChoiceDto
+                    {
+                        ChoiceId = c.ChoiceId,
+                        Value = c.Value
+                    })
+                    .ToList() ?? new List<ExtraBetOptionChoiceDto>()
             };
         }
         

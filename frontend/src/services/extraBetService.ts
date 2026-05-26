@@ -64,7 +64,7 @@ export const extraBetService = {
       return response.data;
     } catch (error: any) {
       if (error.response?.status === 404) {
-        return null; // ingen extra bet för användaren än
+        return null;
       }
       throw error;
     }

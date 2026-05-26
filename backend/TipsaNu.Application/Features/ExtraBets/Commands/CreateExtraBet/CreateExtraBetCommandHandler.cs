@@ -29,17 +29,22 @@ namespace TipsaNu.Application.Features.ExtraBets.Commands.CreateExtraBet
             if (option.ExpiresAt.HasValue && option.ExpiresAt.Value <= DateTime.UtcNow)
                 return OperationResult<ExtraBetDto>.Failure("ExtraBetOption has expired");
 
-            var alreadyPlaced = await extraBetRepository
-                .UserHasBetOnOptionAsync(userId, request.OptionId, cancellationToken);
-            if (alreadyPlaced)
-                return OperationResult<ExtraBetDto>.Failure("You have already placed a bet for this option");
+            var existingExtraBet = await extraBetRepository
+                .GetMyExtraBetByOptionIdAsync(request.OptionId, userId, cancellationToken);
+            
+            var trimmedValue = request.CreateExtraBetDto.Value.Trim();
 
-            if (!option.AllowCustomChoice && option.ExtraBetOptionChoices.All(c => c.Value != request.CreateExtraBetDto.Value.Trim()))            
+            if (!option.AllowCustomChoice && option.ExtraBetOptionChoices.All(c => c.Value != trimmedValue))            
                 return OperationResult<ExtraBetDto>.Failure("Invalid value for this ExtraBetOption");
+            
+            if (existingExtraBet != null)
+            {
+                await genericExtraBetRepository.DeleteAsync(existingExtraBet.ExtraBetId, cancellationToken);
+            }
 
             var extraBet = new ExtraBet
             {
-                Value = request.CreateExtraBetDto.Value.Trim(),
+                Value = trimmedValue,
                 UserId = userId,
                 OptionId = request.OptionId,
             };

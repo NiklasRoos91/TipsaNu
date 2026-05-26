@@ -564,6 +564,29 @@ namespace TipsaNu.Infrastructure.Data.Migrations
                     b.ToTable("Tournaments", "dbo");
                 });
 
+            modelBuilder.Entity("TipsaNu.Domain.Entities.TournamentCompetitor", b =>
+                {
+                    b.Property<int>("TournamentCompetitorId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TournamentCompetitorId"));
+
+                    b.Property<int>("CompetitorId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TournamentId")
+                        .HasColumnType("int");
+
+                    b.HasKey("TournamentCompetitorId");
+
+                    b.HasIndex("CompetitorId");
+
+                    b.HasIndex("TournamentId");
+
+                    b.ToTable("TournamentCompetitors");
+                });
+
             modelBuilder.Entity("TipsaNu.Domain.Entities.TournamentTemplate", b =>
                 {
                     b.Property<int>("TemplateId")
@@ -950,6 +973,25 @@ namespace TipsaNu.Infrastructure.Data.Migrations
                     b.Navigation("Template");
                 });
 
+            modelBuilder.Entity("TipsaNu.Domain.Entities.TournamentCompetitor", b =>
+                {
+                    b.HasOne("TipsaNu.Domain.Entities.Competitor", "Competitor")
+                        .WithMany("TournamentCompetitors")
+                        .HasForeignKey("CompetitorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TipsaNu.Domain.Entities.Tournament", "Tournament")
+                        .WithMany("TournamentCompetitors")
+                        .HasForeignKey("TournamentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Competitor");
+
+                    b.Navigation("Tournament");
+                });
+
             modelBuilder.Entity("TipsaNu.Domain.Entities.TournamentTemplate", b =>
                 {
                     b.HasOne("TipsaNu.Domain.Entities.User", "CreatedByUser")
@@ -981,6 +1023,8 @@ namespace TipsaNu.Infrastructure.Data.Migrations
                     b.Navigation("GroupStandings");
 
                     b.Navigation("HomeMatches");
+
+                    b.Navigation("TournamentCompetitors");
 
                     b.Navigation("WinningMatches");
                 });
@@ -1028,6 +1072,8 @@ namespace TipsaNu.Infrastructure.Data.Migrations
                     b.Navigation("Leagues");
 
                     b.Navigation("Matches");
+
+                    b.Navigation("TournamentCompetitors");
 
                     b.Navigation("TournamentTiebreakers");
                 });

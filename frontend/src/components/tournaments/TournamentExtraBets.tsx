@@ -83,13 +83,14 @@ return (
 
         {!loading && !error && extraBets.map((bet: ExtraBetOptionForUser) => {
           const initialPrediction: { betId: string; selectedOption: string } | undefined = bet.myBet
-            ? { betId: bet.myBet.extraBetId.toString(), selectedOption: bet.myBet.value }
+            ? { betId: bet.myBet.extraBetId.toString(), selectedOption: bet.myBet.value ?? '' }
             : undefined;
 
           return (
             <ExtraBetCard 
               key={bet.optionId} 
               bet={bet} 
+              isAdmin={isAdmin}
               initialPrediction={initialPrediction}
               isExpired={bet.expiresAt ? new Date(bet.expiresAt) < new Date() : false} 
               onSavePrediction={(prediction) => console.log('Saved prediction:', prediction)} 

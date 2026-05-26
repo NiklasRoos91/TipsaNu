@@ -18,7 +18,7 @@ export const mapLeaderboard = (
 
     result.push({
       userId: entry.userId,
-      username: entry.username,
+      userName: entry.userName,
       points: points,
       rank: currentRank,
     });

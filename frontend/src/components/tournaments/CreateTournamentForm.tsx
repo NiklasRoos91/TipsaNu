@@ -7,15 +7,9 @@ import { TextInput } from '../commons/inputs/TextInput';
 import { DateInput } from '../commons/inputs/DateInput';
 import { UrlInput } from '../commons/inputs/UrlInput';
 
-/**
- * CreateTournamentForm - A modular component for creating a new tournament.
- * Uses specialized inputs and handles internal state through useTournamentForm hook.
- */
-
 interface CreateTournamentFormProps {
   onSubmit: (data: TournamentFormData) => Promise<boolean>;
   onCancel: () => void;
-  // Optional: Allows parent to react to state changes (e.g., for live preview)
   onFormChange?: (data: TournamentFormData) => void;
 }
 
@@ -36,7 +30,6 @@ export const CreateTournamentForm: React.FC<CreateTournamentFormProps> = ({
     onCancel 
   });
 
-  // Notify parent of changes if callback exists
   React.useEffect(() => {
     if (onFormChange) {
       onFormChange(formData);

@@ -15,7 +15,7 @@ export const LeagueAccordion: React.FC<LeagueAccordionProps> = ({ league, isExpa
 
   const handleCopy = (e: React.MouseEvent) => {
     e.preventDefault();
-    e.stopPropagation(); // Prevent the accordion from toggling when clicking copy
+    e.stopPropagation();
     navigator.clipboard.writeText(league.invitationCode);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);

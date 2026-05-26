@@ -21,14 +21,7 @@ export const Login = () => {
     <LoginLayout>
       <ErrorMessage message={error} />
       
-      <LoginForm
-        email={email}
-        setEmail={setEmail}
-        password={password}
-        setPassword={setPassword}
-        onSubmit={handleLogin}
-        isLoggingIn={isLoggingIn}
-      />
+      <LoginForm/>
 
       <QuickLoginButtons 
         onQuickLogin={quickLogin} 

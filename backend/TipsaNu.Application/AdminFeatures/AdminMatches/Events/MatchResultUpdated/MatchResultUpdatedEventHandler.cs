@@ -16,11 +16,7 @@ namespace TipsaNu.Application.AdminFeatures.AdminMatches.Events.MatchResultUpdat
         public async Task Handle(MatchResultUpdatedEvent notification, CancellationToken cancellationToken)
         {
             var match = await matchRepository.GetMatchWithTournamentAsync(notification.MatchId, cancellationToken);
-
-            if (match == null)
-                return;
-
-            if (!match.ScoreHome.HasValue || !match.ScoreAway.HasValue)
+            if (match == null || !match.ScoreHome.HasValue || !match.ScoreAway.HasValue)
                 return;
 
             var pointRules = await pointRuleRepository.GetPointRulesForTemplateAndMatchTypeAsync(
@@ -36,14 +32,19 @@ namespace TipsaNu.Application.AdminFeatures.AdminMatches.Events.MatchResultUpdat
             foreach (var prediction in predictions)
             {
                 prediction.PointsAwarded = pointsCalculatorService.CalculatePoints(prediction, match, pointRules);
-
-                await mediator.Publish(
-                    new LeaderboardEntryUpdateRequestedEvent(match.TournamentId, prediction.UserId),
-                    cancellationToken
-                    );
             }
 
             await predictionRepository.UpdateRangeAsync(predictions, cancellationToken);
+            
+            var uniqueUserIds = predictions.Select(p => p.UserId).Distinct();
+
+            foreach (var userId in uniqueUserIds)
+            {
+                await mediator.Publish(
+                    new LeaderboardEntryUpdateRequestedEvent(match.TournamentId, userId),
+                    cancellationToken
+                );
+            }
         }
     }
 }

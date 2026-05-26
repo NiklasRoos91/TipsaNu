@@ -10,8 +10,8 @@ namespace TipsaNu.Application.Features.Auth.Commands.Register
         {
             RuleFor(x => x.Request).NotNull().WithMessage("Request object is required.");
 
-            RuleFor(x => x.Request.Username)
-                .NotEmpty().WithMessage("Username is required.")
+            RuleFor(x => x.Request.UserName)
+                .NotEmpty().WithMessage("UserName is required.")
                 .MaximumLength(100);
 
             RuleFor(x => x.Request.Email)

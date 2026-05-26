@@ -21,6 +21,7 @@ export const AuthProvider = ({ children }: { children?: ReactNode }) => {
   const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(!!localStorage.getItem('token'));
 
   //Init auth on page load/refresh
   useEffect(() => {
@@ -28,20 +29,19 @@ export const AuthProvider = ({ children }: { children?: ReactNode }) => {
       const storedToken = localStorage.getItem('token');
       if (storedToken) {
         try {
-          const currentUser  = await api.verifyToken();  //backend returns user from token
-          console.log("verifyToken response:", currentUser);  
-          
+          const currentUser  = await api.verifyToken();
+
           if (currentUser ) {
             setUser(currentUser );
-            setToken(storedToken);
-            console.log("User set in AuthProvider:", currentUser); // <-- logg här
-            console.log("Is admin?", currentUser.role === "Admin"); // <-- lo
-          } else {
-            localStorage.removeItem('token');
+            setToken(localStorage.getItem('token'));
+            setIsAuthenticated(true);
           }
         } catch (err) {
-          console.log('Token invalid eller expired', err);
+          setUser(null);
+          setIsAuthenticated(false);
+          setToken(null);
           localStorage.removeItem('token');
+          localStorage.removeItem('refreshToken');
         }
     }
       setLoading(false);
@@ -56,12 +56,15 @@ export const AuthProvider = ({ children }: { children?: ReactNode }) => {
     setError('');
     try {
       const res: AuthResponse & { user: User } = await api.login(data);
-      setUser(res.user);
-      setToken(res.accessToken);
       localStorage.setItem('token', res.accessToken);
       localStorage.setItem('refreshToken', res.refreshToken);
+      setToken(res.accessToken);
+      setUser(res.user);
+      setIsAuthenticated(true);
     } catch (err:any) {
       setError(err.response?.data?.message || 'Felaktiga inloggningsuppgifter');
+      setIsAuthenticated(false);
+      throw err;
     } finally {
       setLoading(false);
     }
@@ -73,12 +76,15 @@ export const AuthProvider = ({ children }: { children?: ReactNode }) => {
     setError(null);
     try {
       const res: AuthResponse & { user: User } = await api.register(data);
+      localStorage.setItem('token', res.accessToken);
+      localStorage.setItem('refreshToken', res.refreshToken);
       setUser(res.user);
       setToken(res.accessToken);
-      localStorage.setItem('token', res.accessToken);
+      setIsAuthenticated(true);
     } catch (err: any) {
       setError(err.response?.data?.message || 'Registrering misslyckades');
-      throw err; // Rethrow to allow component-level handling if needed
+      setIsAuthenticated(false);
+      throw err;
     } finally {
       setLoading(false);
     }
@@ -103,6 +109,7 @@ export const AuthProvider = ({ children }: { children?: ReactNode }) => {
   const logout = () => {
     setUser(null);
     setToken(null);
+    setIsAuthenticated(false);
     localStorage.removeItem('token');
     localStorage.removeItem('refreshToken');
   };
@@ -116,7 +123,7 @@ export const AuthProvider = ({ children }: { children?: ReactNode }) => {
       register,
       updateUser,
       logout,
-      isAuthenticated: !!token,
+      isAuthenticated,
       loading,
       error
     }}>

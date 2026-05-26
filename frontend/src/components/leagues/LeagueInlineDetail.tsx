@@ -7,18 +7,6 @@ interface LeagueInlineDetailProps {
   leagueId: number;
 }
 
-// Plceholder hooks until Api is ready
-const useLeagueMembers = (_leagueId: number) => ({
-  members: [], // tom lista
-  loading: false,
-});
-
-const useLeaguePosts = (_leagueId: number) => ({
-  posts: [],
-  loading: false,
-  addPost: async (_: any) => {},
-});
-
 export const LeagueInlineDetail: React.FC<LeagueInlineDetailProps> = ({ leagueId }) => {
   const { league, loading, error } = useLeagueDetail(leagueId);
 

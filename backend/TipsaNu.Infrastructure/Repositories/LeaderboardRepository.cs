@@ -21,19 +21,12 @@ namespace TipsaNu.Infrastructure.Repositories
 
         public async Task UpdateLeaderboardEntriesAsync(int userId, int tournamentId, int totalPoints, CancellationToken cancellationToken)
         {
-            var entries = await context.LeaderboardEntries
-                .Include(le => le.LeagueMember)
-                .ThenInclude(lm => lm.League)
+            await context.LeaderboardEntries
                 .Where(le => le.LeagueMember.UserId == userId && le.LeagueMember.League.TournamentId == tournamentId)
-                .ToListAsync(cancellationToken);
-
-            foreach (var entry in entries)
-            {
-                entry.TotalPoints = totalPoints;
-                entry.LastUpdated = DateTime.UtcNow;
-            }
-
-            await context.SaveChangesAsync(cancellationToken);
+                .ExecuteUpdateAsync(setters => setters
+                        .SetProperty(le => le.TotalPoints, totalPoints)
+                        .SetProperty(le => le.LastUpdated, DateTime.UtcNow), 
+                    cancellationToken);
         }
     }
 }

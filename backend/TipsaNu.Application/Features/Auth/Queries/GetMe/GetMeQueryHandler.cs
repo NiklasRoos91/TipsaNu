@@ -25,7 +25,7 @@ namespace TipsaNu.Application.Features.Auth.Queries.GetMe
             var dto = new UserDto
             {
                 UserId = user.UserId,
-                Username = user.UserName,
+                UserName = user.UserName,
                 Email = user.Email,
                 Role = user.Role.ToString()
             };

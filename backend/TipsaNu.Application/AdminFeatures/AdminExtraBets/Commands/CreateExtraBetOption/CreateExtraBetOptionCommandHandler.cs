@@ -28,14 +28,6 @@ namespace TipsaNu.Application.AdminFeatures.AdminExtraBets.Commands.CreateExtraB
 
             var createdOption = await extraBetsRepository.AddExtraBetOptionAsync(newOption, cancellationToken);
 
-            if (request.CreateExtraBetOptionDto.Choices != null)
-            {
-                foreach (var choice in request.CreateExtraBetOptionDto.Choices)
-                {
-                    await extraBetsRepository.AddExtraBetOptionChoiceAsync(createdOption.OptionId, choice, cancellationToken);
-                }
-            }
-
             var resultDto = createdOption.ToDto();
             return OperationResult<ExtraBetOptionDto>.Success(resultDto);
         }

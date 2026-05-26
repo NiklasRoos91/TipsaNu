@@ -8,7 +8,7 @@ import { ArrowLeft } from 'lucide-react';
 
 /**
  * CreateTournamentTemplate - Administrative page to define a new tournament structure template.
- * Restricted to users with 'admin' username.
+ * Restricted to users with 'admin' userName.
  */
 export const CreateTournamentTemplate: React.FC = () => {
   const { user, loading } = useAuth();
@@ -22,7 +22,7 @@ const createTournamentTemplate = async (data: TournamentTemplateFormData): Promi
 
   useEffect(() => {
     // Fail-safe check in case route protection is bypassed
-    if (!loading && user?.username !== 'admin') {
+    if (!loading && user?.userName !== 'admin') {
       navigate('/tournaments');
     }
   }, [user, loading, navigate]);
@@ -44,8 +44,8 @@ const createTournamentTemplate = async (data: TournamentTemplateFormData): Promi
     navigate('/admin/templates');
   };
 
-  if (loading || user?.username !== 'admin') {
-    return null; // Avoid flickering during redirect
+  if (loading || user?.userName !== 'admin') {
+    return null;
   }
 
   return (

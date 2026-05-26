@@ -10,8 +10,7 @@ namespace TipsaNu.Domain.Interfaces
         Task<ExtraBetOption?> GetOptionByIdWithChoicesAsync(int optionId, CancellationToken cancellationToken = default);
         Task<bool> UserHasBetOnOptionAsync(int userId, int optionId, CancellationToken cancellationToken = default);
         Task<List<ExtraBetOptionCorrectValue>> GetCorrectValuesByOptionIdAsync(int optionId, CancellationToken cancellationToken = default);
-        Task<ExtraBetOptionCorrectValue> AddCorrectValueAsync(int optionId, string value, CancellationToken cancellationToken = default);
-        Task<List<ExtraBet>> GetBetsByOptionIdAsync(int optionId, CancellationToken cancellationToken = default);
+        Task AddCorrectValuesRangeAsync(IEnumerable<ExtraBetOptionCorrectValue> correctValues, CancellationToken cancellationToken = default);        Task<List<ExtraBet>> GetBetsByOptionIdAsync(int optionId, CancellationToken cancellationToken = default);
         Task UpdateRangeAsync(List<ExtraBet> bets, CancellationToken cancellationToken = default);
         Task RemoveCorrectValuesAsync(int optionId, CancellationToken cancellationToken = default);
         Task<ExtraBet?> GetMyExtraBetByOptionIdAsync(int optionId,int userId, CancellationToken cancellationToken = default);

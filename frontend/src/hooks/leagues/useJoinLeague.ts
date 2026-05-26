@@ -1,4 +1,3 @@
-// src/hooks/useJoinLeague.ts
 import { useState } from 'react';
 import type { JoinLeagueDto, LeagueMemberDto } from '../../types/leagueTypes';
 import { joinLeague } from '../../services/leagueService';

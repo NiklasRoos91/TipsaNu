@@ -21,8 +21,7 @@ namespace TipsaNu.Application.Features.Auth.Commands.RefreshToken
                 return OperationResult<AuthResponseDto>
                     .Failure("Invalid or expired refresh token");
 
-            // rotera tokens (best practice)
-            await refreshService.RevokeRefreshTokenAsync(refreshToken, cancellationToken);
+            await refreshService.DeleteRefreshTokenAsync(refreshToken, cancellationToken);
 
             var accessToken = jwt.GenerateToken(refreshToken.User);
             var newRefreshToken = await refreshService

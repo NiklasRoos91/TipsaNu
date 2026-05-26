@@ -18,15 +18,25 @@ namespace TipsaNu.Application.AdminFeatures.AdminExtraBets.Commands.CreateExtraB
             var option = await genericExtraBetOptionRepository.GetByIdAsync(request.OptionId, cancellationToken);
             if (option == null)
                 return OperationResult<bool>.Failure("ExtraBetOption not found");
+            
+            if (option.ExpiresAt.HasValue && option.ExpiresAt.Value > DateTime.Now)
+            {
+                return OperationResult<bool>.Failure("Cannot set correct values before the deadline has passed.");
+            }
 
             var existingValues = await extraBetRepository.GetCorrectValuesByOptionIdAsync(request.OptionId, cancellationToken);
             if (existingValues.Any())
                 return OperationResult<bool>.Failure("Correct values already exist, use PATCH to update.");
 
-            foreach (var value in request.SetExtraBetOptionCorrectValuesDto.CorrectValues)
-            {
-                await extraBetRepository.AddCorrectValueAsync(request.OptionId, value, cancellationToken);
-            }
+            var correctValuesToSave = request.SetExtraBetOptionCorrectValuesDto.CorrectValues
+                .Select(value => new ExtraBetOptionCorrectValue
+                {
+                    OptionId = request.OptionId,
+                    Value = value.Trim()
+                })
+                .ToList();
+            
+            await extraBetRepository.AddCorrectValuesRangeAsync(correctValuesToSave, cancellationToken);
 
             option.Status = ExtraBetOptionStatus.Closed;
             await genericExtraBetOptionRepository.UpdateAsync(option, cancellationToken);

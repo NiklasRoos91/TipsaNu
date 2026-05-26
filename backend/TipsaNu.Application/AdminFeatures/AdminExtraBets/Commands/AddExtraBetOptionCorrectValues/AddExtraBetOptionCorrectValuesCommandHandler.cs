@@ -20,24 +20,32 @@ namespace TipsaNu.Application.AdminFeatures.AdminExtraBets.Commands.AddExtraBetO
                 return OperationResult<bool>.Failure("ExtraBetOption not found");
 
             var existingValues = await extraBetRepository.GetCorrectValuesByOptionIdAsync(request.OptionId, cancellationToken);
-            var existingValueStrings = existingValues.Select(ev => ev.Value).ToHashSet();
 
-            var valuesToAdd = request.SetExtraBetOptionCorrectValuesDto.CorrectValues
-                .Where(v => !existingValueStrings.Contains(v));
+            var existingValueStrings = existingValues
+                .Select(ev => ev.Value.Trim())
+                .ToHashSet(StringComparer.OrdinalIgnoreCase);
+            
+            var uniqueNewValuesToSave = request.SetExtraBetOptionCorrectValuesDto.CorrectValues
+                .Select(v => v.Trim())
+                .Where(trimmedValue => !existingValueStrings.Contains(trimmedValue))
+                .Select(trimmedValue => new ExtraBetOptionCorrectValue
+                {
+                    OptionId = request.OptionId,
+                    Value = trimmedValue
+                })
+                .ToList();
 
-            foreach (var value in valuesToAdd)
+            if (uniqueNewValuesToSave.Any())
             {
-                await extraBetRepository.AddCorrectValueAsync(request.OptionId, value, cancellationToken);
-            }
+                await extraBetRepository.AddCorrectValuesRangeAsync(uniqueNewValuesToSave, cancellationToken);
 
-            if (valuesToAdd.Any())
-            {
                 option.Status = ExtraBetOptionStatus.Closed;
                 await genericExtraBetOptionRepository.UpdateAsync(option, cancellationToken);
+                
             }
 
             await mediator.Publish(new ExtraBetOptionCorrectValuesUpdatedEvent(request.OptionId), cancellationToken);
-
+            
             return OperationResult<bool>.Success(true);
         }
     }

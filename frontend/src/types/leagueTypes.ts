@@ -25,13 +25,13 @@ export interface JoinLeagueDto {
 export interface LeaderboardEntryBackendDto {
   leagueMemberId: number;
   userId: number;
-  username: string;
+  userName: string;
   totalPoints: number;
 }
 
 export interface LeaderboardEntryDto {
   userId: number;
-  username: string;
+  userName: string;
   points: number;
   rank: number;
 }
@@ -44,7 +44,7 @@ export interface LeagueWithLeaderboardDto {
   maxMembers: number;
   currentMembers: number;
   adminUserId: number;
-  adminUsername: string;
+  adminUserName: string;
   leaderboard: LeaderboardEntryDto[];
 }
 

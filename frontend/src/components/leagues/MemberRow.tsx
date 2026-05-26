@@ -28,9 +28,9 @@ export const MemberRow: React.FC<MemberRowProps> = ({ member }) => {
       <td className="px-6 py-4 font-medium text-primary">
         <div className="flex items-center gap-2">
           <div className="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-[10px] font-bold text-slate-400">
-            {member.username.charAt(0).toUpperCase()}
+            {member.userName.charAt(0).toUpperCase()}
           </div>
-          {member.username}
+          {member.userName}
         </div>
       </td>
       <td className="px-6 py-4 font-bold text-primary text-right">

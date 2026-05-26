@@ -38,5 +38,11 @@ namespace TipsaNu.Infrastructure.Auth
             token.Revoked = true;
             await db.SaveChangesAsync(cancellationToken);
         }
+        
+        public async Task DeleteRefreshTokenAsync(RefreshToken token, CancellationToken cancellationToken)
+        {
+            db.RefreshTokens.Remove(token);
+            await db.SaveChangesAsync(cancellationToken);
+        }
     }
 }

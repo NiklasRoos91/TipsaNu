@@ -45,7 +45,7 @@ namespace TipsaNu.Infrastructure.Extensions
             {
                 var context = serviceProvider.GetRequiredService<AppDbContext>();
                 var passwordService = serviceProvider.GetRequiredService<IPasswordService>();
-
+                
                 DbSeeder.SeedAllAsync(context, passwordService).GetAwaiter().GetResult();
             }
 
