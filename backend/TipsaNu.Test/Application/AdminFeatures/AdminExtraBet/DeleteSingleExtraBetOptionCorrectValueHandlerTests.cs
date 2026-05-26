@@ -5,7 +5,7 @@ using TipsaNu.Application.AdminFeatures.AdminExtraBets.Events;
 using TipsaNu.Domain.Entities;
 using TipsaNu.Domain.Interfaces;
 
-namespace TipsaNu.Test.Features.AdminExtraBet
+namespace TipsaNu.Test.Application.AdminFeatures.AdminExtraBet
 {
     public class DeleteSingleExtraBetOptionCorrectValueHandlerTests
     {

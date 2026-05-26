@@ -6,7 +6,7 @@ using TipsaNu.Application.AdminFeatures.AdminExtraBets.Events;
 using TipsaNu.Domain.Entities;
 using TipsaNu.Domain.Interfaces;
 
-namespace TipsaNu.Test.Features.AdminExtraBet
+namespace TipsaNu.Test.Application.AdminFeatures.AdminExtraBet
 {
     public class AddExtraBetOptionCorrectValuesHandlerTests
     {
@@ -30,17 +30,33 @@ namespace TipsaNu.Test.Features.AdminExtraBet
         [Fact]
         public async Task Handle_ShouldAddValues_WhenSomeExist()
         {
+            // Arrange
             _genericRepoMock.Setup(r => r.GetByIdAsync(1, It.IsAny<CancellationToken>()))
-                            .ReturnsAsync(new ExtraBetOption());
+                .ReturnsAsync(new ExtraBetOption());
 
             _repoMock.Setup(r => r.GetCorrectValuesByOptionIdAsync(1, It.IsAny<CancellationToken>()))
-                     .ReturnsAsync(new List<ExtraBetOptionCorrectValue> { new() });
+                .ReturnsAsync(new List<ExtraBetOptionCorrectValue> 
+                { 
+                    new ExtraBetOptionCorrectValue { OptionId = 1, Value = "x" } 
+                });
 
             var handler = new AddExtraBetOptionCorrectValuesCommandHandler(_repoMock.Object, _genericRepoMock.Object, _mediatorMock.Object);
 
-            var result = await handler.Handle(new AddExtraBetOptionCorrectValuesCommand(1, new SetExtraBetOptionCorrectValuesDto { CorrectValues = new List<string> { "y" } }), CancellationToken.None);
+            var command = new AddExtraBetOptionCorrectValuesCommand(1, new SetExtraBetOptionCorrectValuesDto { CorrectValues = new List<string> { "y", "x" } });
 
+            // Act
+            var result = await handler.Handle(command, CancellationToken.None);
+
+            // Assert
             Assert.True(result.IsSuccess);
+
+
+            _repoMock.Verify(r => r.AddCorrectValuesRangeAsync(
+                    It.Is<IEnumerable<ExtraBetOptionCorrectValue>>(list => 
+                        ((List<ExtraBetOptionCorrectValue>)list).Count == 1 && 
+                        ((List<ExtraBetOptionCorrectValue>)list)[0].Value == "y"), 
+                    It.IsAny<CancellationToken>()), 
+                Times.Once);
         }
 
         [Fact]

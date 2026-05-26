@@ -20,7 +20,8 @@ export const useCreateExtraBetCorrectValues = (optionId?: number) => {
         setSuccess(result);
         return result;
       } catch (err: any) {
-        setError(err?.message || "Kunde inte skapa korrektvärden.");
+        const backendErrorMessage = err?.response?.data?.message;
+        setError(backendErrorMessage || err?.message || "Kunde inte skapa korrektvärden.");
         return false;
       } finally {
         setLoading(false);

@@ -4,23 +4,14 @@ using TipsaNu.Domain.Interfaces;
 
 namespace TipsaNu.Application.AdminFeatures.AdminExtraBets.Events
 {
-    public class ExtraBetOptionCorrectValuesUpdatedEventHandler
-    : INotificationHandler<ExtraBetOptionCorrectValuesUpdatedEvent>
+    public class ExtraBetOptionCorrectValuesUpdatedEventHandler(
+        IExtraBetRepository extraBetRepository,
+        IMediator mediator) : INotificationHandler<ExtraBetOptionCorrectValuesUpdatedEvent>
     {
-        private readonly IExtraBetRepository _extraBetRepository;
-        private readonly IMediator _mediator;
-
-        public ExtraBetOptionCorrectValuesUpdatedEventHandler(IExtraBetRepository extraBetRepository, IMediator mediator)
-        {
-            _extraBetRepository = extraBetRepository;
-            _mediator = mediator;
-        }
-
         public async Task Handle(ExtraBetOptionCorrectValuesUpdatedEvent notification, CancellationToken cancellationToken)
         {
-            var bets = await _extraBetRepository.GetBetsByOptionIdAsync(notification.OptionId, cancellationToken);
-
-            var correctValues = await _extraBetRepository.GetCorrectValuesByOptionIdAsync(notification.OptionId, cancellationToken);
+            var bets = await extraBetRepository.GetBetsByOptionIdAsync(notification.OptionId, cancellationToken);
+            var correctValues = await extraBetRepository.GetCorrectValuesByOptionIdAsync(notification.OptionId, cancellationToken);
 
             foreach (var bet in bets)
             {
@@ -28,14 +19,23 @@ namespace TipsaNu.Application.AdminFeatures.AdminExtraBets.Events
                     .Any(cv => string.Equals(cv.Value.Trim(), bet.Value.Trim(), StringComparison.OrdinalIgnoreCase))
                     ? bet.ExtraBetOption.Points
                     : 0;
-
-                await _mediator.Publish(
-                    new LeaderboardEntryUpdateRequestedEvent(bet.ExtraBetOption.TournamentId, bet.UserId),
-                    cancellationToken
-                    );
             }
 
-            await _extraBetRepository.UpdateRangeAsync(bets, cancellationToken);
+            await extraBetRepository.UpdateRangeAsync(bets, cancellationToken);
+            
+            var uniqueUserIds = bets.Select(b => b.UserId).Distinct();
+            var tournamentId = bets.FirstOrDefault()?.ExtraBetOption?.TournamentId;
+
+            if (tournamentId.HasValue)
+            {
+                foreach (var userId in uniqueUserIds)
+                {
+                    await mediator.Publish(
+                        new LeaderboardEntryUpdateRequestedEvent(tournamentId.Value, userId),
+                        cancellationToken
+                    );
+                }
+            }
         }
     }
 }

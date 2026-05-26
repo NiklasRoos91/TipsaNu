@@ -75,16 +75,13 @@ namespace TipsaNu.Infrastructure.Repositories
         }
 
         // This method adds a new correct value for a specific extra bet option.
-        public async Task<ExtraBetOptionCorrectValue> AddCorrectValueAsync(int optionId, string value, CancellationToken cancellationToken = default)
+        public async Task AddCorrectValuesRangeAsync(IEnumerable<ExtraBetOptionCorrectValue>? correctValues, CancellationToken cancellationToken = default)
         {
-            var correctValue = new ExtraBetOptionCorrectValue
-            {
-                OptionId = optionId,
-                Value = value.Trim()
-            };
-            await _context.ExtraBetOptionCorrectValues.AddAsync(correctValue, cancellationToken);
+            if (correctValues == null || !correctValues.Any())
+                return;
+
+            await _context.ExtraBetOptionCorrectValues.AddRangeAsync(correctValues, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
-            return correctValue;
         }
 
         // This method retrieves all bets placed on a specific extra bet option, including the details of the option for each bet.
@@ -122,29 +119,37 @@ namespace TipsaNu.Infrastructure.Repositories
         public async Task<ExtraBet?> GetMyExtraBetByOptionIdAsync(int optionId, int userId, CancellationToken cancellationToken = default)
         {
             return await _context.ExtraBets
-                .AsNoTracking()
                 .FirstOrDefaultAsync(x =>
                     x.OptionId == optionId &&
                     x.UserId == userId,
                     cancellationToken);
         }
 
-        // This method gets all extrabetoptions wit there choices for tournament
+        // This method gets all extrabetoptions with their choices for tournament
         public async Task<List<ExtraBetOption>> GetExtraBetOptionsAsync(int tournamentId, string status, CancellationToken cancellationToken = default)
         {
             var query = _context.ExtraBetOptions
                 .AsNoTracking()
                 .Include(x => x.ExtraBetOptionChoices)
                 .Where(x => x.TournamentId == tournamentId);
+            
+            var now = DateTime.UtcNow;
 
             if (!status.Equals("all", StringComparison.OrdinalIgnoreCase))
             {
                 if (status.Equals("open", StringComparison.OrdinalIgnoreCase))
-                    query = query.Where(x => x.Status == ExtraBetOptionStatus.Open);
+                {
+                    query = query.Where(x => x.Status != ExtraBetOptionStatus.Cancelled 
+                                             && (!x.ExpiresAt.HasValue || x.ExpiresAt.Value > now));
+                }
                 else if (status.Equals("closed", StringComparison.OrdinalIgnoreCase))
-                    query = query.Where(x => x.Status == ExtraBetOptionStatus.Closed);
+                {
+                    query = query.Where(x => x.ExpiresAt.HasValue && x.ExpiresAt.Value <= now);
+                }
                 else if (status.Equals("cancelled", StringComparison.OrdinalIgnoreCase))
+                {
                     query = query.Where(x => x.Status == ExtraBetOptionStatus.Cancelled);
+                }
             }
 
             return await query.ToListAsync(cancellationToken);

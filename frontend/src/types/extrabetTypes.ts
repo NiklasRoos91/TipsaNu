@@ -26,7 +26,7 @@ export type CreateExtraBetDto = {
 };
 
 export type SetExtraBetOptionCorrectValuesDto = {
-  values: string[];
+  correctValues: string[];
 };
 
 export type ExtraBetOptionCorrectValuesResponse = boolean;

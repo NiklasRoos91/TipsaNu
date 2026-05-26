@@ -17,15 +17,18 @@ namespace TipsaNu.Application.AdminFeatures.AdminExtraBets.Commands.ReplaceExtra
             var option = await genericExtraBetOptionRepository.GetByIdAsync(request.OptionId, cancellationToken);
             if (option == null)
                 return OperationResult<bool>.Failure("ExtraBetOption not found");
-
-            var existingValues = await extraBetRepository.GetCorrectValuesByOptionIdAsync(request.OptionId, cancellationToken);
-
+            
             await extraBetRepository.RemoveCorrectValuesAsync(request.OptionId, cancellationToken);
 
-            foreach (var value in request.SetExtraBetOptionCorrectValuesDto.CorrectValues)
-            {
-                await extraBetRepository.AddCorrectValueAsync(request.OptionId, value, cancellationToken);
-            }
+            var newCorrectValues = request.SetExtraBetOptionCorrectValuesDto.CorrectValues
+                .Select(value => new ExtraBetOptionCorrectValue
+                {
+                    OptionId = request.OptionId,
+                    Value = value.Trim()
+                })
+                .ToList();
+            
+            await extraBetRepository.AddCorrectValuesRangeAsync(newCorrectValues, cancellationToken);
 
             await mediator.Publish(new ExtraBetOptionCorrectValuesUpdatedEvent(request.OptionId), cancellationToken);
 
