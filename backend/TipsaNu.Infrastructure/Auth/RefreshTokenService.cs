@@ -44,5 +44,18 @@ namespace TipsaNu.Infrastructure.Auth
             db.RefreshTokens.Remove(token);
             await db.SaveChangesAsync(cancellationToken);
         }
+        
+        public async Task ClearExpiredRefreshTokensAsync(CancellationToken cancellationToken = default)
+        {
+            var expiredTokens = await db.RefreshTokens
+                .Where(rt => rt.ExpiresAt < DateTime.UtcNow)
+                .ToListAsync(cancellationToken);
+
+            if (expiredTokens.Any())
+            {
+                db.RefreshTokens.RemoveRange(expiredTokens);
+                await db.SaveChangesAsync(cancellationToken);
+            }
+        }
     }
 }

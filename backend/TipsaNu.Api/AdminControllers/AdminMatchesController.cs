@@ -74,9 +74,9 @@ namespace TipsaNu.Api.AdminControllers
         // PUT: api/admin/matches/{matchId}/update-status
         // Markerar en match som officiellt avslutad i systemet.
         [HttpPut("{matchId:int}/update-status")]
-        public async Task<IActionResult> FinishMatch(int matchId, [FromQuery] MatchStatusEnum status, CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdateMatchStatus(int matchId, [FromQuery] UpdateMatchStatusDto dto, CancellationToken cancellationToken)
         {
-            var result = await mediator.Send(new UpdateMatchStatusCommand(matchId, status), cancellationToken);
+            var result = await mediator.Send(new UpdateMatchStatusCommand(matchId, dto.Status), cancellationToken);
 
             if (!result.IsSuccess)
             {

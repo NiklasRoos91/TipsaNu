@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using TipsaNu.Application.Feature.Auth.Commands.Register;
 using TipsaNu.Application.Features.Auth.Commands.Login;
+using TipsaNu.Application.Features.Auth.Commands.Logout;
 using TipsaNu.Application.Features.Auth.Commands.RefreshToken;
 using TipsaNu.Application.Features.Auth.DTOs;
 using TipsaNu.Application.Features.Auth.Queries.GetMe;
@@ -64,6 +65,17 @@ namespace TipsaNu.Api.Controllers
                 return BadRequest(result.ErrorMessage);
 
             return Ok(result.Data);
+        }
+        
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout([FromBody] RefreshTokenRequestDto request, CancellationToken cancellationToken)
+        {
+            var result = await mediator.Send(new LogoutCommand(request), cancellationToken);
+
+            if (!result.IsSuccess)
+                return BadRequest(result.ErrorMessages);
+
+            return Ok();
         }
     }
 }

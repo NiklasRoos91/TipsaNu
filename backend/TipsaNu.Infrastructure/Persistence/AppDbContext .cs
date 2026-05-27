@@ -50,6 +50,7 @@ namespace TipsaNu.Infrastructure.Persistence
             modelBuilder.ApplyConfiguration(new ExtraBetOptionChoiceConfiguration());
             modelBuilder.ApplyConfiguration(new ExtraBetOptionCorrectValueConfiguration());
             modelBuilder.ApplyConfiguration(new ExtraBetConfiguration());
+            modelBuilder.ApplyConfiguration(new RefreshTokenConfiguration());
         }
     }
 }
