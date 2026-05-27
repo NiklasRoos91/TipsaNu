@@ -23,8 +23,14 @@ export const useSetMatchResult = () => {
 
       setUpdatedMatch(match);
       return match;
-    } catch (err) {
-      setError("Kunde inte spara resultat.");
+      } catch (err: any) {
+      if (err.response?.data?.errorMessage) {
+        setError(err.response.data.errorMessage);
+      } else if (err.response?.data) {
+        setError(typeof err.response.data === "string" ? err.response.data : "Ett oväntat fel uppstod.");
+      } else {
+        setError("Kunde inte spara resultat. Kontrollera din nätverksanslutning.");
+      }
       throw err;
     } finally {
       setLoading(false);

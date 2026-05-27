@@ -25,7 +25,7 @@ namespace TipsaNu.Application.Features.Matches.Commands.CreateMyPrediction
             if (match == null)
                 return OperationResult<MatchPredictionDto>.Failure("Match not found");
 
-            if (match.PredictionDeadline.HasValue && match.PredictionDeadline < DateTime.UtcNow)
+            if ((match.PredictionDeadline ?? match.StartTime) < DateTime.UtcNow)
                 return OperationResult<MatchPredictionDto>.Failure("Prediction deadline has passed");
 
             var existingPrediction = await predictionRepository.GetByUserAndMatchAsync(userId, request.MatchId, cancellationToken);

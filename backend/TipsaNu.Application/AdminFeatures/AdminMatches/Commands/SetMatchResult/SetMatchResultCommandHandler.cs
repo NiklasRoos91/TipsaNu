@@ -20,10 +20,11 @@ namespace TipsaNu.Application.AdminFeatures.AdminMatches.Commands.SetMatchResult
             if (match == null)
                 return OperationResult<MatchDto>.Failure("Match not found");
 
-            // TODO: Only allow setting the result if the match has started or is finished.
-            // Currently, any match can have its score set. Later we can add a check using match.StartTime 
-            // or match.Status to prevent updating scores for matches that haven't been played yet.
-
+            if (match.Status != MatchStatusEnum.Finished)
+            {
+                return OperationResult<MatchDto>.Failure("Du måste markera matchen som avslutad innan du kan spara ett resultat.");
+            }
+            
             if (request.Dto.ScoreHome.HasValue)
                 match.ScoreHome = request.Dto.ScoreHome;
 
@@ -39,9 +40,7 @@ namespace TipsaNu.Application.AdminFeatures.AdminMatches.Commands.SetMatchResult
                 else
                     match.WinnerCompetitorId = null;
             }
-
-            match.Status = MatchStatusEnum.Finished;
-
+            
             await matchRepository.UpdateAsync(match, cancellationToken);
 
             await mediator.Publish(new MatchResultUpdatedEvent(match.MatchId), cancellationToken);

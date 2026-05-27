@@ -27,7 +27,7 @@ namespace TipsaNu.Api.Extensions
             })
             .AddJwtBearer(options =>
             {
-                options.RequireHttpsMetadata = false; // Sätt true i prod
+                options.RequireHttpsMetadata = false; // put true in prod
                 options.SaveToken = true;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
