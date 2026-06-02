@@ -8,6 +8,8 @@ namespace TipsaNu.Infrastructure.Data.Configurations;
     {
         public void Configure(EntityTypeBuilder<RefreshToken> builder)
         {
+            builder.ToTable("RefreshTokens");
+            
             builder.HasIndex(rt => rt.Token)
                 .IsUnique();
         }

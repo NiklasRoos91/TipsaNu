@@ -19,7 +19,7 @@ namespace TipsaNu.Infrastructure.Extensions
         {
             services.AddDbContext<AppDbContext>(options =>
             {
-                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+                options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
             });
 
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));

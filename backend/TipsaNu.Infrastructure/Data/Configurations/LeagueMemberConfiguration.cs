@@ -8,7 +8,7 @@ namespace TipsaNu.Infrastructure.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<LeagueMember> builder)
         {
-            builder.ToTable("LeagueMembers", "dbo");
+            builder.ToTable("LeagueMembers");
 
             builder.HasKey(lm => lm.LeagueMemberId);
             builder.Property(lm => lm.LeagueMemberId).ValueGeneratedOnAdd();

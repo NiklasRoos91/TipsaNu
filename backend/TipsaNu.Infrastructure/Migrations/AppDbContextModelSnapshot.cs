@@ -2,74 +2,71 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using TipsaNu.Infrastructure.Persistence;
 
 #nullable disable
 
-namespace TipsaNu.Infrastructure.Data.Migrations
+namespace TipsaNu.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260209085320_RenameTablesToPlural")]
-    partial class RenameTablesToPlural
+    partial class AppDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "8.0.23")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("TipsaNu.Domain.Entities.Competitor", b =>
                 {
                     b.Property<int>("CompetitorId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CompetitorId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CompetitorId"));
 
                     b.Property<bool>("IsIndividual")
-                        .HasColumnType("bit");
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("character varying(200)");
 
                     b.HasKey("CompetitorId");
 
-                    b.ToTable("Competitors", "dbo");
+                    b.ToTable("Competitors", (string)null);
                 });
 
             modelBuilder.Entity("TipsaNu.Domain.Entities.ExtraBet", b =>
                 {
                     b.Property<int>("ExtraBetId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ExtraBetId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ExtraBetId"));
 
                     b.Property<int>("OptionId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int?>("PointsAwarded")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("SubmittedAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("UserId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<string>("Value")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("character varying(200)");
 
                     b.HasKey("ExtraBetId");
 
@@ -77,38 +74,46 @@ namespace TipsaNu.Infrastructure.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ExtraBets", "dbo");
+                    b.ToTable("ExtraBets", (string)null);
                 });
 
             modelBuilder.Entity("TipsaNu.Domain.Entities.ExtraBetOption", b =>
                 {
                     b.Property<int>("OptionId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OptionId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("OptionId"));
+
+                    b.Property<bool>("AllowCustomChoice")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
+                        .HasColumnType("character varying(1000)");
 
                     b.Property<DateTime?>("ExpiresAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int?>("MatchId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("character varying(200)");
 
                     b.Property<int>("Points")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
 
                     b.Property<int>("TournamentId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.HasKey("OptionId");
 
@@ -116,94 +121,94 @@ namespace TipsaNu.Infrastructure.Data.Migrations
 
                     b.HasIndex("TournamentId");
 
-                    b.ToTable("ExtraBetOptions", "dbo");
+                    b.ToTable("ExtraBetOptions", (string)null);
                 });
 
             modelBuilder.Entity("TipsaNu.Domain.Entities.ExtraBetOptionChoice", b =>
                 {
                     b.Property<int>("ChoiceId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ChoiceId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ChoiceId"));
 
                     b.Property<int>("OptionId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<string>("Value")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("character varying(200)");
 
                     b.HasKey("ChoiceId");
 
                     b.HasIndex("OptionId");
 
-                    b.ToTable("ExtraBetOptionChoices", "dbo");
+                    b.ToTable("ExtraBetOptionChoices", (string)null);
                 });
 
             modelBuilder.Entity("TipsaNu.Domain.Entities.ExtraBetOptionCorrectValue", b =>
                 {
                     b.Property<int>("CorrectValueId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CorrectValueId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CorrectValueId"));
 
                     b.Property<int>("OptionId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<string>("Value")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("character varying(200)");
 
                     b.HasKey("CorrectValueId");
 
                     b.HasIndex("OptionId");
 
-                    b.ToTable("ExtraBetOptionCorrectValues", "dbo");
+                    b.ToTable("ExtraBetOptionCorrectValues", (string)null);
                 });
 
             modelBuilder.Entity("TipsaNu.Domain.Entities.Group", b =>
                 {
                     b.Property<int>("GroupId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GroupId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("GroupId"));
 
                     b.Property<int>("MaxTeams")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("character varying(50)");
 
                     b.Property<int>("TournamentId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.HasKey("GroupId");
 
                     b.HasIndex("TournamentId");
 
-                    b.ToTable("Groups", "dbo");
+                    b.ToTable("Groups", (string)null);
                 });
 
             modelBuilder.Entity("TipsaNu.Domain.Entities.GroupCompetitor", b =>
                 {
                     b.Property<int>("GroupCompetitorId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GroupCompetitorId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("GroupCompetitorId"));
 
                     b.Property<int>("CompetitorId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("GroupId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.HasKey("GroupCompetitorId");
 
@@ -212,49 +217,49 @@ namespace TipsaNu.Infrastructure.Data.Migrations
                     b.HasIndex("GroupId", "CompetitorId")
                         .IsUnique();
 
-                    b.ToTable("GroupCompetitors", "dbo");
+                    b.ToTable("GroupCompetitors", (string)null);
                 });
 
             modelBuilder.Entity("TipsaNu.Domain.Entities.GroupStanding", b =>
                 {
                     b.Property<int>("StandingId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StandingId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("StandingId"));
 
                     b.Property<int>("CompetitorId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    b.Property<int>("Draws")
-                        .HasColumnType("int");
+                    b.Property<int>("Draw")
+                        .HasColumnType("integer");
 
                     b.Property<int>("GoalDifference")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("GoalsAgainst")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("GoalsFor")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("GroupId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    b.Property<int>("Losses")
-                        .HasColumnType("int");
+                    b.Property<int>("Lost")
+                        .HasColumnType("integer");
 
                     b.Property<int>("Played")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("Points")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("Rank")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    b.Property<int>("Wins")
-                        .HasColumnType("int");
+                    b.Property<int>("Won")
+                        .HasColumnType("integer");
 
                     b.HasKey("StandingId");
 
@@ -262,59 +267,59 @@ namespace TipsaNu.Infrastructure.Data.Migrations
 
                     b.HasIndex("GroupId");
 
-                    b.ToTable("GroupStanding", "dbo");
+                    b.ToTable("GroupStanding", (string)null);
                 });
 
             modelBuilder.Entity("TipsaNu.Domain.Entities.LeaderboardEntry", b =>
                 {
                     b.Property<int>("LeagueMemberId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("LastUpdated")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("TotalPoints")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.HasKey("LeagueMemberId");
 
-                    b.ToTable("LeaderboardEntries", "dbo");
+                    b.ToTable("LeaderboardEntries", (string)null);
                 });
 
             modelBuilder.Entity("TipsaNu.Domain.Entities.League", b =>
                 {
                     b.Property<int>("LeagueId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LeagueId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("LeagueId"));
 
                     b.Property<int>("AdminUserId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
+                        .HasColumnType("character varying(1000)");
 
                     b.Property<string>("InvitationCode")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("character varying(50)");
 
                     b.Property<int>("MaxMembers")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("character varying(200)");
 
                     b.Property<int>("TournamentId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.HasKey("LeagueId");
 
@@ -322,25 +327,25 @@ namespace TipsaNu.Infrastructure.Data.Migrations
 
                     b.HasIndex("TournamentId");
 
-                    b.ToTable("Leagues", "dbo");
+                    b.ToTable("Leagues", (string)null);
                 });
 
             modelBuilder.Entity("TipsaNu.Domain.Entities.LeagueMember", b =>
                 {
                     b.Property<int>("LeagueMemberId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LeagueMemberId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("LeagueMemberId"));
 
                     b.Property<DateTime>("JoinedAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("LeagueId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("UserId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.HasKey("LeagueMemberId");
 
@@ -349,58 +354,58 @@ namespace TipsaNu.Infrastructure.Data.Migrations
                     b.HasIndex("LeagueId", "UserId")
                         .IsUnique();
 
-                    b.ToTable("LeagueMembers", "dbo");
+                    b.ToTable("LeagueMembers", (string)null);
                 });
 
             modelBuilder.Entity("TipsaNu.Domain.Entities.Match", b =>
                 {
                     b.Property<int>("MatchId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MatchId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("MatchId"));
 
                     b.Property<int>("AwayCompetitorId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int?>("DependsOnMatch1Id")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int?>("DependsOnMatch2Id")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int?>("GroupId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("HomeCompetitorId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("MatchType")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<DateTime?>("PredictionDeadline")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("RoundNumber")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int?>("ScoreAway")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int?>("ScoreHome")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("StartTime")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("Status")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("TournamentId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int?>("WinnerCompetitorId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.HasKey("MatchId");
 
@@ -418,68 +423,68 @@ namespace TipsaNu.Infrastructure.Data.Migrations
 
                     b.HasIndex("WinnerCompetitorId");
 
-                    b.ToTable("Matches", "dbo");
+                    b.ToTable("Matches", (string)null);
                 });
 
             modelBuilder.Entity("TipsaNu.Domain.Entities.PointRule", b =>
                 {
                     b.Property<int>("PointRuleId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PointRuleId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("PointRuleId"));
 
                     b.Property<string>("Criterion")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<string>("MatchType")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<int>("Points")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("TemplateId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.HasKey("PointRuleId");
 
                     b.HasIndex("TemplateId");
 
-                    b.ToTable("PointRules", "dbo");
+                    b.ToTable("PointRules", (string)null);
                 });
 
             modelBuilder.Entity("TipsaNu.Domain.Entities.Prediction", b =>
                 {
                     b.Property<int>("PredictionId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PredictionId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("PredictionId"));
 
                     b.Property<int>("MatchId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("PointsAwarded")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("integer")
                         .HasDefaultValue(0);
 
                     b.Property<int>("PredictedAwayScore")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("PredictedHomeScore")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int?>("PredictedWinnerId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("SubmittedAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("UserId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.HasKey("PredictionId");
 
@@ -489,66 +494,69 @@ namespace TipsaNu.Infrastructure.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Predictions", "dbo");
+                    b.ToTable("Predictions", (string)null);
                 });
 
             modelBuilder.Entity("TipsaNu.Domain.Entities.RefreshToken", b =>
                 {
                     b.Property<int>("RefreshTokenId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RefreshTokenId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("RefreshTokenId"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime>("ExpiresAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<bool>("Revoked")
-                        .HasColumnType("bit");
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Token")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<int>("UserId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.HasKey("RefreshTokenId");
 
+                    b.HasIndex("Token")
+                        .IsUnique();
+
                     b.HasIndex("UserId");
 
-                    b.ToTable("RefreshTokens");
+                    b.ToTable("RefreshTokens", (string)null);
                 });
 
             modelBuilder.Entity("TipsaNu.Domain.Entities.Tournament", b =>
                 {
                     b.Property<int>("TournamentId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TournamentId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("TournamentId"));
 
                     b.Property<int>("CreatedByUserId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("character varying(200)");
 
                     b.Property<DateTime>("StartsAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("character varying(50)");
 
                     b.Property<int>("TemplateId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.HasKey("TournamentId");
 
@@ -556,115 +564,138 @@ namespace TipsaNu.Infrastructure.Data.Migrations
 
                     b.HasIndex("TemplateId");
 
-                    b.ToTable("Tournaments", "dbo");
+                    b.ToTable("Tournaments", (string)null);
+                });
+
+            modelBuilder.Entity("TipsaNu.Domain.Entities.TournamentCompetitor", b =>
+                {
+                    b.Property<int>("TournamentCompetitorId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("TournamentCompetitorId"));
+
+                    b.Property<int>("CompetitorId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TournamentId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("TournamentCompetitorId");
+
+                    b.HasIndex("CompetitorId");
+
+                    b.HasIndex("TournamentId");
+
+                    b.ToTable("TournamentCompetitors");
                 });
 
             modelBuilder.Entity("TipsaNu.Domain.Entities.TournamentTemplate", b =>
                 {
                     b.Property<int>("TemplateId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TemplateId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("TemplateId"));
 
                     b.Property<int>("AdvancingPerGroup")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<bool>("AllowsBestThird")
-                        .HasColumnType("bit");
+                        .HasColumnType("boolean");
 
                     b.Property<int>("CreatedByUserId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
+                        .HasColumnType("character varying(1000)");
 
                     b.Property<bool>("IsPublic")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
+                        .HasColumnType("boolean")
                         .HasDefaultValue(false);
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("character varying(200)");
 
                     b.Property<int>("TotalGroups")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.HasKey("TemplateId");
 
                     b.HasIndex("CreatedByUserId");
 
-                    b.ToTable("TournamentTemplates", "dbo");
+                    b.ToTable("TournamentTemplates", (string)null);
                 });
 
             modelBuilder.Entity("TipsaNu.Domain.Entities.TournamentTiebreaker", b =>
                 {
                     b.Property<int>("TiebreakerId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TiebreakerId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("TiebreakerId"));
 
                     b.Property<string>("Criterion")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("text");
 
                     b.Property<int>("Priority")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("TournamentId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.HasKey("TiebreakerId");
 
                     b.HasIndex("TournamentId");
 
-                    b.ToTable("TournamentTiebreakers", "dbo");
+                    b.ToTable("TournamentTiebreakers", (string)null);
                 });
 
             modelBuilder.Entity("TipsaNu.Domain.Entities.User", b =>
                 {
                     b.Property<int>("UserId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("UserId"));
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("character varying(256)");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                        .HasColumnType("character varying(500)");
 
                     b.Property<string>("Role")
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
+                        .HasColumnType("character varying(50)")
                         .HasDefaultValue("User");
 
-                    b.Property<string>("Username")
+                    b.Property<string>("UserName")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("character varying(100)");
 
                     b.HasKey("UserId");
 
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.ToTable("Users", "dbo");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("TipsaNu.Domain.Entities.ExtraBet", b =>
@@ -945,6 +976,25 @@ namespace TipsaNu.Infrastructure.Data.Migrations
                     b.Navigation("Template");
                 });
 
+            modelBuilder.Entity("TipsaNu.Domain.Entities.TournamentCompetitor", b =>
+                {
+                    b.HasOne("TipsaNu.Domain.Entities.Competitor", "Competitor")
+                        .WithMany("TournamentCompetitors")
+                        .HasForeignKey("CompetitorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TipsaNu.Domain.Entities.Tournament", "Tournament")
+                        .WithMany("TournamentCompetitors")
+                        .HasForeignKey("TournamentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Competitor");
+
+                    b.Navigation("Tournament");
+                });
+
             modelBuilder.Entity("TipsaNu.Domain.Entities.TournamentTemplate", b =>
                 {
                     b.HasOne("TipsaNu.Domain.Entities.User", "CreatedByUser")
@@ -976,6 +1026,8 @@ namespace TipsaNu.Infrastructure.Data.Migrations
                     b.Navigation("GroupStandings");
 
                     b.Navigation("HomeMatches");
+
+                    b.Navigation("TournamentCompetitors");
 
                     b.Navigation("WinningMatches");
                 });
@@ -1023,6 +1075,8 @@ namespace TipsaNu.Infrastructure.Data.Migrations
                     b.Navigation("Leagues");
 
                     b.Navigation("Matches");
+
+                    b.Navigation("TournamentCompetitors");
 
                     b.Navigation("TournamentTiebreakers");
                 });
