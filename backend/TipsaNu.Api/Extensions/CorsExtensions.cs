@@ -8,9 +8,16 @@
             {
                 options.AddDefaultPolicy(policy =>
                 {
-                    policy.AllowAnyOrigin()
-                          .AllowAnyHeader()
-                          .AllowAnyMethod();
+                    var allowedOriginsEnv = Environment.GetEnvironmentVariable("ALLOWED_ORIGINS");
+                    
+                    var origins = !string.IsNullOrEmpty(allowedOriginsEnv)
+                        ? allowedOriginsEnv.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                        : ["http://localhost:5173"];
+
+                    policy.WithOrigins(origins)
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials();
                 });
             });
 
