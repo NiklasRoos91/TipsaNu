@@ -1,11 +1,11 @@
 import { useState, useCallback } from "react";
-import type { CreateExtraBetDto, ExtraBetForUserDto } from "../../types/extrabetTypes";
+import type { CreateExtraBetDto, ExtraBetDto } from "../../types/extrabetTypes";
 import { extraBetService } from "../../services/extraBetService";
 
 export const useSubmitExtraBet = (optionId?: number) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [submittedBet, setSubmittedBet] = useState<ExtraBetForUserDto | null>(null);
+  const [submittedBet, setSubmittedBet] = useState<ExtraBetDto | null>(null);
 
   const submit = useCallback(
     async (dto: CreateExtraBetDto) => {

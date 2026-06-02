@@ -3,7 +3,7 @@ import { refreshToken as refreshTokenApi } from './authService';
 
 
 export const api = axios.create({
-  baseURL: 'https://localhost:54877/api',
+  baseURL: `${import.meta.env.VITE_API_URL}/api`,
   headers: { 'Content-Type': 'application/json' },
 });
 
