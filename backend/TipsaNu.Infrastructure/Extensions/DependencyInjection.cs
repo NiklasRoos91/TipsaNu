@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TipsaNu.Application.Commons.Interfaces;
@@ -41,6 +42,17 @@ namespace TipsaNu.Infrastructure.Extensions
             services.AddScoped<ICurrentUserService, CurrentUserService>();
 
             return services;
+        }
+        
+        public static async Task InitializeDatabaseAsync(this IApplicationBuilder app)
+        {
+            using var scope = app.ApplicationServices.CreateScope();
+            var services = scope.ServiceProvider;
+
+            var context = services.GetRequiredService<AppDbContext>();
+            var passwordService = services.GetRequiredService<IPasswordService>();
+
+            await DbSeeder.SeedAllAsync(context, passwordService);
         }
     }
 }

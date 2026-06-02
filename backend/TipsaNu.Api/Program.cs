@@ -38,6 +38,8 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+await app.InitializeDatabaseAsync();
+
 var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
 
 if (Environment.GetEnvironmentVariable("PORT") != null)

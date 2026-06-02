@@ -11,7 +11,7 @@ namespace TipsaNu.Infrastructure.Persistence.Seeders
                     return;
 
                 // Users
-                await UserSeeder.SeedAsync(context, passwordService);
+                // await UserSeeder.SeedAsync(context, passwordService);
 
                 // Tournament template & tournament
                 var tournament = await TournamentSeeder.SeedAsync(context);
@@ -23,7 +23,7 @@ namespace TipsaNu.Infrastructure.Persistence.Seeders
                 var groups = await GroupSeeder.SeedAsync(context, tournament, competitors);
 
                 // Matches
-                await MatchSeeder.SeedAsync(context, tournament, groups);
+                // await MatchSeeder.SeedAsync(context, tournament, groups);
 
                 // PointRules
                 await PointRuleSeeder.SeedAsync(context, tournament);
