@@ -9,6 +9,11 @@ namespace TipsaNu.Application.Services.Implementations
         public int CalculatePoints(Prediction prediction, Match match, List<PointRule> pointRules)
         {
             int points = 0;
+            
+            if (!match.ScoreHome.HasValue || !match.ScoreAway.HasValue)
+            {
+                return points;
+            }
 
             int matchOutcome = GetOutcome(match.ScoreHome.Value, match.ScoreAway.Value);
             int predictedOutcome = GetOutcome(prediction.PredictedHomeScore, prediction.PredictedAwayScore);
@@ -36,7 +41,7 @@ namespace TipsaNu.Application.Services.Implementations
                         break;
 
                     case TippingCriterionEnum.Other:
-                        // framtida regler
+                        // future rules
                         break;
                 }
             }

@@ -112,8 +112,10 @@ export const ExtraBetCard: React.FC<ExtraBetCardProps> = ({
     >
       {/* Header View */}
       <div 
-        onClick={() => (!isExpired || isAdmin) && setIsExpanded(!isExpanded)}
-        className={`p-6 cursor-pointer select-none transition-colors ${isExpired ? 'cursor-default' : 'hover:bg-slate-50/50'}`}
+        onClick={() => (isAdmin || !isExpired) && setIsExpanded(!isExpanded)}
+        className={`p-6 select-none transition-colors ${
+          !isAdmin && isExpired ? 'cursor-default' : 'cursor-pointer hover:bg-slate-50/50'
+        }`}
       >
         <div className="flex justify-between items-start mb-4">
           <div className="flex-1">
@@ -124,7 +126,9 @@ export const ExtraBetCard: React.FC<ExtraBetCardProps> = ({
             <div className="bg-yellow-50 text-yellow-700 px-3 py-1 rounded-lg text-xs font-bold border border-yellow-100 whitespace-nowrap">
               {bet.points}p
             </div>
-            {(!isExpired || isAdmin) && (isExpanded ? <ChevronUp size={20} className="text-accent" /> : <ChevronDown size={20} className="text-slate-300" />)}
+            {(isAdmin || !isExpired) && (
+              isExpanded ? <ChevronUp size={20} className="text-accent" /> : <ChevronDown size={20} className="text-slate-300" />
+            )}          
           </div>
         </div>
 
@@ -146,6 +150,7 @@ export const ExtraBetCard: React.FC<ExtraBetCardProps> = ({
       {/* Expanded Interactive View */}
       {isExpanded && (
         <div className="border-t border-slate-100 bg-slate-50/50 p-6 animate-fade-in">
+
           {!isExpired && (
             <form onSubmit={handleSubmit} className="max-w-md mx-auto space-y-6">
               <div className="space-y-3">
@@ -216,16 +221,16 @@ export const ExtraBetCard: React.FC<ExtraBetCardProps> = ({
             </form>
           )}
           
-          {isAdmin && (
-            <>
-              <h4 className="tetext-xs font-bold text-slate-500 uppercase tracking-widest text-center mb-4 mt-6">
+          {isExpired && isAdmin && (
+            <div className={!isExpired ? "mt-6 pt-6 border-t border-slate-100" : ""}>
+              <h4 className="text-xs font-bold text-slate-500 uppercase tracking-widest text-center mb-4 mt-6">
                 Sätt korrektvärden
               </h4>
               <ExtraBetCorrectValuesForm 
                 optionId={bet.optionId}
                 onCancel={handleCancel}
               />
-            </>
+            </div>
           )}
         </div>
       )}

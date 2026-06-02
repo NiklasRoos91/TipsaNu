@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { MessageSquare, Send } from 'lucide-react';
 
-// Anpassad post-typ, kan uppdateras när backend är klar
+// Mock data and functions for demonstration purposes
 export interface LeaguePostDto {
   postId: number | string;
   userId?: number;

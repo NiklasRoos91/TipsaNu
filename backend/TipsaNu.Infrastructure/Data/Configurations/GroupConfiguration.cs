@@ -9,7 +9,7 @@ namespace TipsaNu.Infrastructure.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Group> builder)
         {
-            builder.ToTable("Groups", "dbo");
+            builder.ToTable("Groups");
 
             builder.HasKey(g => g.GroupId);
             builder.Property(g => g.GroupId).ValueGeneratedOnAdd();

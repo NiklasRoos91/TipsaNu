@@ -8,7 +8,7 @@ namespace TipsaNu.Infrastructure.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Prediction> builder)
         {
-            builder.ToTable("Predictions", "dbo");
+            builder.ToTable("Predictions");
 
             builder.HasKey(p => p.PredictionId);
             builder.Property(p => p.PredictionId).ValueGeneratedOnAdd();

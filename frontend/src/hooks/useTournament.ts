@@ -14,7 +14,6 @@ export const useTournament = (tournamentId: number) => {
       return;
     }
 
-    // Säkerställ att det är ett nummer
     const idNum = Number(tournamentId);
     if (isNaN(idNum)) {
       console.error('useTournament: tournamentId is NaN', tournamentId);

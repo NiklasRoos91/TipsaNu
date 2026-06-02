@@ -14,18 +14,18 @@ namespace TipsaNu.Infrastructure.Auth
         {
             var secret = config["Jwt:Secret"];
             if (string.IsNullOrWhiteSpace(secret))
-                throw new InvalidOperationException("Jwt:Secret saknas i appsettings.json");
-
+                throw new InvalidOperationException("Jwt:Secret is missing in application configuration.");
+            
             var issuer = config["Jwt:Issuer"];
             if (string.IsNullOrWhiteSpace(issuer))
-                throw new InvalidOperationException("Jwt:Issuer saknas i appsettings.json");
+                throw new InvalidOperationException("Jwt:Issuer is missing in application configuration.");
 
             var audience = config["Jwt:Audience"];
             if (string.IsNullOrWhiteSpace(audience))
-                throw new InvalidOperationException("Jwt:Audience saknas i appsettings.json");
+                throw new InvalidOperationException("Jwt:Audience is missing in application configuration.");
 
-            var expiryHours = config.GetValue<int?>("Jwt:ExpiryHours") ?? 4;
-
+            var expiryMinutes = config.GetValue<int?>("Jwt:ExpiryMinutes") ?? 15;
+            
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.UserId.ToString()),
@@ -44,7 +44,7 @@ namespace TipsaNu.Infrastructure.Auth
                 audience: audience,
                 claims: claims,
                 notBefore: DateTime.UtcNow,
-                expires: DateTime.UtcNow.AddHours(expiryHours),
+                expires: DateTime.UtcNow.AddMinutes(expiryMinutes),
                 signingCredentials: creds
             );
 

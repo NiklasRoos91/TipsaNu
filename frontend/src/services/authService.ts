@@ -45,3 +45,8 @@ export const getUserRoleFromToken = (token: string): string | null => {
 
 // --- Utility to check if user is admin ---
 export const isAdmin = (token: string): boolean => getUserRoleFromToken(token) === "Admin";
+
+// --- Logout ---
+export const logout = async (data: RefreshTokenRequest): Promise<void> => {
+  await api.post('/auth/logout', data);
+};

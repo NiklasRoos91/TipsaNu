@@ -23,10 +23,12 @@ export const Login = () => {
       
       <LoginForm/>
 
-      <QuickLoginButtons 
-        onQuickLogin={quickLogin} 
-        isLoggingIn={isLoggingIn} 
-      />
+      {import.meta.env.DEV && (
+        <QuickLoginButtons 
+          onQuickLogin={quickLogin} 
+          isLoggingIn={isLoggingIn} 
+        />
+      )}
 
       <RegisterLink />
     </LoginLayout>

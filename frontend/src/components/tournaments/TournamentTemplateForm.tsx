@@ -72,7 +72,7 @@ export const TournamentTemplateForm: React.FC<TournamentTemplateFormProps> = ({ 
               totalGroups={formData.totalGroups}
               advancingPerGroup={formData.advancingPerGroup}
               allowsBestThird={formData.allowsBestThird}
-              onChange={handleChange}
+              onChange={(field, val) => handleChange(field as keyof TournamentTemplateFormData, val)}
             />
             
             <TiebreakersInput 

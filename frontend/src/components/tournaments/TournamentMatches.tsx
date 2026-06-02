@@ -125,6 +125,7 @@ export const TournamentMatches: React.FC<TournamentMatchesProps> = ({
           predictions={filteredPredictions} 
           groups={groups} 
           refreshPredictions={refreshPredictions}
+          refreshMatches={() => fetchMatches(Number(tournamentId))}
          />
       </div>
     </div>

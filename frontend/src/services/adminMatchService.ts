@@ -1,5 +1,6 @@
 import { CreateMatchDto, SetMatchResultDto } from "../types/matchTypes";
 import { Match, Competitor } from "../types/matchTypes";
+import { MatchStatusEnum } from "../types/enums/matchEnums";
 import { api } from "./apiClient";
 
 
@@ -38,5 +39,20 @@ export const getFilteredCompetitors = async (
   } catch (err: any) {
     console.error('Kunde inte hämta deltagare i servicen:', err);
     throw new Error(err.response?.data?.message || 'Fel vid hämtning av lag');
+  }
+};
+
+export const updateMatchStatus = async (
+  matchId: number,
+  status: MatchStatusEnum
+): Promise<Match> => {
+  try {
+    const response = await api.put<Match>(`/admin/matches/${matchId}/update-status`, null, {
+      params: { status },
+    });
+    return response.data;
+  } catch (err: any) {
+    console.error('Kunde inte uppdatera matchstatus i servicen:', err);
+    throw err; 
   }
 };

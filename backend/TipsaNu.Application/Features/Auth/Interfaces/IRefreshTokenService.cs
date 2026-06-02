@@ -8,5 +8,6 @@ namespace TipsaNu.Application.Features.Auth.Interfaces
         Task<RefreshToken?> GetRefreshTokenAsync(string token, CancellationToken cancellationToken = default);
         Task RevokeRefreshTokenAsync(RefreshToken token, CancellationToken cancellationToken = default);
         Task DeleteRefreshTokenAsync(RefreshToken token, CancellationToken cancellationToken);
+        Task ClearExpiredRefreshTokensAsync(CancellationToken cancellationToken = default);
     }
 }

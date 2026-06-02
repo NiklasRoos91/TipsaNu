@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TipsaNu.Application.AdminFeatures.AdminMatches.Commands.CreateMatch;
 using TipsaNu.Application.AdminFeatures.AdminMatches.Commands.SetMatchResult;
+using TipsaNu.Application.AdminFeatures.AdminMatches.Commands.UpdateMatchStatus;
 using TipsaNu.Application.AdminFeatures.AdminMatches.DTOs;
 using TipsaNu.Application.AdminFeatures.AdminMatches.Queries.GetFilteredCompetitors;
+using TipsaNu.Domain.Enums;
 
 namespace TipsaNu.Api.AdminControllers
 {
@@ -64,6 +66,23 @@ namespace TipsaNu.Api.AdminControllers
                 return result.ErrorMessages?.Any() is true
                     ? BadRequest(result.ErrorMessages)
                     :NotFound(result.ErrorMessage);
+            }
+
+            return Ok(result.Data);
+        }
+        
+        // PUT: api/admin/matches/{matchId}/update-status
+        // Markerar en match som officiellt avslutad i systemet.
+        [HttpPut("{matchId:int}/update-status")]
+        public async Task<IActionResult> UpdateMatchStatus(int matchId, [FromQuery] UpdateMatchStatusDto dto, CancellationToken cancellationToken)
+        {
+            var result = await mediator.Send(new UpdateMatchStatusCommand(matchId, dto.Status), cancellationToken);
+
+            if (!result.IsSuccess)
+            {
+                return result.ErrorMessages?.Any() is true
+                    ? BadRequest(result.ErrorMessages)
+                    : BadRequest(result.ErrorMessage);
             }
 
             return Ok(result.Data);

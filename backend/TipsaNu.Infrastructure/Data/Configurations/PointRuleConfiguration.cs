@@ -9,7 +9,7 @@ namespace TipsaNu.Infrastructure.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<PointRule> builder)
         {
-            builder.ToTable("PointRules", "dbo");
+            builder.ToTable("PointRules");
 
             builder.HasKey(pr => pr.PointRuleId);
             builder.Property(pr => pr.PointRuleId).ValueGeneratedOnAdd();

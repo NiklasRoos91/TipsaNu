@@ -8,7 +8,7 @@ namespace TipsaNu.Infrastructure.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<GroupStanding> builder)
         {
-            builder.ToTable("GroupStanding", "dbo");
+            builder.ToTable("GroupStanding");
 
             builder.HasKey(gs => gs.StandingId);
             builder.Property(gs => gs.StandingId)

@@ -1,5 +1,6 @@
 using TipsaNu.Api.Extensions;
 using TipsaNu.Api.Middleware;
+using TipsaNu.Api.Services.BackgroundServices;
 using TipsaNu.Application.Extensions;
 using TipsaNu.Infrastructure.Extensions;
 
@@ -14,6 +15,7 @@ builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddJwtAuthentication(builder.Configuration);
 builder.Services.AddSwaggerWithJwtBearer();
 builder.Services.AddTransient<ExceptionMiddleware>();
+builder.Services.AddHostedService<TokenCleanupService>();
 
 var app = builder.Build();
 
@@ -36,4 +38,13 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run();
+var port = Environment.GetEnvironmentVariable("PORT") ?? "5000";
+
+if (Environment.GetEnvironmentVariable("PORT") != null)
+{
+    app.Run($"http://0.0.0.0:{port}");
+}
+else
+{
+    app.Run();
+}
