@@ -40,15 +40,6 @@ namespace TipsaNu.Infrastructure.Extensions
             services.AddHttpContextAccessor();
             services.AddScoped<ICurrentUserService, CurrentUserService>();
 
-
-            using (var serviceProvider = services.BuildServiceProvider())
-            {
-                var context = serviceProvider.GetRequiredService<AppDbContext>();
-                var passwordService = serviceProvider.GetRequiredService<IPasswordService>();
-                
-                DbSeeder.SeedAllAsync(context, passwordService).GetAwaiter().GetResult();
-            }
-
             return services;
         }
     }

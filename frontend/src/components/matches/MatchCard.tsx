@@ -29,6 +29,8 @@ export const MatchCard: React.FC<MatchCardProps> = ({ match, prediction: initial
   const [awayScoreLocal, setAwayScoreLocal] = useState<number | null>(match.scoreAway);
   const { handleUpdateStatus, loading: isUpdatingStatus, error: statusError } = useUpdateMatchStatus();
   const [isMatchEndedLocal, setIsMatchEndedLocal] = useState(false);
+  const actualDeadline = match.predictionDeadline ? match.predictionDeadline : match.startTime;
+  const isPredictionClosed = new Date() >= new Date(actualDeadline);
 
   const InProgress = match.status === MatchStatusEnum.InProgress;
   const isFinished = match.status === MatchStatusEnum.Finished;
@@ -66,7 +68,7 @@ export const MatchCard: React.FC<MatchCardProps> = ({ match, prediction: initial
 }, [updatedMatch]);
 
 const handlePredictionSubmit = async (homeScore: number, awayScore: number) => {
-  if (isSubmitting || isLocked || isFinished) return;
+  if (isSubmitting || isLocked || isFinished || isPredictionClosed) return;
   await handleSubmitPrediction(match.matchId, homeScore, awayScore);
   if (refreshPredictions) {
     await refreshPredictions();
@@ -88,17 +90,28 @@ const handlePredictionSubmit = async (homeScore: number, awayScore: number) => {
 
       {/* Main Card Header*/}
       <div 
-        onClick={() => (isAdmin || (!isFinished && !isLocked)) && setIsExpanded(!isExpanded)}
+        onClick={() => (isAdmin || (!isFinished && !isLocked&& !isPredictionClosed)) && setIsExpanded(!isExpanded)}
         className={`p-4 cursor-pointer select-none transition-colors ${
-          !isAdmin && isFinished || isLocked ? 'cursor-default' : 'hover:bg-slate-50/50'}`}
+          !isAdmin && isFinished || isLocked || isPredictionClosed ? 'cursor-default' : 'hover:bg-slate-50/50'}`}
       >
         <div className="flex justify-between items-center mb-3 text-xs font-bold tracking-wider uppercase">
           <span className="text-slate-400">{groupName}</span>
           <div className="flex items-center gap-3">
-            <span className={`${InProgress ? 'text-red-500 animate-pulse' : 'text-slate-400'}`}>
+            <div className="flex flex-col items-end text-right">
+            <span className={`${InProgress ? 'text-red-500 animate-pulse' : 'text-slate-500'}`}>
               {InProgress ? 'LIVE' : isFinished ? 'AVSLUTAD' : new Date(match.startTime).toLocaleDateString('sv-SE', { day: 'numeric', month: 'short' })}
             </span>
-            {(isAdmin || (!isFinished && !isLocked)) && (
+            {!InProgress && !isFinished && (
+              <span className="text-[10px] text-slate-400 font-medium mt-0.5 whitespace-nowrap">
+                {match.predictionDeadline ? (
+                  `Stänger: ${new Date(match.predictionDeadline).toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' })}`
+                ) : (
+                  `Start: ${new Date(match.startTime).toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' })}`
+                )}
+              </span>
+            )}
+          </div>
+            {(isAdmin || (!isFinished && !isLocked && !isPredictionClosed)) && (
               isExpanded ? <ChevronUp size={16} className="text-accent" /> : <ChevronDown size={16} className="text-slate-300" />
             )}
           </div>
@@ -143,26 +156,28 @@ const handlePredictionSubmit = async (homeScore: number, awayScore: number) => {
       {isExpanded && (
         <div className="border-t border-slate-100 bg-slate-50/50 p-6 animate-fade-in">
           <div className="max-w-xs mx-auto">
-            <>
-              <h4 className="text-center text-sm font-bold text-slate-500 uppercase tracking-widest mb-6">
-                Ditt tips för matchen
-              </h4>
-              <MatchPredictionForm 
-                match={{
-                  homeCompetitorName: match.homeCompetitorName,
-                  awayCompetitorName: match.awayCompetitorName
-                }}
-                prediction={initialPrediction ? {
-                  matchId: match.matchId,
-                  predictedHomeScore: initialPrediction.homeScore,
-                    predictedAwayScore: initialPrediction.awayScore,
-                    pointsAwarded: 0,
-                  submittedAt: new Date().toISOString()
-                } : undefined}
-                onSubmit={handlePredictionSubmit}
-                onCancel={handleCancel}
-              />
-            </>
+            {!isPredictionClosed && (
+              <>
+                <h4 className="text-center text-sm font-bold text-slate-500 uppercase tracking-widest mb-6">
+                  Ditt tips för matchen
+                </h4>
+                <MatchPredictionForm 
+                  match={{
+                    homeCompetitorName: match.homeCompetitorName,
+                    awayCompetitorName: match.awayCompetitorName
+                  }}
+                  prediction={initialPrediction ? {
+                    matchId: match.matchId,
+                    predictedHomeScore: initialPrediction.homeScore,
+                      predictedAwayScore: initialPrediction.awayScore,
+                      pointsAwarded: 0,
+                    submittedAt: new Date().toISOString()
+                  } : undefined}
+                  onSubmit={handlePredictionSubmit}
+                  onCancel={handleCancel}
+                />
+              </>
+            )}
 
             {/* Admin: match result */}
             {isAdmin && (

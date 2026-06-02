@@ -53,8 +53,7 @@ export const ScoreInputForm: React.FC<ScoreInputFormProps> = ({
             min={0}
             max={99}
             value={homeScore}
-            onChange={(e) => onHomeChange(parseInt(e.target.value))}
-
+            onChange={(e) => onHomeChange(e.target.value === '' ? 0 : parseInt(e.target.value))}
             className="w-20 h-12 md:w-20 md:h-16 text-center text-2xl md:text-3xl font-black bg-slate-50 border-2 border-slate-200 rounded-2xl focus:border-accent focus:ring-4 focus:ring-accent/10 outline-none transition-all text-slate-900 shadow-inner"
           />
         </div>
@@ -70,7 +69,7 @@ export const ScoreInputForm: React.FC<ScoreInputFormProps> = ({
             min={0}
             max={99}
             value={awayScore}
-            onChange={(e) => onAwayChange(parseInt(e.target.value))}
+            onChange={(e) => onAwayChange(e.target.value === '' ? 0 : parseInt(e.target.value))}
             className="w-20 h-12 md:w-20 md:h-16 text-center text-2xl md:text-3xl font-black bg-slate-50 border-2 border-slate-200 rounded-2xl focus:border-accent focus:ring-4 focus:ring-accent/10 outline-none transition-all text-slate-900 shadow-inner"
           />
         </div>

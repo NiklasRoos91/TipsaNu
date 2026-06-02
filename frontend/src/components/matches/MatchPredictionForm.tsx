@@ -28,8 +28,9 @@ export const MatchPredictionForm: React.FC<MatchPredictionFormProps> = ({ match,
       onAwayChange={setAwayScore}
       onSubmit={handleSubmit}
       onCancel={onCancel}
-      saveLabel="Tips"
+      saveLabel={prediction ? "tips" : "tips"}
       successLabel="Tippat & Klart!"
+      hasExistingData={!!prediction}
       isSubmitting={false}
     />
   );

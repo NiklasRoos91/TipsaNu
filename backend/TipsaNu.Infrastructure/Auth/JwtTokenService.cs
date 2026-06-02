@@ -14,15 +14,15 @@ namespace TipsaNu.Infrastructure.Auth
         {
             var secret = config["Jwt:Secret"];
             if (string.IsNullOrWhiteSpace(secret))
-                throw new InvalidOperationException("Jwt:Secret missing in appsettings.json");
-
+                throw new InvalidOperationException("Jwt:Secret is missing in application configuration.");
+            
             var issuer = config["Jwt:Issuer"];
             if (string.IsNullOrWhiteSpace(issuer))
-                throw new InvalidOperationException("Jwt:Issuer missing in appsettings.json");
+                throw new InvalidOperationException("Jwt:Issuer is missing in application configuration.");
 
             var audience = config["Jwt:Audience"];
             if (string.IsNullOrWhiteSpace(audience))
-                throw new InvalidOperationException("Jwt:Audience missing in appsettings.json");
+                throw new InvalidOperationException("Jwt:Audience is missing in application configuration.");
 
             var expiryMinutes = config.GetValue<int?>("Jwt:ExpiryMinutes") ?? 15;
             
