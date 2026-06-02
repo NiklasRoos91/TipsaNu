@@ -14,7 +14,7 @@ namespace TipsaNu.Infrastructure.Persistence.Seeders
             var pointRules = new List<PointRule>
             {
                 new PointRule { TemplateId = templateId, MatchType = MatchTypeEnum.Group, Criterion = TippingCriterionEnum.CorrectOutcome, Points = 3 },
-                new PointRule { TemplateId = templateId, MatchType = MatchTypeEnum.Group, Criterion = TippingCriterionEnum.ExactScore, Points = 5 },
+                new PointRule { TemplateId = templateId, MatchType = MatchTypeEnum.Group, Criterion = TippingCriterionEnum.ExactScore, Points = 1 },
                 new PointRule { TemplateId = templateId, MatchType = MatchTypeEnum.Group, Criterion = TippingCriterionEnum.GoalDifference, Points = 1 },
                 new PointRule { TemplateId = templateId, MatchType = MatchTypeEnum.Group, Criterion = TippingCriterionEnum.Other, Points = 0 }
             };
