@@ -51,6 +51,19 @@ namespace TipsaNu.Infrastructure.Persistence
             modelBuilder.ApplyConfiguration(new ExtraBetOptionCorrectValueConfiguration());
             modelBuilder.ApplyConfiguration(new ExtraBetConfiguration());
             modelBuilder.ApplyConfiguration(new RefreshTokenConfiguration());
+            
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                var properties = entityType.GetProperties()
+                    .Where(p => p.ClrType == typeof(DateTime) || p.ClrType == typeof(DateTime?));
+
+                foreach (var property in properties)
+                {
+                    property.SetValueConverter(new Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<DateTime, DateTime>(
+                        v => v.Kind == DateTimeKind.Utc ? v : DateTime.SpecifyKind(v, DateTimeKind.Utc),
+                        v => v));
+                }
+            }
         }
     }
 }
