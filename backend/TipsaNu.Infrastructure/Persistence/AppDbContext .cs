@@ -52,6 +52,8 @@ namespace TipsaNu.Infrastructure.Persistence
             modelBuilder.ApplyConfiguration(new ExtraBetConfiguration());
             modelBuilder.ApplyConfiguration(new RefreshTokenConfiguration());
             
+            var swedenTimeZone = TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time");
+            
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
                 var properties = entityType.GetProperties()
@@ -59,9 +61,20 @@ namespace TipsaNu.Infrastructure.Persistence
 
                 foreach (var property in properties)
                 {
-                    property.SetValueConverter(new Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<DateTime, DateTime>(
-                        v => v.Kind == DateTimeKind.Utc ? v : DateTime.SpecifyKind(v, DateTimeKind.Utc),
-                        v => v));
+                    if (property.ClrType == typeof(DateTime))
+                    {
+                        property.SetValueConverter(new Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<DateTime, DateTime>(
+                            v => v.Kind == DateTimeKind.Utc ? v : TimeZoneInfo.ConvertTimeToUtc(v, swedenTimeZone),
+                            v => DateTime.SpecifyKind(v, DateTimeKind.Utc)
+                        ));
+                    }
+                    else if (property.ClrType == typeof(DateTime?))
+                    {
+                        property.SetValueConverter(new Microsoft.EntityFrameworkCore.Storage.ValueConversion.ValueConverter<DateTime?, DateTime?>(
+                            v => !v.HasValue ? null : (v.Value.Kind == DateTimeKind.Utc ? v : TimeZoneInfo.ConvertTimeToUtc(v.Value, swedenTimeZone)),
+                            v => !v.HasValue ? null : DateTime.SpecifyKind(v.Value, DateTimeKind.Utc)
+                        ));
+                    }
                 }
             }
         }

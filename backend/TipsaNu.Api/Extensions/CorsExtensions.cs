@@ -12,7 +12,7 @@
                     
                     var origins = !string.IsNullOrEmpty(allowedOriginsEnv)
                         ? allowedOriginsEnv.Split(',', StringSplitOptions.RemoveEmptyEntries)
-                        : ["http://localhost:5173"];
+                        : ["http://localhost:3000"];
 
                     policy.WithOrigins(origins)
                         .AllowAnyHeader()
