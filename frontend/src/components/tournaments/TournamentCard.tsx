@@ -17,7 +17,7 @@ export const TournamentCard: React.FC<TournamentCardProps> = ({ tournament }) =>
           </div>
           <div>
             <h3 className="font-bold text-primary group-hover:text-accent transition-colors">{tournament.name}</h3>
-            <p className="text-sm text-slate-500">Visa specialtips för denna turnering</p>
+            <p className="text-sm text-slate-500"></p>
           </div>
         </div>
         <div className="flex items-center gap-2 text-accent font-bold text-sm">
