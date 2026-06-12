@@ -90,7 +90,7 @@ const handlePredictionSubmit = async (homeScore: number, awayScore: number) => {
 
       {/* Main Card Header*/}
       <div 
-        onClick={() => (isAdmin || (!isFinished && !isLocked&& !isPredictionClosed)) && setIsExpanded(!isExpanded)}
+        onClick={() => (isAdmin || (!isFinished && !isLocked && !isPredictionClosed)) && setIsExpanded(!isExpanded)}
         className={`p-4 cursor-pointer select-none transition-colors ${
           !isAdmin && isFinished || isLocked || isPredictionClosed ? 'cursor-default' : 'hover:bg-slate-50/50'}`}
       >
@@ -98,19 +98,19 @@ const handlePredictionSubmit = async (homeScore: number, awayScore: number) => {
           <span className="text-slate-400">{groupName}</span>
           <div className="flex items-center gap-3">
             <div className="flex flex-col items-end text-right">
-            <span className={`${InProgress ? 'text-red-500 animate-pulse' : 'text-slate-500'}`}>
-              {InProgress ? 'LIVE' : isFinished ? 'AVSLUTAD' : new Date(match.startTime).toLocaleDateString('sv-SE', { day: 'numeric', month: 'short' })}
-            </span>
-            {!InProgress && !isFinished && (
-              <span className="text-[10px] text-slate-400 font-medium mt-0.5 whitespace-nowrap">
-                {match.predictionDeadline ? (
-                  `Stänger: ${new Date(match.predictionDeadline).toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' })}`
-                ) : (
-                  `Start: ${new Date(match.startTime).toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' })}`
-                )}
+              <span className={`${InProgress ? 'text-red-500 animate-pulse' : 'text-slate-500'}`}>
+                {InProgress ? 'LIVE' : isFinished ? 'AVSLUTAD' : new Date(match.startTime).toLocaleDateString('sv-SE', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
               </span>
-            )}
-          </div>
+              {!InProgress && !isFinished && (
+                <span className="text-[10px] text-slate-400 font-medium mt-0.5 whitespace-nowrap">
+                  {match.predictionDeadline ? (
+                    `Spelstopp: ${new Date(match.predictionDeadline).toLocaleDateString('sv-SE', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}`
+                  ) : (
+                    `Start: ${new Date(match.startTime).toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' })}`
+                  )}
+                </span>
+              )}
+            </div>
             {(isAdmin || (!isFinished && !isLocked && !isPredictionClosed)) && (
               isExpanded ? <ChevronUp size={16} className="text-accent" /> : <ChevronDown size={16} className="text-slate-300" />
             )}
