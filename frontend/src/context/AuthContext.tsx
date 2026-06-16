@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import { User, AuthResponse, LoginRequest, RegisterRequest } from '../types/authTypes';
 import * as api from '../services/authService';
+import { registerTokenSetter } from '../services/apiClient';
 
 interface AuthContextType {
   user: User | null;
@@ -30,6 +31,10 @@ export const AuthProvider = ({ children }: { children?: ReactNode }) => {
     }
     return err.response?.data?.errorMessage || err.response?.data?.message || fallback;
   };
+
+  useEffect(() => {
+    registerTokenSetter(setToken);
+  }, []);
 
   useEffect(() => {
     const initAuth = async () => {
