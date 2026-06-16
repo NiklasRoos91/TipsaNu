@@ -38,6 +38,28 @@ namespace TipsaNu.Infrastructure.Auth
             token.Revoked = true;
             await db.SaveChangesAsync(cancellationToken);
         }
+
+        public async Task<RefreshToken> RotateRefreshTokenAsync(RefreshToken oldToken, CancellationToken cancellationToken = default)
+        {
+            await using var transaction = await db.Database.BeginTransactionAsync(cancellationToken);
+
+            var newToken = new RefreshToken
+            {
+                UserId = oldToken.UserId,
+                Token = Convert.ToBase64String(Guid.NewGuid().ToByteArray()),
+                ExpiresAt = DateTime.UtcNow.AddDays(7),
+                CreatedAt = DateTime.UtcNow,
+                Revoked = false
+            };
+            db.RefreshTokens.Add(newToken);
+
+            oldToken.Revoked = true;
+
+            await db.SaveChangesAsync(cancellationToken);
+            await transaction.CommitAsync(cancellationToken);
+
+            return newToken;
+        }
         
         public async Task DeleteRefreshTokenAsync(RefreshToken token, CancellationToken cancellationToken)
         {

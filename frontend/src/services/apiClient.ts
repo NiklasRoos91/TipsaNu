@@ -1,6 +1,4 @@
 import axios from 'axios';
-import { refreshToken as refreshTokenApi } from './authService';
-
 
 export const api = axios.create({
   baseURL: `${import.meta.env.VITE_API_URL}/api`,
@@ -9,6 +7,13 @@ export const api = axios.create({
 
 let isRefreshing = false;
 let failedQueue: any[] = [];
+
+// Fix #5: allows AuthContext to stay in sync when the interceptor silently refreshes
+let onTokenRefreshed: ((token: string) => void) | null = null;
+export const registerTokenSetter = (fn: (token: string) => void) => {
+  onTokenRefreshed = fn;
+};
+
 const processQueue = (error: any, token: string | null = null) => {
   failedQueue.forEach(prom => {
     if (error) {
@@ -38,6 +43,7 @@ api.interceptors.response.use(
           failedQueue.push({ resolve, reject });
         })
           .then(token => {
+            originalRequest._retry = true;  // Fix #2: guard against a second refresh cycle
             originalRequest.headers.Authorization = `Bearer ${token}`;
             return api(originalRequest);
           })
@@ -50,7 +56,12 @@ api.interceptors.response.use(
       isRefreshing = true;
 
       const refresh = localStorage.getItem('refreshToken');
-      if (!refresh) return Promise.reject(error);
+      if (!refresh) {
+        // Fix #1: drain queue and release the lock so concurrent requests don't hang
+        processQueue(error, null);
+        isRefreshing = false;
+        return Promise.reject(error);
+      }
 
       try {
         const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/refresh`, {
@@ -62,15 +73,15 @@ api.interceptors.response.use(
         const data = response.data;
         localStorage.setItem('token', data.accessToken);
         localStorage.setItem('refreshToken', data.refreshToken);
+        onTokenRefreshed?.(data.accessToken); // Fix #5: keep AuthContext.token in sync
 
         originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
 
         processQueue(null, data.accessToken);
-        
         isRefreshing = false;
         return api(originalRequest);
       } catch (e) {
-        localStorage.removeItem('token');
+        // Fix #3: single consolidated cleanup block (was removing token twice)
         processQueue(e, null);
         isRefreshing = false;
         localStorage.removeItem('token');
