@@ -29,34 +29,54 @@ if (isNaN(tournamentId)) {
   if (!tournament) return <div className="p-8 text-center">Turnering hittades inte</div>;
 
   return (
-    <div className="w-full pb-20">
+    <div className="max-w-5xl mx-auto pb-20 px-4 md:px-0">
       <TournamentBanner tournament={tournament} />
 
-      <TournamentTabs
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
+      <TournamentTabs 
+        activeTab={activeTab} 
+        setActiveTab={setActiveTab} 
         leaguesCount={0}
-        extraBetsCount={0}
+        extraBetsCount={0} 
       />
 
-      {activeTab === 'matches' && (
-        <TournamentMatches
-          tournamentId={id || ''}
-        />
-      )}
+      <div className="grid lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2">
+          {activeTab === 'matches' && (
+            <TournamentMatches 
+              tournamentId={id || ''} 
+            />
+          )}
 
-      {activeTab === 'leagues' && (
-        <TournamentLeagues
-          tournamentId={id || ''}
-        />
-      )}
+          {activeTab === 'leagues' && (
+            <TournamentLeagues 
+              tournamentId={id || ''} 
+            />
+          )}
 
-      {activeTab === 'extrabets' && (
-        <TournamentExtraBets
-          tournamentId={id || ''}
-          isAdmin={isAdmin}
-        />
-      )}
+          {activeTab === 'extrabets' && (
+            <TournamentExtraBets 
+              tournamentId={id || ''} 
+              isAdmin={isAdmin} 
+            />
+          )}
+        </div>
+
+        {/* Sidebar Actions */}
+        {/* <div className="space-y-6">
+          <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+            <h3 className="text-lg font-bold text-primary mb-4 flex items-center gap-2">
+              <Trophy size={20} className="text-accent" />
+              Turneringsstatus
+            </h3>
+            <div className="space-y-4">
+              <div className="flex items-center gap-3 text-sm text-slate-500 pt-2 border-t border-slate-100">
+                <Calendar size={18} className="text-slate-400" />
+                <span>Slutar {new Date(tournament.endDate).toLocaleDateString('sv-SE')}</span>
+              </div>
+            </div>
+          </div>
+        </div> */}
+      </div>
     </div>
   );
 };
