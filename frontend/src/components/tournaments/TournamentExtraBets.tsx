@@ -122,12 +122,12 @@ return (
       </div>
 
       {/* List with extrabet options */}
-      <div className="grid gap-4">
-        {loading && <div>Laddar extratips...</div>}
-        {error && <div className="text-red-500">{error}</div>}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {loading && <div className="col-span-full">Laddar extratips...</div>}
+        {error && <div className="col-span-full text-red-500">{error}</div>}
 
         {!loading && !error && extraBets.length === 0 && (
-          <div className="text-center p-12 bg-slate-50 rounded-xl border-2 border-dashed border-slate-200 text-slate-400">
+          <div className="col-span-full text-center p-12 bg-slate-50 rounded-xl border-2 border-dashed border-slate-200 text-slate-400">
             {selectedFilter === ExtraBetFilterEnum.NeedsCorrection
               ? 'Inga stängda extratips att rätta just nu.'
               : 'Inga extratips skapade för denna turnering ännu.'}
@@ -135,7 +135,7 @@ return (
         )}
 
         {!loading && !error && extraBets.length > 0 && displayedBets.length === 0 && (
-          <div className="text-center p-12 bg-slate-50 rounded-xl border-2 border-dashed border-slate-200 text-slate-400">
+          <div className="col-span-full text-center p-12 bg-slate-50 rounded-xl border-2 border-dashed border-slate-200 text-slate-400">
             Inga extratips matchar "{searchQuery}".
           </div>
         )}
