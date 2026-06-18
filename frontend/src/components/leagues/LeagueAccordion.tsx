@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ChevronRight, ChevronDown, Users, Copy, Check } from 'lucide-react';
 import { LeagueInlineDetail } from './LeagueInlineDetail';
 import type { LeagueDto } from '../../types/leagueTypes';
+import { useLeagueDetail } from '../../hooks/leagues/useLeagueDetail';
 
 
 interface LeagueAccordionProps {
@@ -12,6 +13,7 @@ interface LeagueAccordionProps {
 
 export const LeagueAccordion: React.FC<LeagueAccordionProps> = ({ league, isExpanded, onToggle }) => {
   const [copied, setCopied] = useState(false);
+  const { league: detail, loading: detailLoading, error: detailError } = useLeagueDetail(isExpanded ? league.leagueId : null);
 
   const handleCopy = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -58,7 +60,7 @@ export const LeagueAccordion: React.FC<LeagueAccordionProps> = ({ league, isExpa
 
             <div className="flex items-center gap-2 text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-2">
               <span className="flex items-center gap-1">
-                <Users size={10} /> medlemmar: -
+                <Users size={10} /> medlemmar: {detail?.currentMembers ?? '-'}
               </span>
 
               <span>•</span>
@@ -105,7 +107,7 @@ export const LeagueAccordion: React.FC<LeagueAccordionProps> = ({ league, isExpa
         </div>
       </button>
 
-      {isExpanded && <LeagueInlineDetail leagueId={league.leagueId} />}
+      {isExpanded && <LeagueInlineDetail detail={detail} loading={detailLoading} error={detailError} />}
     </div>
   );
 };

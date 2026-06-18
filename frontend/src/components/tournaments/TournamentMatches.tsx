@@ -2,14 +2,15 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { useGroups } from '../../hooks/useGroups';
 import { useUserPredictions } from '../../hooks/useUserPredictions';
 import { ActionButton } from '../commons/ActionButton';
-import { useAuth } from '../../hooks/useAuth'; 
+import { useAuth } from '../../hooks/useAuth';
 import { CreateMatch } from '../matches/CreateMatch';
-import { useTournamentMatches } from '../../hooks/useTournamentMatches'; 
-import { MatchTypeEnum } from '../../types/enums/matchEnums'; 
-import { MatchCategorySelector } from './MatchCategorySelector';
+import { useTournamentMatches } from '../../hooks/useTournamentMatches';
+import { MatchTypeEnum } from '../../types/enums/matchEnums';
+import { MatchCategorySelector, MatchCategory } from './MatchCategorySelector';
 import { MatchFilterChips } from './MatchFilterChips';
 import { PredictionProgressBar } from '../commons/ProgressBar';
 import { MatchList } from '../matches/MatchList';
+import { MatchSearchFilter } from './MatchSearchFilter';
 import { Match, UIPrediction  } from '../../types/matchTypes';
 
 interface TournamentMatchesProps {
@@ -19,7 +20,7 @@ interface TournamentMatchesProps {
 export const TournamentMatches: React.FC<TournamentMatchesProps> = ({ 
   tournamentId 
 }) => {
-  const [matchCategory, setMatchCategory] = useState<'groups' | 'knockout'>('groups');
+  const [matchCategory, setMatchCategory] = useState<MatchCategory>('groups');
   const [selectedFilter, setSelectedFilter] = useState<string | MatchTypeEnum | null>(null);
   const { groups } = useGroups(Number(tournamentId));
   const { matches, fetchMatches, loading: loadingMatches, error: matchesError } = useTournamentMatches();
@@ -37,10 +38,11 @@ export const TournamentMatches: React.FC<TournamentMatchesProps> = ({
   }), [groups, matches]);
 
   useEffect(() => {
+    if (matchCategory === 'search') return;
     const availableFilters = matchGroups[matchCategory];
     if (availableFilters.length > 0) {
       const isSelectedValid = availableFilters.some(f => f === selectedFilter);
-      if (!selectedFilter || !isSelectedValid) {setSelectedFilter(availableFilters[0]);}
+      if (!selectedFilter || !isSelectedValid) { setSelectedFilter(availableFilters[0]); }
     } else {
       setSelectedFilter(null);
     }
@@ -98,35 +100,52 @@ export const TournamentMatches: React.FC<TournamentMatchesProps> = ({
           />
         )}
 
-        <MatchFilterChips 
-          filters={matchGroups[matchCategory]}
-          selectedFilter={selectedFilter}
-          onSelectFilter={setSelectedFilter}
-          filteredCount={filteredMatches.length}
-        />
+        {matchCategory === 'search' ? (
+          <MatchSearchFilter
+            tournamentId={Number(tournamentId)}
+            matches={matches ?? []}
+            predictions={predictions.map(p => ({
+              matchId: p.matchId,
+              predictedHomeScore: p.predictedHomeScore,
+              predictedAwayScore: p.predictedAwayScore,
+            }))}
+            groups={groups}
+            refreshPredictions={refreshPredictions}
+            refreshMatches={() => fetchMatches(Number(tournamentId))}
+          />
+        ) : (
+          <>
+            <MatchFilterChips
+              filters={matchGroups[matchCategory]}
+              selectedFilter={selectedFilter}
+              onSelectFilter={setSelectedFilter}
+              filteredCount={filteredMatches.length}
+            />
 
-        {matchCategory === 'groups' && selectedFilter && (
-          <div className="animate-fade-in">
-            <div className="h-32 bg-slate-50 rounded-xl animate-pulse border border-slate-100" />
-            <div className="p-4 bg-slate-50 rounded-xl text-xs text-slate-400 italic mb-6">
-              Ingen tabell tillgänglig för denna grupp.
-            </div>
-          </div>
+            {matchCategory === 'groups' && selectedFilter && (
+              <div className="animate-fade-in">
+                <div className="h-32 bg-slate-50 rounded-xl animate-pulse border border-slate-100" />
+                <div className="p-4 bg-slate-50 rounded-xl text-xs text-slate-400 italic mb-6">
+                  Ingen tabell tillgänglig för denna grupp.
+                </div>
+              </div>
+            )}
+
+            <PredictionProgressBar
+              total={filteredMatches.length}
+              progress={filteredPredictions.length}
+              label='Tippade matcher'
+            />
+
+            <MatchList
+              matches={filteredMatches}
+              predictions={filteredPredictions}
+              groups={groups}
+              refreshPredictions={refreshPredictions}
+              refreshMatches={() => fetchMatches(Number(tournamentId))}
+            />
+          </>
         )}
-      
-        <PredictionProgressBar 
-          total={filteredMatches.length} 
-          progress={filteredPredictions.length} 
-          label='Tippade matcher'
-        />
-
-        <MatchList 
-          matches={filteredMatches} 
-          predictions={filteredPredictions} 
-          groups={groups} 
-          refreshPredictions={refreshPredictions}
-          refreshMatches={() => fetchMatches(Number(tournamentId))}
-         />
       </div>
     </div>
   );

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import {  ChevronDown, ChevronUp } from 'lucide-react';
 import { Match } from '../../types/matchTypes'; 
-import { MatchStatusEnum } from '../../types/enums/matchEnums';
+import { MatchStatusEnum, MatchTypeEnum } from '../../types/enums/matchEnums';
+import { knockoutLabels, formatGroupName } from '../../utils/matchTypeLabels';
 import { useCreatePrediction  } from '../../hooks/useCreatePrediction';
 import { MatchPredictionForm } from './MatchPredictionForm';
 import { useSetMatchResult } from '../../hooks/useSetMatchResult';
@@ -37,7 +38,9 @@ export const MatchCard: React.FC<MatchCardProps> = ({ match, prediction: initial
   const isScheduled = match.status === MatchStatusEnum.Scheduled;
   const isLocked = !isFinished && match.status !== MatchStatusEnum.Scheduled && new Date(match.startTime) < new Date();
 
-  const groupName = groups.find(group => group.groupId === match.groupId)?.name ?? "Okänd grupp";
+  const groupName = match.matchType !== MatchTypeEnum.Group
+    ? knockoutLabels[match.matchType] ?? 'Slutspel'
+    : formatGroupName(groups.find(g => g.groupId === match.groupId)?.name ?? 'Okänd grupp');
 
   useEffect(() => {
     if (initialPrediction) {
@@ -180,7 +183,7 @@ const handlePredictionSubmit = async (homeScore: number, awayScore: number) => {
             )}
 
             {/* Admin: match result */}
-            {isAdmin && (
+            {isAdmin && isPredictionClosed && (
               <div className="mt-6 pt-6 border-t border-slate-100">
                 <h4 className="text-center text-sm font-bold text-slate-500 uppercase tracking-widest mb-6">
                   Mata in matchresultat
@@ -193,11 +196,12 @@ const handlePredictionSubmit = async (homeScore: number, awayScore: number) => {
                 )}
 
                 {isFinished ? (
-                  <MatchResultForm 
+                  <MatchResultForm
                     match={{
                       homeCompetitorName: match.homeCompetitorName,
                       awayCompetitorName: match.awayCompetitorName
                     }}
+                    hasExistingData={homeScoreLocal !== null}
                     onSubmit={async (homeScore, awayScore) => {
                       await handleSubmitResult(match.matchId, homeScore, awayScore);
                       setHomeScoreLocal(homeScore);

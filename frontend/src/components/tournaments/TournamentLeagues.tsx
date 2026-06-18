@@ -1,6 +1,6 @@
 
-import React, { useState } from 'react';
-import { LogIn } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+import { LogIn, Search } from 'lucide-react';
 import { useMyLeaguesInTournament } from "../../hooks/useMyLeaguesInTournament.ts";
 import { ActionButton } from '../commons/ActionButton';
 import { FormButtons } from '../commons/FormButtons';
@@ -16,7 +16,13 @@ export const TournamentLeagues: React.FC<TournamentLeaguesProps> = ({ tournament
   const tid = Number(tournamentId);
   const [expandedLeagueId, setExpandedLeagueId] = useState<string | null>(null);
   const [createSuccess, setCreateSuccess] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const { leagues, loading, error, refetch } = useMyLeaguesInTournament(tid);
+
+  const filteredLeagues = useMemo(
+    () => leagues.filter(l => l.name.toLowerCase().includes(searchQuery.toLowerCase())),
+    [leagues, searchQuery]
+  );
   
   const handleLeagueCreated = (newLeague: any) => {
   leagueForm.setShowCreate(false);
@@ -47,8 +53,21 @@ const handleLeagueJoined = (member: any) => {
     <div className="space-y-8 animate-fade-in">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <h2 className="text-2xl font-bold text-primary">Ligor</h2>
-        
-        <div className="flex gap-2 ml-auto">
+
+        {leagues.length > 0 && (
+          <div className="relative w-full sm:w-52">
+            <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              placeholder="Sök liga..."
+              className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-accent/10 focus:border-accent outline-none transition-all text-sm font-medium text-slate-900 shadow-inner"
+            />
+          </div>
+        )}
+
+        <div className="flex gap-2 sm:ml-auto">
           <ActionButton 
             label="Gå med" 
             variant="secondary"
@@ -148,8 +167,8 @@ const handleLeagueJoined = (member: any) => {
         )}
 
         {!loading && !error && leagues.length > 0 && (
-          <>
-            {leagues.map((l) => (
+          filteredLeagues.length > 0 ? (
+            filteredLeagues.map((l) => (
               <LeagueAccordion
                 key={l.leagueId}
                 league={l}
@@ -160,8 +179,12 @@ const handleLeagueJoined = (member: any) => {
                   )
                 }
               />
-            ))}
-          </>
+            ))
+          ) : (
+            <div className="text-center p-10 bg-slate-50 rounded-2xl border border-dashed border-slate-200 text-slate-400">
+              <p className="font-medium">Inga ligor matchar "{searchQuery}".</p>
+            </div>
+          )
         )}
 
         {!loading && !error && leagues.length === 0 && (

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Filter } from 'lucide-react';
 import { MatchTypeEnum } from '../../types/enums/matchEnums';
+import { getFilterChipLabel, getFilterInLabel, matchCountText } from '../../utils/matchTypeLabels';
 
 interface MatchFilterChipsProps {
   filters: (string | MatchTypeEnum)[];
@@ -29,10 +30,7 @@ export const MatchFilterChips: React.FC<MatchFilterChipsProps> = ({
                   : 'bg-white border-slate-200 text-slate-500 hover:border-accent hover:text-accent'
               }`}
             >
-              {typeof filter === 'number' 
-                ? MatchTypeEnum[filter]
-                : filter.toString()
-              }
+              {getFilterChipLabel(filter)}
             </button>
           ))
         ) : (
@@ -42,10 +40,10 @@ export const MatchFilterChips: React.FC<MatchFilterChipsProps> = ({
         )}
       </div>
 
-      {selectedFilter && (
+      {selectedFilter !== null && (
         <div className="flex items-center gap-2 text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
           <Filter size={14} />
-          <span>Visar {filteredCount} matcher i {selectedFilter.toString()}</span>
+          <span>Visar {matchCountText(filteredCount)} i {getFilterInLabel(selectedFilter)}</span>
         </div>
       )}
     </div>
