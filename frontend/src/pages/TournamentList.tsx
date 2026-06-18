@@ -13,7 +13,7 @@ export const TournamentList = () => {
   const { isAdmin} = useAuth();
 
   return (
-    <div className="max-w-4xl mx-auto pb-12">
+    <div className="w-full pb-12">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
           <h2 className="text-3xl font-bold text-primary">Turneringar</h2>
@@ -49,7 +49,7 @@ export const TournamentList = () => {
           Laddar turneringar...
         </div>
       ) : (
-        <div className="grid gap-6 animate-fade-in">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fade-in">
           {tournaments.length > 0 ? (
             tournaments.map(t => (
             <TournamentCard 
