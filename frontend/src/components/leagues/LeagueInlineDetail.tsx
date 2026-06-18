@@ -1,17 +1,18 @@
 import React from 'react';
 import { LeaderboardTable } from './LeaderboardTable';
 // import { Forum } from './Forum';
-import { useLeagueDetail } from '../../hooks/leagues/useLeagueDetail';
+import type { LeagueWithLeaderboardDto } from '../../types/leagueTypes';
 
 interface LeagueInlineDetailProps {
-  leagueId: number;
+  detail: LeagueWithLeaderboardDto | null;
+  loading: boolean;
+  error: string | null;
 }
 
-export const LeagueInlineDetail: React.FC<LeagueInlineDetailProps> = ({ leagueId }) => {
-  const { league, loading, error } = useLeagueDetail(leagueId);
-
+export const LeagueInlineDetail: React.FC<LeagueInlineDetailProps> = ({ detail, loading, error }) => {
   if (loading) return <div className="p-4 text-sm text-slate-500">Laddar ligadetaljer...</div>;
-  if (error || !league) return <div className="p-4 text-sm text-red-500">Kunde inte hämta ligan</div>;
+  if (error || !detail) return <div className="p-4 text-sm text-red-500">Kunde inte hämta ligan</div>;
+  const league = detail;
 
   return (
     <div className="mt-2 p-4 md:p-6 bg-slate-50 rounded-b-xl border-t border-slate-100 animate-fade-in">

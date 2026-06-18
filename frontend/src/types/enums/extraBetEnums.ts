@@ -8,4 +8,5 @@ export enum ExtraBetFilterEnum {
   All = "all",
   Open = "open",
   Closed = "closed",
+  NeedsCorrection = "needs_correction",
 }

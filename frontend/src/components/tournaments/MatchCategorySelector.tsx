@@ -1,8 +1,10 @@
 import React from 'react';
 
+export type MatchCategory = 'groups' | 'knockout' | 'search';
+
 interface MatchCategorySelectorProps {
-  matchCategory: 'groups' | 'knockout';
-  setMatchCategory: (cat: 'groups' | 'knockout') => void;
+  matchCategory: MatchCategory;
+  setMatchCategory: (cat: MatchCategory) => void;
 }
 
 export const MatchCategorySelector: React.FC<MatchCategorySelectorProps> = ({
@@ -22,6 +24,12 @@ export const MatchCategorySelector: React.FC<MatchCategorySelectorProps> = ({
         className={`px-4 py-1.5 text-xs font-bold rounded-md transition-all ${matchCategory === 'knockout' ? 'bg-white text-primary shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
       >
         Slutspel
+      </button>
+      <button
+        onClick={() => setMatchCategory('search')}
+        className={`px-4 py-1.5 text-xs font-bold rounded-md transition-all ${matchCategory === 'search' ? 'bg-white text-primary shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
+      >
+        Sök & datum
       </button>
     </div>
   );
