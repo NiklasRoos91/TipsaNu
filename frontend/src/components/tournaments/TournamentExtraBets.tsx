@@ -116,8 +116,8 @@ return (
           onChange={e => setSortOrder(e.target.value as 'soonest' | 'latest')}
           className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-sm font-medium text-slate-700 outline-none focus:ring-4 focus:ring-accent/10 focus:border-accent transition-all"
         >
-          <option value="soonest">Sortera: Kortast tid kvar</option>
-          <option value="latest">Sortera: Längst tid kvar</option>
+          <option value="soonest">Tid kvar ↓</option>
+          <option value="latest">Tid kvar ↑</option>
         </select>
       </div>
 
