@@ -12,7 +12,7 @@ interface MatchListProps {
 
 export const MatchList: React.FC<MatchListProps> = ({matches, predictions, groups, refreshPredictions, refreshMatches }) => {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 animate-fade-in">
+    <div className="space-y-4 animate-fade-in">
       {matches.length > 0 ? (
         matches.map(match => {
           const initialPrediction = predictions.find(p => p.matchId === match.matchId) ?? null;
@@ -31,7 +31,7 @@ export const MatchList: React.FC<MatchListProps> = ({matches, predictions, group
           );
         })
       ) : (
-        <div className="col-span-full text-center p-12 bg-white rounded-xl border border-slate-200 text-slate-400">
+        <div className="text-center p-12 bg-white rounded-xl border border-slate-200 text-slate-400">
           Inga matcher hittades för det valda filtret.
         </div>
       )}
